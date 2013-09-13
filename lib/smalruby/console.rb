@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-require_relative 'base'
 require 'readline'
 
 module Smalruby
@@ -109,7 +108,7 @@ module Smalruby
     #
     # @see $?
     def system_failed?
-      return $CHILD_STATUS != 0
+      return $? != 0
     end
 
     # @!endgroup

@@ -1,10 +1,16 @@
-require "smalruby/version"
+require 'smalruby/version'
+require 'active_support'
 
 module Smalruby
-  # Your code goes here...
-end
+  extend ActiveSupport::Autoload
 
-require 'smalruby/base'
-require 'smalruby/console'
+  autoload :Base
+  autoload :Console
+
+  module_function
+
+  def start
+  end
+end
 
 include Smalruby

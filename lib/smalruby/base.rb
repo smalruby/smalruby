@@ -10,15 +10,21 @@ module Smalruby
     attr_accessor :threads
 
     def initialize
-      World.instance.objects << self
       @event_handlers = {}
       @threads = []
+
+      World.instance.objects << self
     end
 
     def on(event, *args, &block)
       event = event.to_sym
       @event_handlers[event] ||= []
-      @event_handlers[event] << EventHandler.new(self, args, &block)
+      h = EventHandler.new(self, args, &block)
+      @event_handlers[event] << h
+
+      if Smalruby.started?
+        @threads << h.call
+      end
     end
 
     def start

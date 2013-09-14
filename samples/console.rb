@@ -1,6 +1,6 @@
 require 'smalruby'
 
-console1 = Smalruby::Console.new
+console1 = Console.new
 console1.on(:start) do
   loop do
     input = readline('> ')
@@ -13,5 +13,3 @@ console1.on(:start) do
     end
   end
 end
-
-Smalruby.start

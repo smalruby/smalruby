@@ -40,5 +40,18 @@ module Smalruby
     def join
       @threads.each(&:join)
     end
+
+    def loop(&block)
+      while true
+        yield
+        Smalruby.await
+      end
+    end
+
+    private
+
+    def asset_path(name)
+      return File.expand_path("../../../assets/#{name}", __FILE__)
+    end
   end
 end

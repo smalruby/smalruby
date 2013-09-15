@@ -44,6 +44,16 @@ module Smalruby
             if Input.key_down?(K_ESCAPE)
               exit
             end
+            if Input.mouse_push?(M_LBUTTON)
+              x, y = Input.mouse_pos_x, Input.mouse_pos_y
+              s = Sprite.new(x, y)
+              s.collision = [0, 0, 1, 1]
+              s.check(world.objects).each do |o|
+                if o.respond_to?(:click)
+                  o.click
+                end
+              end
+            end
             world.objects.delete_if { |o|
               if o.alive?
                 false

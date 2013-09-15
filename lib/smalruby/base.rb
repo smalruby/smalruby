@@ -65,6 +65,12 @@ module Smalruby
       end
     end
 
+    def click
+      @event_handlers[:click].try(:each) do |h|
+        @threads << h.call
+      end
+    end
+
     def alive?
       return @threads.any?(&:alive?)
     end

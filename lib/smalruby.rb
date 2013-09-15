@@ -33,7 +33,7 @@ module Smalruby
         # ウィンドウアプリケーション
         Window.caption = File.basename($0)
         first = true
-        Window.fps = 10
+        Window.fps = 30
         Window.loop do
           lock do
             if first

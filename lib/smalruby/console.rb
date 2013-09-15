@@ -16,6 +16,14 @@ module Smalruby
   #    end
   #    start
   class Console < Base
+    def initialize
+      super(0, 0)
+    end
+
+    def loop(&block)
+      Kernel.loop(&block)
+    end
+
     # @!group 出力
 
     # @!method p(object)

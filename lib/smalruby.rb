@@ -6,7 +6,6 @@ require 'dxruby'
 
 require 'smalruby/world'
 require 'smalruby/base'
-require 'smalruby/sprite_base'
 require 'smalruby/event_handler'
 
 module Smalruby

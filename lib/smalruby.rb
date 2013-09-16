@@ -44,13 +44,24 @@ module Smalruby
             if Input.key_down?(K_ESCAPE)
               exit
             end
-            if Input.mouse_push?(M_LBUTTON)
+            if Input.mouse_push?(M_LBUTTON) || Input.mouse_push?(M_RBUTTON) ||
+                Input.mouse_push?(M_MBUTTON)
               x, y = Input.mouse_pos_x, Input.mouse_pos_y
               s = Sprite.new(x, y)
               s.collision = [0, 0, 1, 1]
+              buttons = []
+              if Input.mouse_down?(M_LBUTTON)
+                buttons << :left
+              end
+              if Input.mouse_down?(M_RBUTTON)
+                buttons << :right
+              end
+              if Input.mouse_down?(M_MBUTTON)
+                buttons << :center
+              end
               s.check(world.objects).each do |o|
                 if o.respond_to?(:click)
-                  o.click
+                  o.click(buttons)
                 end
               end
             end
@@ -62,11 +73,7 @@ module Smalruby
                 true
               end
             }
-            world.objects.each do |o|
-              if o.respond_to?(:draw)
-                o.draw
-              end
-            end
+            Sprite.draw(world.objects)
           end
         end
       else

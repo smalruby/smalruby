@@ -2,20 +2,21 @@
 module Smalruby
   # イベントハンドラを表現するクラス
   class EventHandler
-    attr_accessor :args
+    attr_accessor :object
+    attr_accessor :options
     attr_accessor :block
 
     # @param [Object] object 操作対象
-    # @param [Array] args イベントハンドラの引数
+    # @param [Array] options イベントハンドラのオプション
     # @param [Proc] block イベントハンドラ
-    def initialize(object, args, &block)
+    def initialize(object, options, &block)
       @object = object
-      @args = args
+      @options = options
       @block = block
     end
 
-    def call
-      return Thread.start(@object, @block, @args) do |object, block, args|
+    def call(*args)
+      return Thread.start(@object, @block) do |object, block|
         object.instance_exec(*args, &block)
       end
     end

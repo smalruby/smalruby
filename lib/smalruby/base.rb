@@ -48,10 +48,10 @@ module Smalruby
 
     # @!endgroup
 
-    def on(event, *args, &block)
+    def on(event, *options, &block)
       event = event.to_sym
       @event_handlers[event] ||= []
-      h = EventHandler.new(self, args, &block)
+      h = EventHandler.new(self, options, &block)
       @event_handlers[event] << h
 
       if Smalruby.started?
@@ -65,8 +65,11 @@ module Smalruby
       end
     end
 
-    def click
+    def click(buttons)
       @event_handlers[:click].try(:each) do |h|
+        if h.options.length > 0 && !h.options.any? { |b| buttons.include?(b) }
+          next
+        end
         @threads << h.call
       end
     end

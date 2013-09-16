@@ -70,7 +70,7 @@ module Smalruby
         if h.options.length > 0 && !h.options.any? { |b| buttons.include?(b) }
           next
         end
-        @threads << h.call
+        @threads << h.call(Input.mouse_pos_x, Input.mouse_pos_y)
       end
     end
 

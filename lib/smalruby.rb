@@ -13,6 +13,7 @@ module Smalruby
 
   autoload :Console
   autoload :Car
+  autoload :Canvas
 
   module_function
 
@@ -32,7 +33,7 @@ module Smalruby
         # ウィンドウアプリケーション
         Window.caption = File.basename($0)
         first = true
-        Window.fps = 30
+        Window.fps = 15
         Window.loop do
           lock do
             if first
@@ -66,12 +67,10 @@ module Smalruby
               end
             end
             world.objects.delete_if { |o|
-              if o.alive?
-                false
-              else
+              if !o.alive?
                 o.join
-                true
               end
+              o.vanished?
             }
             Sprite.draw(world.objects)
           end

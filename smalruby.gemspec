@@ -30,5 +30,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-rubocop'
 
   spec.add_runtime_dependency 'activesupport'
-  spec.add_runtime_dependency 'dxruby_sdl' if /windows/i !~ RUBY_PLATFORM
+  if /windows/i =~ RUBY_PLATFORM
+    spec.add_runtime_dependency 'dxruby'
+  else
+    spec.add_runtime_dependency 'dxruby_sdl'
+  end
 end

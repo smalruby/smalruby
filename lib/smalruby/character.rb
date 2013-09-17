@@ -2,8 +2,8 @@
 require 'forwardable'
 
 module Smalruby
-  # 操作対象のベースクラス
-  class Base < Sprite
+  # キャラクターを表現するクラス
+  class Character < Sprite
     extend Forwardable
 
     attr_accessor :event_handlers

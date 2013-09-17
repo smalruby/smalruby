@@ -5,7 +5,7 @@ require 'active_support/concurrency/latch'
 require 'dxruby'
 
 require 'smalruby/world'
-require 'smalruby/base'
+require 'smalruby/character'
 require 'smalruby/event_handler'
 
 module Smalruby

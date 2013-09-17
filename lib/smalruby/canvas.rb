@@ -3,7 +3,7 @@ require 'readline'
 
 module Smalruby
   # お絵かきを表現するクラス
-  class Canvas < Base
+  class Canvas < Character
     def initialize(option = {})
       opt = {
         x: 0,

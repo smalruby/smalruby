@@ -15,7 +15,7 @@ module Smalruby
   #      puts('こんにちは、世界！')
   #    end
   #    start
-  class Console < Base
+  class Console < Character
     def initialize
       super(0, 0)
     end

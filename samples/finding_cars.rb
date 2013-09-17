@@ -12,7 +12,7 @@ canvas1.on(:start) do
   box_fill(0, 400, 639, 404, [255, 255, 255])
 end
 
-car1 = Base.new(0, 148, 'car1.png')
+car1 = Character.new(0, 148, 'car1.png')
 car1.visible = false
 car1.on(:start) do
   speed = 1 + rand(5)
@@ -25,7 +25,7 @@ car1.on(:click) do
   @visible = true
 end
 
-car2 = Base.new(639, 148, 'car2.png')
+car2 = Character.new(639, 148, 'car2.png')
 car2.visible = false
 car2.on(:start) do
   speed = 10 + rand(5)
@@ -38,7 +38,7 @@ car2.on(:click) do
   @visible = true
 end
 
-car3 = Base.new(0, 348, 'car3.png')
+car3 = Character.new(0, 348, 'car3.png')
 car3.visible = false
 car3.on(:start) do
   speed = 1 + rand(5)
@@ -51,7 +51,7 @@ car3.on(:click) do
   @visible = true
 end
 
-car4 = Base.new(639, 348, 'car4.png')
+car4 = Character.new(639, 348, 'car4.png')
 car4.visible = false
 car4.on(:start) do
   speed = 10 + rand(5)

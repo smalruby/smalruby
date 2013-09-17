@@ -66,58 +66,18 @@ module Smalruby
                 end
               end
             end
-            #if (keys = Input.keys).length > 0
-            if Input.key_push?(K_SPACE) ||
-              Input.key_push?(K_UP) ||
-                Input.key_push?(K_DOWN) ||
-                Input.key_push?(K_LEFT) ||
-                Input.key_push?(K_RIGHT)
-              keys = []
-              if Input.key_down?(K_SPACE)
-                keys << K_SPACE
-              end
-              if Input.key_down?(K_UP)
-                keys << K_UP
-              end
-              if Input.key_down?(K_DOWN)
-                keys << K_DOWN
-              end
-              if Input.key_down?(K_LEFT)
-                keys << K_LEFT
-              end
-              if Input.key_down?(K_RIGHT)
-                keys << K_RIGHT
-              end
-              world.objects.each do |o|
-                if o.respond_to?(:key_push)
-                  o.key_push(keys)
-                end
-              end
-            end
-            if Input.key_down?(K_SPACE) ||
-              Input.key_down?(K_UP) ||
-                Input.key_down?(K_DOWN) ||
-                Input.key_down?(K_LEFT) ||
-                Input.key_down?(K_RIGHT)
-              keys = []
-              if Input.key_down?(K_SPACE)
-                keys << K_SPACE
-              end
-              if Input.key_down?(K_UP)
-                keys << K_UP
-              end
-              if Input.key_down?(K_DOWN)
-                keys << K_DOWN
-              end
-              if Input.key_down?(K_LEFT)
-                keys << K_LEFT
-              end
-              if Input.key_down?(K_RIGHT)
-                keys << K_RIGHT
-              end
+            if (keys = Input.keys).length > 0
               world.objects.each do |o|
                 if o.respond_to?(:key_down)
                   o.key_down(keys)
+                end
+              end
+              pushed_keys = keys.select { |key| Input.key_push?(key) }
+              if pushed_keys.length > 0
+                world.objects.each do |o|
+                  if o.respond_to?(:key_push)
+                    o.key_push(pushed_keys)
+                  end
                 end
               end
             end

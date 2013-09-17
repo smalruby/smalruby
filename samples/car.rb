@@ -1,6 +1,6 @@
 require 'smalruby'
 
-car1 = Car.new(0, 0, 1)
+car1 = Base.new(0, 0, 'car1.png')
 car1.on(:start) do
   loop do
     move(5)

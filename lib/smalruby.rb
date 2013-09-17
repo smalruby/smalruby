@@ -12,7 +12,6 @@ module Smalruby
   extend ActiveSupport::Autoload
 
   autoload :Console
-  autoload :Car
   autoload :Canvas
 
   module_function

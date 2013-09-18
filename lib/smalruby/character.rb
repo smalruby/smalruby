@@ -54,7 +54,7 @@ module Smalruby
     # @!group 見た目
 
     def say(message)
-      lines = message.lines.map { |l| l.scan(/.{1,10}/) }.flatten
+      lines = message.to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
       font = Font.new(16)
       width = lines.map { |l| font.get_width(l) }.max
       height = lines.length * (font.size + 1)

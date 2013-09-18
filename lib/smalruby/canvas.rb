@@ -20,7 +20,8 @@ module Smalruby
       @image.draw_font(x, y, string, Font.new(font_size), color)
     end
 
-    def_delegators :@image, :line, :box, :box_fill, :circle, :circle_fill
+    def_delegators :@image,
+                   :line, :box, :box_fill, :circle, :circle_fill, :clear
 
     # @!endgroup
   end

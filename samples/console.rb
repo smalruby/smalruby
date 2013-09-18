@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'smalruby'
 
 console1 = Console.new

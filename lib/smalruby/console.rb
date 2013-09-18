@@ -116,7 +116,7 @@ module Smalruby
     #
     # @see $?
     def system_failed?
-      return $? != 0
+      return $CHILD_STATUS != 0
     end
 
     # @!endgroup

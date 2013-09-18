@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'smalruby'
 
 car1 = Character.new(0, 0, 'car1.png')

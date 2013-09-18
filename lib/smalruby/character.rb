@@ -162,7 +162,7 @@ module Smalruby
     end
 
     def loop(&block)
-      while true
+      Kernel.loop do
         yield
         Smalruby.await
       end

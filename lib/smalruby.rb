@@ -16,21 +16,12 @@ module Smalruby
 
   module_function
 
-  @@started = false
-  @@lock = ActiveSupport::Concurrency::Latch.new(1)
-  @@draw_sprites = []
-
-  def draw(sprite)
-    Smalruby.lock.await
-    @@draw_sprites << sprite
-  end
-
   def start
-    @@started = true
+    @started = true
     begin
       if world.objects.any? { |o| /console/i !~ o.class.name }
         # ウィンドウアプリケーション
-        Window.caption = File.basename($0)
+        Window.caption = File.basename($PROGRAM_NAME)
         first = true
         Window.fps = 15
         Window.loop do
@@ -66,19 +57,7 @@ module Smalruby
               end
             end
             if (keys = Input.keys).length > 0
-              world.objects.each do |o|
-                if o.respond_to?(:key_down)
-                  o.key_down(keys)
-                end
-              end
-              pushed_keys = keys.select { |key| Input.key_push?(key) }
-              if pushed_keys.length > 0
-                world.objects.each do |o|
-                  if o.respond_to?(:key_push)
-                    o.key_push(pushed_keys)
-                  end
-                end
-              end
+              key_down_and_push(keys)
             end
             world.objects.delete_if { |o|
               if !o.alive?
@@ -101,34 +80,58 @@ module Smalruby
   end
 
   def started?
-    return @@started
+    return @started
   end
 
   def world
-    World.instance
-  end
-
-  @@draw_mutex = Mutex.new
-  @@draw_cv = ConditionVariable.new
-
-  def lock(&block)
-    @@draw_mutex.synchronize do
-      yield
-      @@draw_cv.broadcast
-    end
+    return World.instance
   end
 
   def await
-    @@draw_mutex.synchronize do
-      @@draw_cv.wait(@@draw_mutex)
+    @draw_mutex.synchronize do
+      @draw_cv.wait(@draw_mutex)
+    end
+  end
+
+  private
+
+  @started = false
+  @draw_mutex = Mutex.new
+  @draw_cv = ConditionVariable.new
+
+  class << self
+
+    private
+
+    def lock(&block)
+      @draw_mutex.synchronize do
+        yield
+        @draw_cv.broadcast
+      end
+    end
+
+    def key_down_and_push(keys)
+      world.objects.each do |o|
+        if o.respond_to?(:key_down)
+          o.key_down(keys)
+        end
+      end
+      pushed_keys = keys.select { |key| Input.key_push?(key) }
+      if pushed_keys.length > 0
+        world.objects.each do |o|
+          if o.respond_to?(:key_push)
+            o.key_push(pushed_keys)
+          end
+        end
+      end
     end
   end
 end
 
 include Smalruby
 
-END {
-  if !started?
-    start
+at_exit do
+  if !Smalruby.started?
+    Smalruby.start
   end
-}
+end

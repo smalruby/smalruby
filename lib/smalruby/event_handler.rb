@@ -16,9 +16,9 @@ module Smalruby
     end
 
     def call(*args)
-      return Thread.start(@object, @block) do |object, block|
-        object.instance_exec(*args, &block)
-      end
+      return Thread.start(@object, @block) { |object, block|
+               object.instance_exec(*args, &block)
+             }
     end
   end
 end

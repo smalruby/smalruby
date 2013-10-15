@@ -89,7 +89,8 @@ module Smalruby
     # @!group 調べる
 
     def distance(x, y)
-      res = Math.sqrt((@x + center_x - x).abs ** 2 + (@y + center_y - y).abs ** 2).to_i
+      res =
+        Math.sqrt((@x + center_x - x).abs**2 + (@y + center_y - y).abs**2).to_i
       return res
     end
 

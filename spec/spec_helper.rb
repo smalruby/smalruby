@@ -3,6 +3,9 @@
 require 'coveralls'
 Coveralls.wear!
 
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'smalruby'
+
 Dir.glob(File.expand_path('../support/**/*.rb', __FILE__)).each do |path|
   require path
 end

@@ -12,6 +12,7 @@ module Smalruby
         height: Window.height,
       }.merge(option)
       super(opt[:x], opt[:y], Image.new(opt[:width], opt[:height]))
+      @image.set_color_key([0, 0, 0])
     end
 
     # @!group ペン

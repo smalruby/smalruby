@@ -9,7 +9,7 @@ module Smalruby
     attr_accessor :event_handlers
     attr_accessor :threads
 
-    def initialize(x, y, image = nil)
+    def initialize(x, y, image = nil, option = {})
       if image.is_a?(String)
         image = Image.load(asset_path(image))
       end
@@ -21,6 +21,12 @@ module Smalruby
       @scale_x = 1.0
       @scale_y = 1.0
       @vector = { x: 1, y: 0 }
+
+      [:visible].each do |k|
+        if option.key?(k)
+          instance_variable_set("@#{k}", option[k])
+        end
+      end
 
       World.instance.objects << self
     end
@@ -76,6 +82,15 @@ module Smalruby
                       frame_size + margin_size,
                       lines.join("\n"), font, [0, 0, 0])
       @balloon = Sprite.new(@x, @y, image)
+    end
+
+    # @!endgroup
+
+    # @!group 調べる
+
+    def distance(x, y)
+      res = Math.sqrt((@x + center_x - x).abs ** 2 + (@y + center_y - y).abs ** 2).to_i
+      return res
     end
 
     # @!endgroup

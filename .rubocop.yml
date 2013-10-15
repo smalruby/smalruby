@@ -5,6 +5,9 @@ AllCops:
 MethodLength:
   Enabled: false
 
+ClassLength:
+  Enabled: false
+
 Documentation:
   Enabled: false
 

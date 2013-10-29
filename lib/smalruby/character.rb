@@ -45,7 +45,7 @@ module Smalruby
     end
 
     def turn_if_reach_wall
-      max_width = Window.width - self.image.width
+      max_width = Window.width - image.width
       if self.x < 0
         self.x = 0
         turn
@@ -89,8 +89,8 @@ module Smalruby
     # @!group 調べる
 
     def distance(x, y)
-      res =
-        Math.sqrt((self.x + center_x - x).abs**2 + (self.y + center_y - y).abs**2).to_i
+      res = Math.sqrt((self.x + center_x - x).abs**2 +
+                      (self.y + center_y - y).abs**2).to_i
       return res
     end
 
@@ -98,7 +98,7 @@ module Smalruby
 
     def draw
       if @balloon
-        @balloon.x = self.x + self.image.width / 2
+        @balloon.x = self.x + image.width / 2
         if @balloon.x < 0
           @balloon.x = 0
         elsif @balloon.x + @balloon.image.width >= Window.width
@@ -114,13 +114,13 @@ module Smalruby
       end
       if self.x < 0
         self.x = 0
-      elsif self.x + self.image.width >= Window.width
-        self.x = Window.width - self.image.width
+      elsif self.x + image.width >= Window.width
+        self.x = Window.width - image.width
       end
       if self.y < 0
         self.y = 0
-      elsif self.y + self.image.height >= Window.height
-        self.y = Window.height - self.image.height
+      elsif self.y + image.height >= Window.height
+        self.y = Window.height - image.height
       end
       super
     end

@@ -12,13 +12,13 @@ module Smalruby
         height: Window.height,
       }.merge(option)
       super(opt[:x], opt[:y], Image.new(opt[:width], opt[:height]))
-      self.image.set_color_key([0, 0, 0])
+      image.set_color_key([0, 0, 0])
     end
 
     # @!group ペン
 
     def draw_font(x, y, string, font_size, color = [255, 255, 255])
-      self.image.draw_font(x, y, string, Font.new(font_size), color)
+      image.draw_font(x, y, string, Font.new(font_size), color)
     end
 
     def_delegators :image,

@@ -18,13 +18,13 @@ module Smalruby
       @event_handlers = {}
       @threads = []
 
-      @scale_x = 1.0
-      @scale_y = 1.0
+      self.scale_x = 1.0
+      self.scale_y = 1.0
       @vector = { x: 1, y: 0 }
 
       [:visible].each do |k|
         if option.key?(k)
-          instance_variable_set("@#{k}", option[k])
+          send("#{k}=", option[k])
         end
       end
 
@@ -34,23 +34,23 @@ module Smalruby
     # @!group 動き
 
     def move(val = 1)
-      @x += @vector[:x] * val
-      @y += @vector[:y] * val
+      self.x += @vector[:x] * val
+      self.y += @vector[:y] * val
     end
 
     def turn
       @vector[:x] *= -1
       @vector[:y] *= -1
-      @scale_x *= -1
+      self.scale_x *= -1
     end
 
     def turn_if_reach_wall
-      max_width = Window.width - @image.width
-      if @x < 0
-        @x = 0
+      max_width = Window.width - self.image.width
+      if self.x < 0
+        self.x = 0
         turn
-      elsif @x >= max_width
-        @x = max_width - 1
+      elsif self.x >= max_width
+        self.x = max_width - 1
         turn
       end
     end
@@ -81,7 +81,7 @@ module Smalruby
       image.draw_font(frame_size + margin_size,
                       frame_size + margin_size,
                       lines.join("\n"), font, [0, 0, 0])
-      @balloon = Sprite.new(@x, @y, image)
+      @balloon = Sprite.new(self.x, self.y, image)
     end
 
     # @!endgroup
@@ -90,7 +90,7 @@ module Smalruby
 
     def distance(x, y)
       res =
-        Math.sqrt((@x + center_x - x).abs**2 + (@y + center_y - y).abs**2).to_i
+        Math.sqrt((self.x + center_x - x).abs**2 + (self.y + center_y - y).abs**2).to_i
       return res
     end
 
@@ -98,13 +98,13 @@ module Smalruby
 
     def draw
       if @balloon
-        @balloon.x = @x + @image.width / 2
+        @balloon.x = self.x + self.image.width / 2
         if @balloon.x < 0
           @balloon.x = 0
         elsif @balloon.x + @balloon.image.width >= Window.width
           @balloon.x = Window.width - @balloon.image.width
         end
-        @balloon.y = @y - @balloon.image.height
+        @balloon.y = self.y - @balloon.image.height
         if @balloon.y < 0
           @balloon.y = 0
         elsif @balloon.y + @balloon.image.height >= Window.height
@@ -112,15 +112,15 @@ module Smalruby
         end
         @balloon.draw
       end
-      if @x < 0
-        @x = 0
-      elsif @x + @image.width >= Window.width
-        @x = Window.width - @image.width
+      if self.x < 0
+        self.x = 0
+      elsif self.x + self.image.width >= Window.width
+        self.x = Window.width - self.image.width
       end
-      if @y < 0
-        @y = 0
-      elsif @y + @image.height >= Window.height
-        @y = Window.height - @image.height
+      if self.y < 0
+        self.y = 0
+      elsif self.y + self.image.height >= Window.height
+        self.y = Window.height - self.image.height
       end
       super
     end

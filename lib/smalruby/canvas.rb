@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require "smalruby/color"
-
 module Smalruby
   # お絵かきを表現するクラス
   class Canvas < Character

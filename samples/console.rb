@@ -2,6 +2,7 @@
 require 'smalruby'
 
 console1 = Console.new
+
 console1.on(:start) do
   loop do
     input = readline('> ')

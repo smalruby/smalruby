@@ -1,7 +1,3 @@
-AllCops:
-  Excludes:
-    - tmp/**
-
 MethodLength:
   Enabled: false
 
@@ -36,4 +32,10 @@ SymbolName:
   Enabled: false
 
 StringLiterals:
+  Enabled: false
+
+AsciiIdentifiers:
+  Enabled: false
+
+VariableName:
   Enabled: false

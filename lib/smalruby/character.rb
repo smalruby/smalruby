@@ -9,11 +9,19 @@ module Smalruby
     attr_accessor :event_handlers
     attr_accessor :threads
 
-    def initialize(x, y, image = nil, option = {})
-      if image.is_a?(String)
-        image = Image.load(asset_path(image))
+    def initialize(option = {})
+      opt = {
+        x: 0,
+        y: 0,
+        costume: nil,
+        visible: true
+      }.merge(option)
+
+      # TODO: コスチュームの配列に対応する
+      if opt[:costume].is_a?(String)
+        opt[:costume] = Image.load(asset_path(opt[:costume]))
       end
-      super(x, y, image)
+      super(opt[:x], opt[:y], opt[:costume])
 
       @event_handlers = {}
       @threads = []
@@ -23,8 +31,8 @@ module Smalruby
       @vector = { x: 1, y: 0 }
 
       [:visible].each do |k|
-        if option.key?(k)
-          send("#{k}=", option[k])
+        if opt.key?(k)
+          send("#{k}=", opt[k])
         end
       end
 
@@ -33,17 +41,20 @@ module Smalruby
 
     # @!group 動き
 
+    # (  )歩動かす
     def move(val = 1)
       self.x += @vector[:x] * val
       self.y += @vector[:y] * val
     end
 
+    # 振り返る
     def turn
       @vector[:x] *= -1
       @vector[:y] *= -1
       self.scale_x *= -1
     end
 
+    # もし端に着いたら、跳ね返る
     def turn_if_reach_wall
       max_width = Window.width - image.width
       if self.x < 0

@@ -4,7 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'smalruby/version'
 
 Gem::Specification.new do |spec|
+  platform = ENV['GEM_PLATFORM'] || Gem::Platform.local.to_s
+  is_windows = /windows|mingw|cygwin/i.match(platform)
+
   spec.name          = 'smalruby'
+  if is_windows
+    spec.platform      = 'x86-mingw32'
+  end
   spec.version       = Smalruby::VERSION
   spec.authors       = ['Kouji Takao']
   spec.email         = ['kouji.takao@gmail.com']
@@ -30,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-rubocop'
 
   spec.add_runtime_dependency 'activesupport'
-  if /windows|mingw|cygwin/i =~ RUBY_PLATFORM
+  if is_windows
     spec.add_runtime_dependency 'dxruby'
   else
     spec.add_runtime_dependency 'dxruby_sdl'

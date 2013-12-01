@@ -25,6 +25,13 @@ module Smalruby
         Window.caption = File.basename($PROGRAM_NAME)
         first = true
         Window.fps = 15
+
+        # サウンド関係の初期化処理
+        begin
+          Sound.new('')
+        rescue
+        end
+
         Window.loop do
           lock do
             if first

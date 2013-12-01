@@ -107,6 +107,15 @@ module Smalruby
 
     # @!endgroup
 
+    # @!group 音
+
+    def play(option = {})
+      @sound_cache ||= {}
+      (@sound_cache[option[:name]] ||= Sound.new(asset_path(option[:name]))).play
+    end
+
+    # @!endgroup
+
     def draw
       if @balloon
         @balloon.x = self.x + image.width / 2

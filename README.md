@@ -1,5 +1,7 @@
 # smalruby
 
+test.
+
 smalruby is a 2D game development library. This is part of "Smalruby"
 project that is a learning ruby programming environment for kids.
 

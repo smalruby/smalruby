@@ -17,7 +17,7 @@ module Smalruby
   #    start
   class Console < Character
     def initialize
-      super(0, 0)
+      super
     end
 
     def loop(&block)

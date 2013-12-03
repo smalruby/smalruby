@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'forwardable'
+require 'mutex_m'
 
 module Smalruby
   # キャラクターを表現するクラス
@@ -8,6 +9,9 @@ module Smalruby
 
     attr_accessor :event_handlers
     attr_accessor :threads
+
+    @@font_cache = {}
+    @@font_cache.extend(Mutex_m)
 
     def initialize(option = {})
       opt = {
@@ -72,7 +76,7 @@ module Smalruby
 
     def say(message)
       lines = message.to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
-      font = Font.new(16)
+      font = new_font(16)
       width = lines.map { |l| font.get_width(l) }.max
       height = lines.length * (font.size + 1)
       frame_size = 3
@@ -208,6 +212,13 @@ module Smalruby
 
     def asset_path(name)
       return File.expand_path("../../../assets/#{name}", __FILE__)
+    end
+
+    def new_font(size)
+      @@font_cache.synchronize do
+        @@font_cache[size] ||= Font.new(size)
+      end
+      return @@font_cache[size]
     end
   end
 end

@@ -25,7 +25,7 @@ module Smalruby
         size: 32,
         color: "white",
       }.merge(option)
-      image.draw_font(opt[:x], opt[:y], opt[:string], Font.new(opt[:size]),
+      image.draw_font(opt[:x], opt[:y], opt[:string], new_font(opt[:size]),
                       Color.smalruby_to_dxruby(opt[:color]))
     end
 

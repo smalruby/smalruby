@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'smalruby/version'
 require 'active_support/all'
-require 'active_support/concurrency/latch'
 require 'dxruby'
 
 require 'smalruby/world'
@@ -26,7 +25,8 @@ module Smalruby
         first = true
         Window.fps = 15
 
-        # サウンド関係の初期化処理
+        # HACK: DXRubyのためのサウンド関係の初期化処理。こうしておかな
+        # いとDirectSoundの初期化でエラーが発生する
         begin
           Sound.new('')
         rescue

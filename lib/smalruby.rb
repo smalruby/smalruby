@@ -20,68 +20,9 @@ module Smalruby
     @started = true
     begin
       if world.objects.any? { |o| /console/i !~ o.class.name }
-        # ウィンドウアプリケーション
-        Window.caption = File.basename($PROGRAM_NAME)
-        first = true
-        Window.fps = 15
-
-        # HACK: DXRubyのためのサウンド関係の初期化処理。こうしておかな
-        # いとDirectSoundの初期化でエラーが発生する
-        begin
-          Sound.new('')
-        rescue
-        end
-
-        Window.loop do
-          lock do
-            if first
-              world.objects.each do |object|
-                object.start
-              end
-              first = false
-            end
-            if Input.key_down?(K_ESCAPE)
-              exit
-            end
-            if Input.mouse_push?(M_LBUTTON) || Input.mouse_push?(M_RBUTTON) ||
-                Input.mouse_push?(M_MBUTTON)
-              x, y = Input.mouse_pos_x, Input.mouse_pos_y
-              s = Sprite.new(x, y)
-              s.collision = [0, 0, 1, 1]
-              buttons = []
-              if Input.mouse_down?(M_LBUTTON)
-                buttons << :left
-              end
-              if Input.mouse_down?(M_RBUTTON)
-                buttons << :right
-              end
-              if Input.mouse_down?(M_MBUTTON)
-                buttons << :center
-              end
-              s.check(world.objects).each do |o|
-                if o.respond_to?(:click)
-                  o.click(buttons)
-                end
-              end
-            end
-            if (keys = Input.keys).length > 0
-              key_down_and_push(keys)
-            end
-            world.objects.delete_if { |o|
-              if !o.alive?
-                o.join
-              end
-              o.vanished?
-            }
-            Sprite.draw(world.objects)
-          end
-        end
+        start_window_application
       else
-        # コンソールアプリケーション
-        world.objects.each do |object|
-          object.start
-        end
-        world.objects.each(&:join)
+        start_console_application
       end
     rescue SystemExit
     end
@@ -108,8 +49,59 @@ module Smalruby
   @draw_cv = ConditionVariable.new
 
   class << self
-
     private
+
+    def init_window_application
+      Window.caption = File.basename($PROGRAM_NAME)
+      Window.fps = 15
+
+      # HACK: DXRubyのためのサウンド関係の初期化処理。こうしておかな
+      # いとDirectSoundの初期化でエラーが発生する
+      begin
+        Sound.new('')
+      rescue
+      end
+    end
+
+    def start_window_application
+      init_window_application
+
+      first = true
+      Window.loop do
+        lock do
+          if Input.key_down?(K_ESCAPE)
+            exit
+          end
+
+          if first
+            world.objects.each do |object|
+              object.start
+            end
+            first = false
+          end
+
+          mouse_down_and_push
+
+          key_down_and_push
+
+          world.objects.delete_if do |o|
+            if !o.alive?
+              o.join
+            end
+            o.vanished?
+          end
+
+          Sprite.draw(world.objects)
+        end
+      end
+    end
+
+    def start_console_application
+      world.objects.each do |object|
+        object.start
+      end
+      world.objects.each(&:join)
+    end
 
     def lock(&block)
       @draw_mutex.synchronize do
@@ -118,17 +110,42 @@ module Smalruby
       end
     end
 
-    def key_down_and_push(keys)
-      world.objects.each do |o|
-        if o.respond_to?(:key_down)
-          o.key_down(keys)
+    def mouse_down_and_push
+      clickable_objects = world.objects.select { |o| o.respond_to?(:click) }
+      if clickable_objects.length > 0 &&
+          (Input.mouse_push?(M_LBUTTON) || Input.mouse_push?(M_RBUTTON) ||
+           Input.mouse_push?(M_MBUTTON))
+        buttons = []
+        {
+          left: M_LBUTTON,
+          right: M_RBUTTON,
+          center: M_MBUTTON,
+        }.each do |sym, const|
+          if Input.mouse_down?(const)
+            buttons << sym
+          end
+        end
+        s = Sprite.new(Input.mouse_pos_x, Input.mouse_pos_y)
+        s.collision = [0, 0, 1, 1]
+        s.check(clickable_objects).each do |o|
+          o.click(buttons)
         end
       end
-      pushed_keys = keys.select { |key| Input.key_push?(key) }
-      if pushed_keys.length > 0
+    end
+
+    def key_down_and_push
+      if (keys = Input.keys).length > 0
         world.objects.each do |o|
-          if o.respond_to?(:key_push)
-            o.key_push(pushed_keys)
+          if o.respond_to?(:key_down)
+            o.key_down(keys)
+          end
+        end
+        pushed_keys = keys.select { |key| Input.key_push?(key) }
+        if pushed_keys.length > 0
+          world.objects.each do |o|
+            if o.respond_to?(:key_push)
+              o.key_push(pushed_keys)
+            end
           end
         end
       end

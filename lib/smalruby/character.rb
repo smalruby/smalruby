@@ -7,11 +7,12 @@ module Smalruby
   class Character < Sprite
     extend Forwardable
 
+    cattr_accessor :font_cache
+    self.font_cache = {}
+    font_cache.extend(Mutex_m)
+
     attr_accessor :event_handlers
     attr_accessor :threads
-
-    @@font_cache = {}
-    @@font_cache.extend(Mutex_m)
 
     def initialize(option = {})
       opt = {
@@ -115,27 +116,15 @@ module Smalruby
 
     def play(option = {})
       @sound_cache ||= {}
-      (@sound_cache[option[:name]] ||= Sound.new(asset_path(option[:name]))).play
+      (@sound_cache[option[:name]] ||= Sound.new(asset_path(option[:name])))
+        .play
     end
 
     # @!endgroup
 
     def draw
-      if @balloon
-        @balloon.x = self.x + image.width / 2
-        if @balloon.x < 0
-          @balloon.x = 0
-        elsif @balloon.x + @balloon.image.width >= Window.width
-          @balloon.x = Window.width - @balloon.image.width
-        end
-        @balloon.y = self.y - @balloon.image.height
-        if @balloon.y < 0
-          @balloon.y = 0
-        elsif @balloon.y + @balloon.image.height >= Window.height
-          @balloon.y = Window.height - @balloon.image.height
-        end
-        @balloon.draw
-      end
+      draw_balloon
+
       if self.x < 0
         self.x = 0
       elsif self.x + image.width >= Window.width
@@ -215,10 +204,28 @@ module Smalruby
     end
 
     def new_font(size)
-      @@font_cache.synchronize do
-        @@font_cache[size] ||= Font.new(size)
+      self.class.font_cache.synchronize do
+        self.class.font_cache[size] ||= Font.new(size)
       end
-      return @@font_cache[size]
+      return self.class.font_cache[size]
+    end
+
+    def draw_balloon
+      if @balloon
+        @balloon.x = self.x + image.width / 2
+        if @balloon.x < 0
+          @balloon.x = 0
+        elsif @balloon.x + @balloon.image.width >= Window.width
+          @balloon.x = Window.width - @balloon.image.width
+        end
+        @balloon.y = self.y - @balloon.image.height
+        if @balloon.y < 0
+          @balloon.y = 0
+        elsif @balloon.y + @balloon.image.height >= Window.height
+          @balloon.y = Window.height - @balloon.image.height
+        end
+        @balloon.draw
+      end
     end
   end
 end

@@ -36,7 +36,7 @@ end
 
 task :rubocop do
   files = `git ls-files | grep -e '.rb$' | grep -v '^samples/'`
-  sh "rubocop #{files.split(/\s+/m).join(' ')}"
+  sh "rubocop -d #{files.split(/\s+/m).join(' ')}"
 end
 
 task :default => [:rubocop, :spec]

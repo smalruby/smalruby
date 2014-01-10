@@ -152,9 +152,7 @@ module Smalruby
       h = EventHandler.new(self, options, &block)
       @event_handlers[event] << h
 
-      if Smalruby.started?
-        @threads << h.call
-      end
+      @threads << h.call if event == :start && Smalruby.started?
     end
 
     def start

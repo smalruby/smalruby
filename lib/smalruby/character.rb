@@ -13,6 +13,7 @@ module Smalruby
 
     attr_accessor :event_handlers
     attr_accessor :threads
+    attr_accessor :checking_hit_targets
 
     def initialize(option = {})
       opt = {
@@ -30,6 +31,7 @@ module Smalruby
 
       @event_handlers = {}
       @threads = []
+      @checking_hit_targets = []
 
       self.scale_x = 1.0
       self.scale_y = 1.0
@@ -50,6 +52,11 @@ module Smalruby
     def move(val = 1)
       self.x += @vector[:x] * val
       self.y += @vector[:y] * val
+    end
+
+    # (  )歩後ろに動かす
+    def move_back(val = 1)
+      move(-val)
     end
 
     # 振り返る
@@ -152,7 +159,14 @@ module Smalruby
       h = EventHandler.new(self, options, &block)
       @event_handlers[event] << h
 
-      @threads << h.call if event == :start && Smalruby.started?
+      case event
+      when :start
+        @threads << h.call if Smalruby.started?
+      when :hit
+        @checking_hit_targets << options
+        @checking_hit_targets.flatten!
+        @checking_hit_targets.uniq!
+      end
     end
 
     def start
@@ -185,6 +199,19 @@ module Smalruby
           next
         end
         @threads << h.call(Input.mouse_pos_x, Input.mouse_pos_y)
+      end
+    end
+
+    def hit
+      # TODO: なんでもいいからキャラクターに当たった場合に対応する
+      @checking_hit_targets &= World.instance.objects
+      objects = check(@checking_hit_targets)
+      return if objects.empty?
+      @event_handlers[:hit].try(:each) do |h|
+        if h.options.length == 0 && !h.options.any? { |o| objects.include?(o) }
+          next
+        end
+        @threads << h.call(objects)
       end
     end
 

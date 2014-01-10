@@ -84,6 +84,8 @@ module Smalruby
 
           key_down_and_push
 
+          hit
+
           world.objects.delete_if do |o|
             if !o.alive?
               o.join
@@ -147,6 +149,14 @@ module Smalruby
               o.key_push(pushed_keys)
             end
           end
+        end
+      end
+    end
+
+    def hit
+      world.objects.each do |o|
+        if o.respond_to?(:hit)
+          o.hit
         end
       end
     end

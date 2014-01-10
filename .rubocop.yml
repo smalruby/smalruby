@@ -37,3 +37,6 @@ SymbolName:
 
 StringLiterals:
   Enabled: false
+
+EndOfLine:
+  Enabled: false

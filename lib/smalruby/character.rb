@@ -233,7 +233,8 @@ module Smalruby
     private
 
     def asset_path(name)
-      paths = [Pathname("../#{name}").expand_path(Pathname($PROGRAM_NAME).expand_path(Dir.pwd)),
+      program_path = Pathname($PROGRAM_NAME).expand_path(Dir.pwd)
+      paths = [Pathname("../#{name}").expand_path(program_path),
                Pathname("../../../assets/#{name}").expand_path(__FILE__)]
       paths.find { |path| path.file? }.to_s
     end

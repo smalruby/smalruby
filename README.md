@@ -1,5 +1,8 @@
 # smalruby
 
+[![Gem Version](https://badge.fury.io/rb/smalruby.png)](http://badge.fury.io/rb/smalruby)
+[![Build Status](https://travis-ci.org/smalruby/smalruby.png?branch=master)](https://travis-ci.org/smalruby/smalruby)
+
 smalruby is a 2D game development library. This is part of "Smalruby"
 project that is a learning ruby programming environment for kids.
 

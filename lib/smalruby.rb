@@ -2,6 +2,7 @@
 require 'smalruby/version'
 require 'active_support/all'
 require 'dxruby'
+require 'english'
 
 require 'smalruby/world'
 require 'smalruby/color'

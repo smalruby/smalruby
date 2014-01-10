@@ -6,7 +6,8 @@ smalruby's license (see the file LICENSE) except some files
 mentioned below.
 
 assets/car1.png, assets/car2.png, assets/car3.png, assets/car4.png,
-assets/cat1.png, assets/cat2.png, assets/cat3.png, assets/frog1.png:
+assets/cat1.png, assets/cat2.png, assets/cat3.png, assets/frog1.png,
+samples/extra_car.png:
 
   These are downloaded from ICON HOIHOI http://iconhoihoi.oops.jp/.
 

@@ -61,18 +61,7 @@ module Smalruby
 
     # もし端に着いたら、跳ね返る
     def turn_if_reach_wall
-      max_width = Window.width - image.width
-      max_height = Window.height - image.height
-
-      if self.x < 0 || self.x >= max_width || self.y < 0 || self.y >= max_height
-        self.x = 0 if self.x < 0
-        self.x = max_width - 1 if self.x >= max_width
-
-        self.y = 0 if self.y < 0
-        self.y = max_height - 1 if self.y >= max_height
-
-        turn
-      end
+      turn if reach_wall?
     end
 
     # (  )度回転する
@@ -117,10 +106,16 @@ module Smalruby
 
     # @!group 調べる
 
+    # 距離
     def distance(x, y)
-      res = Math.sqrt((self.x + center_x - x).abs**2 +
-                      (self.y + center_y - y).abs**2).to_i
-      return res
+      Math.sqrt((self.x + center_x - x).abs**2 +
+                (self.y + center_y - y).abs**2).to_i
+    end
+
+    # 端に着いた
+    def reach_wall?
+      self.x < 0 || self.x >= (Window.width - image.width) ||
+        self.y < 0 || self.y >= (Window.height - image.height)
     end
 
     # @!endgroup

@@ -11,5 +11,5 @@ car1.on(:start) do
 end
 
 car1.on(:click) do
-  turn
+  rotate(45)
 end

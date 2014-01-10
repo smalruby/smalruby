@@ -62,13 +62,26 @@ module Smalruby
     # もし端に着いたら、跳ね返る
     def turn_if_reach_wall
       max_width = Window.width - image.width
-      if self.x < 0
-        self.x = 0
-        turn
-      elsif self.x >= max_width
-        self.x = max_width - 1
+      max_height = Window.height - image.height
+
+      if self.x < 0 || self.x >= max_width || self.y < 0 || self.y >= max_height
+        self.x = 0 if self.x < 0
+        self.x = max_width - 1 if self.x >= max_width
+
+        self.y = 0 if self.y < 0
+        self.y = max_height - 1 if self.y >= max_height
+
         turn
       end
+    end
+
+    # (  )度回転する
+    def rotate(angle)
+      radian = angle * Math::PI / 180
+      x, y = @vector[:x], @vector[:y]
+      @vector[:x] = x * Math.cos(radian) - y * Math.sin(radian)
+      @vector[:y] = x * Math.sin(radian) + y * Math.cos(radian)
+      self.angle = (self.angle + angle) % 360
     end
 
     # @!endgroup

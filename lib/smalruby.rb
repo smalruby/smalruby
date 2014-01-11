@@ -3,6 +3,7 @@ require 'smalruby/version'
 require 'active_support/all'
 require 'dxruby'
 require 'English'
+require 'pathname'
 
 require 'smalruby/world'
 require 'smalruby/color'

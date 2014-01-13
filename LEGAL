@@ -5,8 +5,10 @@ All the files in this distribution are covered under either the
 smalruby's license (see the file LICENSE) except some files
 mentioned below.
 
-assets/car1.png, assets/car2.png, assets/car3.png, assets/car4.png,
-assets/cat1.png, assets/cat2.png, assets/cat3.png, assets/frog1.png,
+assets/ball1.png, assets/ball2.png, assets/ball3.png,
+assets/ball4.png, assets/ball5.png, assets/ball6.png, assets/car1.png,
+assets/car2.png, assets/car3.png, assets/car4.png, assets/cat1.png,
+assets/cat2.png, assets/cat3.png, assets/frog1.png,
 samples/extra_car.png:
 
   These are downloaded from ICON HOIHOI http://iconhoihoi.oops.jp/.

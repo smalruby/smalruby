@@ -216,7 +216,19 @@ module Smalruby
     end
 
     def alive?
-      return @threads.any?(&:alive?)
+      @threads.delete_if { |t|
+        if t.alive?
+          false
+        else
+          begin
+            t.join
+          rescue => e
+            print_exception(e)
+          end
+          true
+        end
+      }
+      @threads.length > 0
     end
 
     def join
@@ -262,6 +274,11 @@ module Smalruby
         end
         @balloon.draw
       end
+    end
+
+    def print_exception(exception)
+      $stderr.puts("#{exception.class}: #{exception.message}")
+      $stderr.puts("        #{exception.backtrace.join("\n        ")}")
     end
   end
 end

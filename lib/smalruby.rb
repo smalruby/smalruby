@@ -168,7 +168,5 @@ end
 include Smalruby
 
 at_exit do
-  if !Smalruby.started?
-    Smalruby.start
-  end
+  Smalruby.start if !$! && !Smalruby.started?
 end

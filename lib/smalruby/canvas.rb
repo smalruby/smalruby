@@ -4,12 +4,14 @@ module Smalruby
   # お絵かきを表現するクラス
   class Canvas < Character
     def initialize(option = {})
-      opt = {
+      defaults = {
         x: 0,
         y: 0,
         width: Window.width,
         height: Window.height,
-      }.merge(option)
+      }
+      opt = process_optional_arguments(option, defaults)
+
       opt[:costume] = Image.new(opt[:width], opt[:height])
       super(opt)
       image.set_color_key([0, 0, 0])

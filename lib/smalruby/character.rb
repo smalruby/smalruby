@@ -16,16 +16,21 @@ module Smalruby
     attr_accessor :checking_hit_targets
 
     def initialize(option = {})
-      opt = {
+      defaults = {
         x: 0,
         y: 0,
+        width: 1,
+        height: 1,
         costume: nil,
         visible: true
-      }.merge(option)
+      }
+      opt = process_optional_arguments(option, defaults)
 
       # TODO: コスチュームの配列に対応する
       if opt[:costume].is_a?(String)
         opt[:costume] = Image.load(asset_path(opt[:costume]))
+      else
+        opt[:costume] = Image.new(opt[:width], opt[:height])
       end
       super(opt[:x], opt[:y], opt[:costume])
 
@@ -130,8 +135,13 @@ module Smalruby
     # @!group 音
 
     def play(option = {})
+      defaults = {
+        name: 'piano_do.wav',
+      }
+      opt = process_optional_arguments(option, defaults)
+
       @sound_cache ||= {}
-      (@sound_cache[option[:name]] ||= Sound.new(asset_path(option[:name])))
+      (@sound_cache[opt[:name]] ||= Sound.new(asset_path(opt[:name])))
         .play
     end
 
@@ -274,6 +284,15 @@ module Smalruby
         end
         @balloon.draw
       end
+    end
+
+    def process_optional_arguments(options, defaults)
+      unknown_keys = options.keys - defaults.keys
+      if unknown_keys.length > 0
+        s = unknown_keys.map { |k| "#{k}: #{options[k].inspect}" }.join(', ')
+        raise ArgumentError, "Unknown options: #{s}"
+      end
+      defaults.merge(options)
     end
 
     def print_exception(exception)

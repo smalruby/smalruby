@@ -290,7 +290,7 @@ module Smalruby
       unknown_keys = options.keys - defaults.keys
       if unknown_keys.length > 0
         s = unknown_keys.map { |k| "#{k}: #{options[k].inspect}" }.join(', ')
-        raise ArgumentError, "Unknown options: #{s}"
+        fail ArgumentError, "Unknown options: #{s}"
       end
       defaults.merge(options)
     end

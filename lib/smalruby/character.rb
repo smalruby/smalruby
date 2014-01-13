@@ -208,10 +208,10 @@ module Smalruby
       objects = check(@checking_hit_targets)
       return if objects.empty?
       @event_handlers[:hit].try(:each) do |h|
-        if h.options.length == 0 && !h.options.any? { |o| objects.include?(o) }
+        if h.options.length > 0 && !h.options.any? { |o| objects.include?(o) }
           next
         end
-        @threads << h.call(objects)
+        @threads << h.call(h.options & objects)
       end
     end
 

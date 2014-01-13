@@ -13,7 +13,7 @@ module Smalruby
       opt = process_optional_arguments(option, defaults)
 
       opt[:costume] = Image.new(opt[:width], opt[:height])
-      super(opt)
+      super(opt.reject { |k, v| [:width, :height].include?(k) })
       image.set_color_key([0, 0, 0])
     end
 

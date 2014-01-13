@@ -19,8 +19,6 @@ module Smalruby
       defaults = {
         x: 0,
         y: 0,
-        width: 1,
-        height: 1,
         costume: nil,
         visible: true
       }
@@ -29,8 +27,6 @@ module Smalruby
       # TODO: コスチュームの配列に対応する
       if opt[:costume].is_a?(String)
         opt[:costume] = Image.load(asset_path(opt[:costume]))
-      else
-        opt[:costume] = Image.new(opt[:width], opt[:height])
       end
       super(opt[:x], opt[:y], opt[:costume])
 

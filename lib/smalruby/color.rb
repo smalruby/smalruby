@@ -153,9 +153,14 @@ module Smalruby
     # Smalrubyの色名からDXRubyの色コードに変換する
     def smalruby_to_dxruby(color)
       if color.is_a?(String)
-        return NAME_TO_CODE[color.downcase]
+        color = color.downcase
+        if color == 'random'
+          [rand(0..0xff), rand(0..0xff), rand(0..0xff)]
+        else
+          NAME_TO_CODE[color]
+        end
       else
-        return color
+        color
       end
     end
   end

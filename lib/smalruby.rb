@@ -51,6 +51,7 @@ module Smalruby
   @draw_cv = ConditionVariable.new
 
   class << self
+
     private
 
     def init_window_application

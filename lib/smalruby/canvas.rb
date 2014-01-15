@@ -14,7 +14,6 @@ module Smalruby
 
       opt[:costume] = Image.new(opt[:width], opt[:height])
       super(opt.reject { |k, v| [:width, :height].include?(k) })
-      image.set_color_key([0, 0, 0])
     end
 
     # @!group ペン

@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency 'guard-rubocop'
 
+  spec.add_runtime_dependency 'mime-types', '~> 1.6'
   spec.add_runtime_dependency 'activesupport'
   if is_windows
     spec.add_runtime_dependency 'dxruby'

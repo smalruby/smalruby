@@ -7,9 +7,11 @@ module Smalruby
     include Singleton
 
     attr_accessor :objects
+    attr_accessor :board
 
     def initialize
       @objects = []
+      @board = nil
     end
   end
 end

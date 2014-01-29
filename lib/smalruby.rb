@@ -5,6 +5,7 @@ require 'dxruby'
 require 'English'
 require 'pathname'
 
+require 'smalruby/util'
 require 'smalruby/world'
 require 'smalruby/color'
 require 'smalruby/character'
@@ -15,6 +16,8 @@ module Smalruby
 
   autoload :Console
   autoload :Canvas
+  autoload :Scene
+  autoload :Hardware
 
   module_function
 
@@ -42,6 +45,10 @@ module Smalruby
     @draw_mutex.synchronize do
       @draw_cv.wait(@draw_mutex)
     end
+  end
+
+  def init_hardware(options = {})
+    Hardware.init(options)
   end
 
   private

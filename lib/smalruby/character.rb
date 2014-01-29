@@ -11,6 +11,10 @@ module Smalruby
     self.font_cache = {}
     font_cache.extend(Mutex_m)
 
+    cattr_accessor :hardware_cache
+    self.hardware_cache = {}
+    hardware_cache.extend(Mutex_m)
+
     attr_accessor :event_handlers
     attr_accessor :threads
     attr_accessor :checking_hit_targets
@@ -139,6 +143,18 @@ module Smalruby
       @sound_cache ||= {}
       (@sound_cache[opt[:name]] ||= Sound.new(asset_path(opt[:name])))
         .play
+    end
+
+    # @!endgroup
+
+    # @!group ハードウェア
+
+    def led(pin)
+      key = [:led, pin]
+      self.class.hardware_cache.synchronize do
+        self.class.hardware_cache[key] ||= Hardware::Led.new(pin: pin)
+      end
+      self.class.hardware_cache[key]
     end
 
     # @!endgroup

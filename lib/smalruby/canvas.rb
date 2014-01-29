@@ -3,17 +3,15 @@
 module Smalruby
   # お絵かきを表現するクラス
   class Canvas < Character
-    def initialize(option = {})
+    def initialize(options = {})
       defaults = {
-        x: 0,
-        y: 0,
         width: Window.width,
         height: Window.height,
       }
-      opt = process_optional_arguments(option, defaults)
+      opts = Util.process_options(options, defaults)
 
-      opt[:costume] = Image.new(opt[:width], opt[:height])
-      super(opt.reject { |k, v| [:width, :height].include?(k) })
+      opts[:costume] = Image.new(opts[:width], opts[:height])
+      super(opts.reject { |k, v| defaults.keys.include?(k) })
     end
 
     # @!group ペン

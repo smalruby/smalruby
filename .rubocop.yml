@@ -32,9 +32,6 @@ AsciiComments:
 CaseEquality:
   Enabled: false
 
-SymbolName:
-  Enabled: false
-
 StringLiterals:
   Enabled: false
 

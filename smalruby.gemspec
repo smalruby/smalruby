@@ -42,4 +42,5 @@ Gem::Specification.new do |spec|
   else
     spec.add_runtime_dependency 'dxruby_sdl'
   end
+  spec.add_runtime_dependency 'dino', '~> 0.10.0'
 end

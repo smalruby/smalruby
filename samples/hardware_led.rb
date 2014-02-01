@@ -4,9 +4,11 @@ DESCRIPTION = <<EOS
 LEDを1秒間隔で点滅させます
 EOS
 
+# デジタルの13番ピンに接続してください。
+
 require 'smalruby'
 
-init_hardware(device: 'COM5')
+init_hardware
 
 scene1 = Scene.new(color: 'white')
 
@@ -14,9 +16,9 @@ scene1.on(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do
-    led(13).on
+    led('D13').on
     sleep(1)
-    led(13).off
+    led('D13').off
     sleep(1)
   end
 end

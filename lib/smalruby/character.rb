@@ -149,12 +149,24 @@ module Smalruby
 
     # @!group ハードウェア
 
+    # LED
     def led(pin)
-      key = [:led, pin]
-      self.class.hardware_cache.synchronize do
-        self.class.hardware_cache[key] ||= Hardware::Led.new(pin: pin)
-      end
-      self.class.hardware_cache[key]
+      Hardware.create_hardware(Hardware::Led, pin)
+    end
+
+    # RGB LED(アノード)
+    def rgb_led_anode(pin)
+      Hardware.create_hardware(Hardware::RgbLedAnode, pin)
+    end
+
+    # RGB LED(カソード)
+    def rgb_led_cathode(pin)
+      Hardware.create_hardware(Hardware::RgbLedCathode, pin)
+    end
+
+    # 汎用的なセンサー
+    def sensor(pin)
+      Hardware.create_hardware(Hardware::Sensor, pin)
     end
 
     # @!endgroup
@@ -188,6 +200,8 @@ module Smalruby
         @checking_hit_targets << options
         @checking_hit_targets.flatten!
         @checking_hit_targets.uniq!
+      when :sensor_change
+        sensor(options.first)
       end
     end
 
@@ -234,6 +248,13 @@ module Smalruby
           next
         end
         @threads << h.call(h.options & objects)
+      end
+    end
+
+    def sensor_change(pin, value)
+      @event_handlers[:sensor_change].try(:each) do |h|
+        next unless h.options.include?(pin)
+        @threads << h.call(value)
       end
     end
 

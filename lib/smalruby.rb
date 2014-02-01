@@ -95,6 +95,8 @@ module Smalruby
 
           hit
 
+          sensor_change
+
           world.objects.delete_if do |o|
             if !o.alive?
               o.join
@@ -166,6 +168,24 @@ module Smalruby
       world.objects.each do |o|
         if o.respond_to?(:hit)
           o.hit
+        end
+      end
+    end
+
+    def sensor_change
+      if world.sensor_change_queue.length > 0
+        sensor_change_queue = nil
+        world.sensor_change_queue.synchronize do
+          sensor_change_queue = world.sensor_change_queue.dup
+          world.sensor_change_queue.clear
+        end
+
+        world.objects.each do |o|
+          if o.respond_to?(:sensor_change)
+            sensor_change_queue.each do |pin, value|
+              o.sensor_change(pin, value)
+            end
+          end
         end
       end
     end

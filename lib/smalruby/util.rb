@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Smalruby
   module Util
     module_function
@@ -14,6 +15,13 @@ module Smalruby
     def print_exception(exception)
       $stderr.puts("#{exception.class}: #{exception.message}")
       $stderr.puts("        #{exception.backtrace.join("\n        ")}")
+    end
+
+    # プラットフォームがWindowsかどうかを返す
+    #
+    # @return [Boolean] Windowsの場合はtrue、そうでない場合はfalseを返す
+    def windows?
+      /windows|mingw|cygwin/i =~ RbConfig::CONFIG['arch']
     end
   end
 end

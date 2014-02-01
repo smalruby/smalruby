@@ -6,7 +6,7 @@ if Util.windows?
 
   if Dino::VERSION >= '0.11'
     class Dino::TxRx::Base
-      def gets(timeout=0.005)
+      def gets(timeout = 0.005)
         return nil unless IO.select([io], nil, nil, timeout)
         io.read_timeout = (timeout * 1000).to_i
         bytes = []
@@ -32,7 +32,7 @@ if Util.windows?
         end
       end
 
-      def gets(timeout=0.005)
+      def gets(timeout = 0.005)
         return nil unless IO.select([io], nil, nil, timeout)
         io.read_timeout = (timeout * 1000).to_i
         bytes = []

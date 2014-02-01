@@ -23,6 +23,10 @@ module Smalruby
         @value = 0
         @threshold = options[:threshold] || DEFAULT_THRESHOLD
 
+        start_receiving_data
+      end
+
+      def start_receiving_data
         prev_data = 0
         when_data_received { |data|
           begin
@@ -33,7 +37,7 @@ module Smalruby
               prev_data = data
             end
           rescue
-            Util.print_exception($!)
+            Util.print_exception($ERROR_INFO)
           end
         }
       end

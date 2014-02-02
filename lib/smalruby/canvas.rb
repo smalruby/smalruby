@@ -6,7 +6,7 @@ module Smalruby
     def initialize(options = {})
       defaults = {
         width: Window.width,
-        height: Window.height,
+        height: Window.height
       }
       opts = Util.process_options(options, defaults)
 
@@ -21,7 +21,7 @@ module Smalruby
         x: 0,
         y: 0,
         string: "",
-        size: 32,
+        size: 32
       }.merge(DEFAULT_COLOR_OPTION)
       opt = process_optional_arguments(option, defaults)
 
@@ -78,7 +78,7 @@ module Smalruby
     private
 
     DEFAULT_COLOR_OPTION = {
-      color: 'white',
+      color: 'white'
     }
     private_constant :DEFAULT_COLOR_OPTION
 
@@ -91,7 +91,7 @@ module Smalruby
       x1: nil,
       y1: nil,
       x2: nil,
-      y2: nil,
+      y2: nil
     }
     private_constant :DEFAULT_RECT_OPTION
 
@@ -101,7 +101,7 @@ module Smalruby
         left: option[:x1],
         top: option[:y1],
         right: option[:x2],
-        bottom: option[:y2],
+        bottom: option[:y2]
       }.merge(option)
       process_optional_arguments(opt, defaults)
     end
@@ -110,7 +110,7 @@ module Smalruby
       defaults = {
         x: 5,
         y: 5,
-        r: 5,
+        r: 5
       }.merge(DEFAULT_COLOR_OPTION)
       process_optional_arguments(option, defaults)
     end

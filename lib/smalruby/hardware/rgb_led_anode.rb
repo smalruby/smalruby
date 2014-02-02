@@ -20,7 +20,7 @@ module Smalruby
       # RGB LEDをオンにする
       def on(options = {})
         defaults = {
-          color: 'white',
+          color: 'white'
         }
         opts = Util.process_options(options, defaults)
 

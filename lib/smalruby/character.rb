@@ -136,7 +136,7 @@ module Smalruby
 
     def play(option = {})
       defaults = {
-        name: 'piano_do.wav',
+        name: 'piano_do.wav'
       }
       opt = process_optional_arguments(option, defaults)
 

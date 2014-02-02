@@ -5,7 +5,7 @@ module Smalruby
   class Scene < Canvas
     def initialize(options = {})
       defaults = {
-        color: 'black',
+        color: 'black'
       }
       opts = Util.process_options(options, defaults)
 

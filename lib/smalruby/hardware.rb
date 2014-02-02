@@ -26,7 +26,7 @@ module Smalruby
       fail 'already started.' if @started
 
       defaults = {
-        device: nil,
+        device: nil
       }
       opt = Util.process_options(options, defaults)
 

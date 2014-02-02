@@ -132,7 +132,7 @@ module Smalruby
         {
           left: M_LBUTTON,
           right: M_RBUTTON,
-          center: M_MBUTTON,
+          center: M_MBUTTON
         }.each do |sym, const|
           if Input.mouse_down?(const)
             buttons << sym

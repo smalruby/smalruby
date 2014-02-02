@@ -266,7 +266,8 @@ module Smalruby
           begin
             t.join
           rescue => e
-            print_exception(e)
+            Util.print_exception(e)
+            exit(1)
           end
           true
         end

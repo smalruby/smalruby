@@ -24,6 +24,7 @@ module Smalruby
         x: 0,
         y: 0,
         costume: nil,
+        angle: 0,
         visible: true
       }
       opt = process_optional_arguments(option, defaults)
@@ -46,6 +47,10 @@ module Smalruby
         if opt.key?(k)
           send("#{k}=", opt[k])
         end
+      end
+
+      if opt[:angle] != 0
+        rotate(opt[:angle])
       end
 
       World.instance.objects << self

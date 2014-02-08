@@ -83,11 +83,16 @@ module Smalruby
 
     # (  )度回転する
     def rotate(angle)
-      radian = angle * Math::PI / 180
-      x, y = @vector[:x], @vector[:y]
-      @vector[:x] = x * Math.cos(radian) - y * Math.sin(radian)
-      @vector[:y] = x * Math.sin(radian) + y * Math.cos(radian)
-      self.angle = (self.angle + angle) % 360
+      self.angle += angle
+    end
+
+    # (　)度に向ける
+    def angle=(val)
+      val %= 360
+      radian = val * Math::PI / 180
+      @vector[:x] = self.scale_x * Math.cos(radian)
+      @vector[:y] = self.scale_x * Math.sin(radian)
+      super(val)
     end
 
     # @!endgroup

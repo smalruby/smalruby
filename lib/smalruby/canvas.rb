@@ -5,6 +5,8 @@ module Smalruby
   class Canvas < Character
     def initialize(options = {})
       defaults = {
+        x: 0,
+        y: 0,
         width: Window.width,
         height: Window.height
       }

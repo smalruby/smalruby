@@ -13,7 +13,7 @@ module Smalruby
       opts = Util.process_options(options, defaults)
 
       opts[:costume] = Image.new(opts[:width], opts[:height])
-      super(opts.reject { |k, v| defaults.keys.include?(k) })
+      super(opts.reject { |k, v| [:width, :height].include?(k) })
     end
 
     # @!group ペン

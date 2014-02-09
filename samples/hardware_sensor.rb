@@ -4,9 +4,9 @@ require 'smalruby'
 
 init_hardware
 
-scene1 = Scene.new(color: 'white')
+stage1 = Stage.new(color: 'white')
 
-scene1.on(:sensor_change, 'A0') do |value|
+stage1.on(:sensor_change, 'A0') do |value|
   v = sensor('A0').value
   if 0 <= v && v <= 255
     fill(color: 'red')

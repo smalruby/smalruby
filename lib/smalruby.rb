@@ -16,7 +16,7 @@ module Smalruby
 
   autoload :Console
   autoload :Canvas
-  autoload :Scene
+  autoload :Stage
   autoload :Hardware
 
   module_function

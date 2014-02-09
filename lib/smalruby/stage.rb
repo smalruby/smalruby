@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 module Smalruby
-  # シーンを表現するクラス
-  class Scene < Canvas
+  # ステージを表現するクラス
+  class Stage < Canvas
     def initialize(options = {})
       defaults = {
         color: 'black'

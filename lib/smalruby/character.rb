@@ -99,8 +99,14 @@ module Smalruby
 
     # @!group 見た目
 
-    def say(message)
-      lines = message.to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
+    def say(options = {})
+      defaults = {
+        message: '',
+        second: 0,
+      }
+      opts = process_optional_arguments(options, defaults)
+
+      lines = opts[:message].to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
       font = new_font(16)
       width = lines.map { |l| font.get_width(l) }.max
       height = lines.length * (font.size + 1)

@@ -11,9 +11,9 @@ require 'smalruby'
 
 init_hardware
 
-scene1 = Scene.new(color: 'white')
+stage1 = Stage.new(color: 'white')
 
-scene1.on(:start) do
+stage1.on(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do

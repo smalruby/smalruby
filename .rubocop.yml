@@ -37,3 +37,6 @@ StringLiterals:
 
 EndOfLine:
   Enabled: false
+
+TrailingComma:
+  Enabled: false

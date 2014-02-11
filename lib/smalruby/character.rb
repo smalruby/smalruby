@@ -95,6 +95,20 @@ module Smalruby
       super(val)
     end
 
+    # (  )に向ける
+    def point_towards(target)
+      if target == :mouse
+        tx = Input.mouse_pos_x
+        ty = Input.mouse_pos_y
+      else
+        tx = target.x
+        ty = target.y
+      end
+      dx = tx - x
+      dy = ty - y
+      self.angle = Math.atan2(dy, dx) * 180 / Math::PI
+    end
+
     # @!endgroup
 
     # @!group 見た目
@@ -105,6 +119,13 @@ module Smalruby
         second: 0,
       }
       opts = process_optional_arguments(options, defaults)
+
+      if @balloon
+        @balloon.vanish
+        @balloon = nil
+      end
+
+      return if opts[:message].empty?
 
       lines = opts[:message].to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
       font = new_font(16)
@@ -144,6 +165,10 @@ module Smalruby
     def reach_wall?
       self.x < 0 || self.x >= (Window.width - image.width) ||
         self.y < 0 || self.y >= (Window.height - image.height)
+    end
+
+    def hit?(other)
+      check([other]).length > 0
     end
 
     # @!endgroup

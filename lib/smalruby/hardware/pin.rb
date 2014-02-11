@@ -6,6 +6,10 @@ module Smalruby
     module Pin
       module_function
 
+      DIO_DINO_RE = /\A([0-9]|1[0-3])\z/
+      DIO_SMALRUBY_RE = /\AD([0-9]|1[0-3])\z/
+      AI_RE = /\AA[0-5]\z/
+
       # Smalrubyのピン番号をDinoのピン番号に変換する
       #
       # ピン番号が0～13、D0～D13、A0～A5でなければ例外が発生する
@@ -16,11 +20,11 @@ module Smalruby
       def smalruby_to_dino(pin)
         pin = pin.to_s
         case pin
-        when /\A[0-9]|1[0-3]\z/
+        when DIO_DINO_RE
           pin.to_i
-        when /\AD[0-9]|D1[0-3]\z/
+        when DIO_SMALRUBY_RE
           pin[1..-1].to_i
-        when /\AA[0-5]\z/
+        when AI_RE
           pin
         else
           fail "ハードウェアのピンの番号が間違っています: #{pin}"
@@ -36,11 +40,11 @@ module Smalruby
       def dino_to_smalruby(pin)
         pin = pin.to_s
         case pin
-        when /\A[0-9]|1[0-3]\z/
+        when DIO_DINO_RE
           "D#{pin}"
-        when /\AD[0-9]|D1[0-3]\z/
+        when DIO_SMALRUBY_RE
           pin
-        when /\AA[0-5]\z/
+        when AI_RE
           pin
         else
           fail "ハードウェアのピンの番号が間違っています: #{pin}"

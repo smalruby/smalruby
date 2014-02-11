@@ -145,9 +145,11 @@ module Smalruby
                      width + (frame_size + margin_size) + margin_size - 1,
                      height + (frame_size + margin_size) + margin_size - 1,
                      [255, 255, 255])
-      image.draw_font(frame_size + margin_size,
-                      frame_size + margin_size,
-                      lines.join("\n"), font, [0, 0, 0])
+      lines.each.with_index do |line, row|
+        image.draw_font(frame_size + margin_size,
+                        frame_size + margin_size + (font.size + 1) * row,
+                        line, font, [0, 0, 0])
+      end
       @balloon = Sprite.new(self.x, self.y, image)
     end
 

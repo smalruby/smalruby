@@ -125,9 +125,10 @@ module Smalruby
         @balloon = nil
       end
 
-      return if opts[:message].empty?
+      message = opts[:message].to_s
+      return if message.empty?
 
-      lines = opts[:message].to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
+      lines = message.to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
       font = new_font(16)
       width = lines.map { |l| font.get_width(l) }.max
       height = lines.length * (font.size + 1)

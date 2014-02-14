@@ -97,6 +97,8 @@ module Smalruby
 
           sensor_change
 
+          button_change
+
           world.objects.delete_if do |o|
             if !o.alive?
               o.join
@@ -184,6 +186,28 @@ module Smalruby
           if o.respond_to?(:sensor_change)
             sensor_change_queue.each do |pin, value|
               o.sensor_change(pin, value)
+            end
+          end
+        end
+      end
+    end
+
+    def button_change
+      if world.button_change_queue.length > 0
+        queue = nil
+        world.button_change_queue.synchronize do
+          queue = world.button_change_queue.dup
+          world.button_change_queue.clear
+        end
+
+        world.objects.each do |o|
+          if o.respond_to?(:button_up) && o.respond_to?(:button_down)
+            queue.each do |pin, up_or_down|
+              if up_or_down == :up
+                o.button_up(pin)
+              else
+                o.button_down(pin)
+              end
             end
           end
         end

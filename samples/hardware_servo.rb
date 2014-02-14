@@ -11,6 +11,8 @@ init_hardware
 stage1 = Stage.new(color: 'white')
 
 stage1.on(:start) do
+  draw_font(string: DESCRIPTION, color: 'black')
+
   servo('D3').position = 90
 end
 

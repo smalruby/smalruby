@@ -208,14 +208,19 @@ module Smalruby
       Hardware.create_hardware(Hardware::RgbLedCathode, pin)
     end
 
-    # 汎用的なセンサー
-    def sensor(pin)
-      Hardware.create_hardware(Hardware::Sensor, pin)
-    end
-
     # サーボモーター
     def servo(pin)
       Hardware.create_hardware(Hardware::Servo, pin)
+    end
+
+    # ボタン
+    def button(pin)
+      Hardware.create_hardware(Hardware::Button, pin)
+    end
+
+    # 汎用的なセンサー
+    def sensor(pin)
+      Hardware.create_hardware(Hardware::Sensor, pin)
     end
 
     # @!endgroup
@@ -251,6 +256,8 @@ module Smalruby
         @checking_hit_targets.uniq!
       when :sensor_change
         sensor(options.first)
+      when :button_up, :button_down
+        button(options.first)
       end
     end
 
@@ -304,6 +311,20 @@ module Smalruby
       @event_handlers[:sensor_change].try(:each) do |h|
         next unless h.options.include?(pin)
         @threads << h.call(value)
+      end
+    end
+
+    def button_up(pin)
+      @event_handlers[:button_up].try(:each) do |h|
+        next unless h.options.include?(pin)
+        @threads << h.call
+      end
+    end
+
+    def button_down(pin)
+      @event_handlers[:button_down].try(:each) do |h|
+        next unless h.options.include?(pin)
+        @threads << h.call
       end
     end
 

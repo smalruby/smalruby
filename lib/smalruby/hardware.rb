@@ -12,8 +12,10 @@ module Smalruby
     autoload :Led
     autoload :RgbLedAnode
     autoload :RgbLedCathode
-    autoload :Sensor
     autoload :Servo
+
+    autoload :Button
+    autoload :Sensor
 
     module_function
 

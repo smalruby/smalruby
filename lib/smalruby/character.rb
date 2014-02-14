@@ -213,6 +213,11 @@ module Smalruby
       Hardware.create_hardware(Hardware::Sensor, pin)
     end
 
+    # サーボモーター
+    def servo(pin)
+      Hardware.create_hardware(Hardware::Servo, pin)
+    end
+
     # @!endgroup
 
     def draw

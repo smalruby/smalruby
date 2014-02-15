@@ -20,12 +20,13 @@ module Smalruby
       MAX_ANGLE = 180
 
       def angle(value)
-        if value < MIN_ANGLE
+        v = value.to_i
+        if v < MIN_ANGLE
           MIN_ANGLE
-        elsif value > MAX_ANGLE
+        elsif v > MAX_ANGLE
           MAX_ANGLE
         else
-          value
+          v
         end
       end
     end

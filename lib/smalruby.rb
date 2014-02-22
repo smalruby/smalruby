@@ -70,6 +70,36 @@ module Smalruby
         Sound.new('')
       rescue
       end
+
+      activate_window
+    end
+
+    def activate_window
+      if Util.windows?
+        require 'Win32API'
+
+        # http://f.orzando.net/pukiwiki-plus/index.php?Programming%2FTips
+        # を参考にした
+        hwnd_active =
+          Win32API.new('user32', 'GetForegroundWindow', nil, 'i').call
+        this_thread_id =
+          Win32API.new('Kernel32', 'GetCurrentThreadId', nil, 'i').call
+        active_thread_id =
+          Win32API.new('user32', 'GetWindowThreadProcessId', %w(i p), 'i')
+          .call(hwnd_active, 0)
+        attach_thread_input =
+          Win32API.new('user32', 'AttachThreadInput', %w(i i i), 'v')
+        attach_thread_input.call(this_thread_id, active_thread_id, 1)
+        Win32API.new('user32', 'SetForegroundWindow', %w(i), 'i')
+          .call(Window.hWnd)
+        attach_thread_input.call(this_thread_id, active_thread_id, 0)
+
+        hwnd_topmost = -1
+        swp_nosize = 0x0001
+        swp_nomove = 0x0002
+        Win32API.new('user32', 'SetWindowPos', %w(i i i i i i i), 'i')
+          .call(Window.hWnd, hwnd_topmost, 0, 0, 0, 0, swp_nosize | swp_nomove)
+      end
     end
 
     def start_window_application

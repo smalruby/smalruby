@@ -39,4 +39,40 @@ task :rubocop do
   sh "rubocop #{files.split(/\s+/m).join(' ')}"
 end
 
+task :build do
+  ENV['GEM_PLATFORM'] = 'linux'
+  Rake::Task['gem:build'].invoke
+
+  ENV['GEM_PLATFORM'] = 'x86-mingw32'
+  Rake::Task['gem:build'].reenable
+  Rake::Task['gem:build'].invoke
+end
+
+task :release do
+  ENV['GEM_PLATFORM'] = 'linux'
+  Rake::Task['gem:release'].invoke
+
+  ENV['GEM_PLATFORM'] = 'x86-mingw32'
+  Rake::Task['gem:release'].reenable
+  Rake::Task['gem:build'].reenable
+  Rake::Task['gem:release'].invoke
+
+  require 'smalruby/version'
+  next_version = Smalruby::VERSION.split('.').tap { |versions|
+    versions[-1] = (versions[-1].to_i + 1).to_s
+  }.join('.')
+  File.open('lib/smalruby/version.rb', 'r+') do |f|
+    lines = []
+    while line = f.gets
+      line = "#{$1} '#{next_version}'\n" if /(\s*VERSION = )/.match(line)
+      lines << line
+    end
+    f.rewind
+    f.write(lines.join)
+  end
+  sh 'git add lib/smalruby/version.rb'
+  sh "git commit -m #{next_version}"
+  sh 'git push'
+end
+
 task :default => [:rubocop, :spec]

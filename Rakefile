@@ -1,4 +1,4 @@
-require 'bundler/gem_tasks'
+require 'bundler/gem_helper'
 require 'yard'
 require "rspec/core/rake_task"
 
@@ -37,6 +37,10 @@ end
 task :rubocop do
   files = `git ls-files | grep -e '.rb$' | grep -v '^samples/'`
   sh "rubocop #{files.split(/\s+/m).join(' ')}"
+end
+
+namespace :gem do
+  Bundler::GemHelper.install_tasks
 end
 
 task :build do

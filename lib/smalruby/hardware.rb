@@ -13,6 +13,7 @@ module Smalruby
     autoload :RgbLedAnode
     autoload :RgbLedCathode
     autoload :Servo
+    autoload :TwoWheelDriveCar
 
     autoload :Button
     autoload :Sensor
@@ -29,12 +30,17 @@ module Smalruby
       fail 'already started.' if @started
 
       defaults = {
-        device: nil
+        device: nil,
+        baud: 115200
       }
       opt = Util.process_options(options, defaults)
 
-      txrx = Dino::TxRx.new
-      txrx.io = opt[:device] if opt[:device]
+      if Dino::VERSION >= '0.11'
+        txrx = Dino::TxRx.new(opt)
+      elsif Dino::VERSION >= '0.10'
+        txrx = Dino::TxRx.new
+        txrx.io = opt[:device] if opt[:device]
+      end
       world.board = Dino::Board.new(txrx)
 
       @initialized_hardware = true

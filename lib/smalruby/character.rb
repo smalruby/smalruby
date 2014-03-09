@@ -213,6 +213,11 @@ module Smalruby
       Hardware.create_hardware(Hardware::Servo, pin)
     end
 
+    # 2WD車
+    def two_wheel_drive_car(pin)
+      Hardware.create_hardware(Hardware::TwoWheelDriveCar, pin)
+    end
+
     # ボタン
     def button(pin)
       Hardware.create_hardware(Hardware::Button, pin)

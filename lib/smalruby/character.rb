@@ -18,6 +18,7 @@ module Smalruby
     attr_accessor :event_handlers
     attr_accessor :threads
     attr_accessor :checking_hit_targets
+    attr_accessor :angle unless Util.windows?
 
     def initialize(option = {})
       defaults = {
@@ -38,6 +39,7 @@ module Smalruby
       @event_handlers = {}
       @threads = []
       @checking_hit_targets = []
+      @angle = 0 unless Util.windows?
 
       self.scale_x = 1.0
       self.scale_y = 1.0

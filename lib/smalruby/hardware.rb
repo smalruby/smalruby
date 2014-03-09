@@ -31,7 +31,7 @@ module Smalruby
 
       defaults = {
         device: nil,
-        baud: 115200
+        baud: 115_200
       }
       opt = Util.process_options(options, defaults)
 

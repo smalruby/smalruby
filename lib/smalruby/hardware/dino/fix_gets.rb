@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# rubocop:disable all
+
 # WindowsでのDinoの不具合を修正するモンキーパッチ
 if Util.windows?
   require 'dino'

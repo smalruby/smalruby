@@ -5,7 +5,7 @@ module Smalruby
   class Stage < Canvas
     def initialize(options = {})
       defaults = {
-        color: 'black'
+        color: 'white'
       }
       opts = Util.process_options(options, defaults)
 

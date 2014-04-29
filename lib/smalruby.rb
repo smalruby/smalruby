@@ -63,6 +63,7 @@ module Smalruby
     def init_window_application
       Window.caption = File.basename($PROGRAM_NAME)
       Window.fps = 15
+      Window.bgcolor = [255, 255, 255]
 
       # HACK: DXRubyのためのサウンド関係の初期化処理。こうしておかな
       # いとDirectSoundの初期化でエラーが発生する

@@ -356,7 +356,7 @@ module Smalruby
       @threads.each(&:join)
     end
 
-    def loop(&block)
+    def loop
       Kernel.loop do
         yield
         Smalruby.await

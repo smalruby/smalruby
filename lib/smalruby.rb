@@ -131,9 +131,7 @@ module Smalruby
           button_change
 
           world.objects.delete_if do |o|
-            if !o.alive?
-              o.join
-            end
+            o.join unless o.alive?
             o.vanished?
           end
 
@@ -149,7 +147,7 @@ module Smalruby
       world.objects.each(&:join)
     end
 
-    def lock(&block)
+    def lock
       @draw_mutex.synchronize do
         yield
         @draw_cv.broadcast

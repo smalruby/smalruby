@@ -38,7 +38,7 @@ module Smalruby
 
       private
 
-      def after_initialize(options = {})
+      def after_initialize(_ = {})
         set_pin_mode(pins[3], :out)
         off
       end

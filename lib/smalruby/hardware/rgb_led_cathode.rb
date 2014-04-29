@@ -40,7 +40,7 @@ module Smalruby
 
       private
 
-      def after_initialize(options = {})
+      def after_initialize(_ = {})
         off
       end
 

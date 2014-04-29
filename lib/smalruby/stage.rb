@@ -9,7 +9,7 @@ module Smalruby
       }
       opts = Util.process_options(options, defaults)
 
-      super(opts.reject { |k, v| defaults.keys.include?(k) })
+      super(opts.reject { |k, _| defaults.keys.include?(k) })
 
       fill(color: opts[:color])
     end

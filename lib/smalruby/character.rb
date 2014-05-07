@@ -11,6 +11,10 @@ module Smalruby
     self.font_cache = {}
     font_cache.extend(Mutex_m)
 
+    cattr_accessor :sound_cache
+    self.sound_cache = {}
+    sound_cache.extend(Mutex_m)
+
     cattr_accessor :hardware_cache
     self.hardware_cache = {}
     hardware_cache.extend(Mutex_m)
@@ -186,9 +190,7 @@ module Smalruby
       }
       opt = process_optional_arguments(option, defaults)
 
-      @sound_cache ||= {}
-      (@sound_cache[opt[:name]] ||= Sound.new(asset_path(opt[:name])))
-        .play
+      new_sound(opt[:name]).play
     end
 
     # @!endgroup
@@ -376,7 +378,14 @@ module Smalruby
       self.class.font_cache.synchronize do
         self.class.font_cache[size] ||= Font.new(size)
       end
-      return self.class.font_cache[size]
+      self.class.font_cache[size]
+    end
+
+    def new_sound(name)
+      self.class.sound_cache.synchronize do
+        self.class.sound_cache[name] ||= Sound.new(asset_path(name))
+      end
+      self.class.sound_cache[size]
     end
 
     def draw_balloon

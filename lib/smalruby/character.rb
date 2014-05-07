@@ -23,6 +23,7 @@ module Smalruby
     attr_accessor :threads
     attr_accessor :checking_hit_targets
     attr_accessor :angle unless Util.windows?
+    attr_reader :rotation_style
 
     def initialize(option = {})
       defaults = {
@@ -44,6 +45,7 @@ module Smalruby
       @threads = []
       @checking_hit_targets = []
       @angle = 0 unless Util.windows?
+      @rotation_style = :free
 
       self.scale_x = 1.0
       self.scale_y = 1.0
@@ -81,16 +83,32 @@ module Smalruby
       move(-val)
     end
 
-    # 振り返る
+    # くるっと振り返る
     def turn
-      @vector[:x] *= -1
-      @vector[:y] *= -1
-      self.scale_x *= -1
+      sync_angle(@vector[:x] * -1, @vector[:y] * -1)
+    end
+
+    # 横に振り返る
+    def turn_x
+      sync_angle(@vector[:x] * -1, @vector[:y])
+    end
+
+    # 縦に振り返る
+    def turn_y
+      sync_angle(@vector[:x], @vector[:y] * -1)
     end
 
     # もし端に着いたら、跳ね返る
     def turn_if_reach_wall
-      turn if reach_wall?
+      lr = reach_left_or_right_wall?
+      tb = reach_top_or_bottom_wall?
+      if lr && tb
+        turn
+      elsif lr
+        turn_x
+      elsif tb
+        turn_y
+      end
     end
 
     # (  )度回転する
@@ -98,13 +116,38 @@ module Smalruby
       self.angle += angle
     end
 
+    def rotation_style=(val)
+      @rotation_style = val
+      sync_angle(@vector[:x], @vector[:y])
+    end
+
+    # 角度
+    def angle
+      return super if @rotation_style == :free
+
+      x, y = @vector[:x], @vector[:y]
+      a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
+      a = 360 - a if y < 0
+      a
+    end
+
     # (　)度に向ける
     def angle=(val)
       val %= 360
       radian = val * Math::PI / 180
-      @vector[:x] = self.scale_x * Math.cos(radian)
-      @vector[:y] = self.scale_x * Math.sin(radian)
-      super(val)
+      @vector[:x] = Math.cos(radian)
+      @vector[:y] = Math.sin(radian)
+
+      if @rotation_style == :free
+        self.scale_x = 1
+        super(val)
+      elsif @rotation_style == :left_right
+        if @vector[:x] >= 0
+          self.scale_x = 1
+        else
+          self.scale_x = -1
+        end
+      end
     end
 
     # (  )に向ける
@@ -176,10 +219,19 @@ module Smalruby
                 (self.y + center_y - y).abs**2).to_i
     end
 
-    # 端に着いた
+    # 端に着いた?
     def reach_wall?
-      self.x < 0 || self.x >= (Window.width - image.width) ||
-        self.y < 0 || self.y >= (Window.height - image.height)
+      reach_left_or_right_wall? || reach_top_or_bottom_wall?
+    end
+
+    # 左右の端に着いた?
+    def reach_left_or_right_wall?
+      self.x < 0 || self.x >= (Window.width - image.width)
+    end
+
+    # 上下の端に着いた?
+    def reach_top_or_bottom_wall?
+      self.y < 0 || self.y >= (Window.height - image.height)
     end
 
     def hit?(other)
@@ -372,6 +424,12 @@ module Smalruby
     end
 
     private
+
+    def sync_angle(x, y)
+      a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
+      a = 360 - a if y < 0
+      self.angle = a
+    end
 
     def asset_path(name)
       program_path = Pathname($PROGRAM_NAME).expand_path(Dir.pwd)

@@ -59,6 +59,12 @@ module Smalruby
         rotate(opt[:angle])
       end
 
+      # HACK: Windows XP SP3の環境でワーカースレッドで音声を読み込めな
+      # い不具合が発生した。このためメインスレッドでプリロードしておく。
+      %w(do re mi fa so ra si do_2).each do |n|
+        new_sound("piano_#{n}.wav")
+      end
+
       World.instance.objects << self
     end
 
@@ -385,7 +391,7 @@ module Smalruby
       self.class.sound_cache.synchronize do
         self.class.sound_cache[name] ||= Sound.new(asset_path(name))
       end
-      self.class.sound_cache[size]
+      self.class.sound_cache[name]
     end
 
     def draw_balloon

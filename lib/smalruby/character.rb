@@ -31,7 +31,8 @@ module Smalruby
         y: 0,
         costume: nil,
         angle: 0,
-        visible: true
+        visible: true,
+        rotation_style: :free
       }
       opt = process_optional_arguments(option, defaults)
 
@@ -45,7 +46,6 @@ module Smalruby
       @threads = []
       @checking_hit_targets = []
       @angle = 0 unless Util.windows?
-      @rotation_style = :free
 
       self.scale_x = 1.0
       self.scale_y = 1.0
@@ -57,9 +57,9 @@ module Smalruby
         end
       end
 
-      if opt[:angle] != 0
-        rotate(opt[:angle])
-      end
+      self.angle = opt[:angle] if opt[:angle] != 0
+
+      self.rotation_style = opt[:rotation_style]
 
       # HACK: Windows XP SP3の環境でワーカースレッドで音声を読み込めな
       # い不具合が発生した。このためメインスレッドでプリロードしておく。

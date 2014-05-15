@@ -146,6 +146,10 @@ module Smalruby
         else
           self.scale_x = -1
         end
+        super(0)
+      else
+        self.scale_x = 1
+        super(0)
       end
     end
 

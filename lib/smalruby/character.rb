@@ -22,7 +22,6 @@ module Smalruby
     attr_accessor :event_handlers
     attr_accessor :threads
     attr_accessor :checking_hit_targets
-    attr_accessor :angle unless Util.windows?
     attr_reader :rotation_style
 
     def initialize(option = {})
@@ -57,9 +56,9 @@ module Smalruby
         end
       end
 
-      self.angle = opt[:angle] if opt[:angle] != 0
-
       self.rotation_style = opt[:rotation_style]
+
+      self.angle = opt[:angle] if opt[:angle] != 0
 
       # HACK: Windows XP SP3の環境でワーカースレッドで音声を読み込めな
       # い不具合が発生した。このためメインスレッドでプリロードしておく。

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'smalruby'
 
-car1 = Character.new(x: 0, y: 0, costume: 'car1.png')
-car1.rotation_style = :free
+car1 = Character.new(x: 0, y: 0, costume: 'car1.png', rotation_style: :left_right)
 
 car1.on(:start) do
   loop do

@@ -22,6 +22,8 @@ module Smalruby
     attr_accessor :event_handlers
     attr_accessor :threads
     attr_accessor :checking_hit_targets
+    attr_accessor :costumes
+    attr_accessor :costume_index
     attr_reader :rotation_style
 
     def initialize(option = {})
@@ -35,11 +37,11 @@ module Smalruby
       }
       opt = process_optional_arguments(option, defaults)
 
-      # TODO: コスチュームの配列に対応する
-      if opt[:costume].is_a?(String)
-        opt[:costume] = Image.load(asset_path(opt[:costume]))
-      end
-      super(opt[:x], opt[:y], opt[:costume])
+      @costumes = [opt[:costume]].flatten.compact.map { |costume|
+        costume.is_a?(String) ? Image.load(asset_path(costume)) : costume
+      }
+      @costume_index = 0
+      super(opt[:x], opt[:y], @costumes[@costume_index])
 
       @event_handlers = {}
       @threads = []
@@ -210,6 +212,13 @@ module Smalruby
                         line, font, [0, 0, 0])
       end
       @balloon = Sprite.new(self.x, self.y, image)
+    end
+
+    # 次のコスチュームにする
+    def next_costume
+      @costume_index += 1
+      @costume_index = @costume_index % @costumes.length
+      self.image = @costumes[@costume_index]
     end
 
     # @!endgroup

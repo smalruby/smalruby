@@ -435,6 +435,11 @@ module Smalruby
       end
     end
 
+    # 1フレーム待つ
+    def await
+      Smalruby.await
+    end
+
     private
 
     def sync_angle(x, y)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
 module Smalruby
-  VERSION =  '0.0.22'
+  VERSION =  '0.0.23'
 end

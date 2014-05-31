@@ -169,6 +169,17 @@ module Smalruby
       self.angle = Math.atan2(dy, dx) * 180 / Math::PI
     end
 
+    # (  )に行く
+    def go_to(target)
+      if target == :mouse
+        self.x = Input.mouse_pos_x - (image.width / 2)
+        self.y = Input.mouse_pos_y - (image.height / 2)
+      else
+        self.x = target.x
+        self.y = target.y
+      end
+    end
+
     # @!endgroup
 
     # @!group 見た目

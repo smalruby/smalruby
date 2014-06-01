@@ -114,6 +114,9 @@ module Smalruby
           end
 
           if first
+            unless world.objects.any? { |o| o.is_a?(Stage) }
+              Stage.new(color: 'white')
+            end
             world.objects.each do |object|
               object.start
             end

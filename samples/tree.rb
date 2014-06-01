@@ -33,7 +33,7 @@ class Tree
     y = @y
     @x += Math.cos(@radian) * length
     @y += Math.sin(@radian) * length
-    @canvas.line(x1: x, y1: y, x2: @x, y2: @y, color: "white")
+    @canvas.line(x1: x, y1: y, x2: @x, y2: @y, color: "green")
   end
 
   def backward(length)

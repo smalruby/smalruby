@@ -25,6 +25,8 @@ module Smalruby
     attr_accessor :costumes
     attr_accessor :costume_index
     attr_reader :rotation_style
+    attr_reader :enable_pen
+    attr_accessor :pen_color
 
     def initialize(option = {})
       defaults = {
@@ -47,6 +49,8 @@ module Smalruby
       @threads = []
       @checking_hit_targets = []
       @angle = 0 unless Util.windows?
+      @enable_pen = false
+      @pen_color = 'black'
 
       self.scale_x = 1.0
       self.scale_y = 1.0
@@ -75,13 +79,64 @@ module Smalruby
 
     # (  )歩動かす
     def move(val = 1)
-      self.x += @vector[:x] * val
-      self.y += @vector[:y] * val
+      self.position = [x + @vector[:x] * val, y + @vector[:y] * val]
     end
 
     # (  )歩後ろに動かす
     def move_back(val = 1)
       move(-val)
+    end
+
+    # X座標を(  )にする
+    def x=(val)
+      left = x + center_x
+      top = y + center_y
+
+      if val < 0
+        val = 0
+      elsif val + image.width >= Window.width
+        val = Window.width - image.width
+      end
+
+      super(val)
+
+      draw_pen(left, top, x + center_x, y + center_y) if @enable_pen
+    end
+
+    # Y座標を(  )にする
+    def y=(val)
+      left = x + center_x
+      top = y + center_y
+
+      if val < 0
+        val = 0
+      elsif val + image.height >= Window.height
+        val = Window.height - image.height
+      end
+      super(val)
+
+      draw_pen(left, top, x + center_x, y + center_y) if @enable_pen
+    end
+
+    # X座標を(  )、Y座標を(  )にする
+    def position=(val)
+      if @enable_pen
+        @enable_pen = false
+        left = x + center_x
+        top = y + center_y
+        self.x = val[0]
+        self.y = val[1]
+        draw_pen(left, top, x + center_x, y + center_y)
+        @enable_pen = true
+      else
+        self.x = val[0]
+        self.y = val[1]
+      end
+    end
+
+    # X座標、Y座標
+    def position
+      [x, y]
     end
 
     # くるっと振り返る
@@ -191,12 +246,16 @@ module Smalruby
       }
       opts = process_optional_arguments(options, defaults)
 
+      message = opts[:message].to_s
+      return if message == @current_message
+
+      @current_message = message
+
       if @balloon
         @balloon.vanish
         @balloon = nil
       end
 
-      message = opts[:message].to_s
       return if message.empty?
 
       lines = message.to_s.lines.map { |l| l.scan(/.{1,10}/) }.flatten
@@ -222,7 +281,7 @@ module Smalruby
                         frame_size + margin_size + (font.size + 1) * row,
                         line, font, [0, 0, 0])
       end
-      @balloon = Sprite.new(self.x, self.y, image)
+      @balloon = Sprite.new(x, y, image)
     end
 
     # 次のコスチュームにする
@@ -249,12 +308,12 @@ module Smalruby
 
     # 左右の端に着いた?
     def reach_left_or_right_wall?
-      self.x < 0 || self.x >= (Window.width - image.width)
+      x <= 0 || x >= (Window.width - image.width)
     end
 
     # 上下の端に着いた?
     def reach_top_or_bottom_wall?
-      self.y < 0 || self.y >= (Window.height - image.height)
+      y <= 0 || y >= (Window.height - image.height)
     end
 
     def hit?(other)
@@ -265,6 +324,7 @@ module Smalruby
 
     # @!group 音
 
+    # (  )の音を鳴らす
     def play(option = {})
       defaults = {
         name: 'piano_do.wav'
@@ -273,6 +333,23 @@ module Smalruby
 
       new_sound(opt[:name]).play
     end
+
+    # @!endgroup
+
+    # @!group ペン
+
+    # ペンを下ろす
+    def down_pen
+      @enable_pen = true
+    end
+
+    # ペンを上げる
+    def up_pen
+      @enable_pen = false
+    end
+
+    # @!method pen_color=(val)
+    # ペンの色を（  ）にする
 
     # @!endgroup
 
@@ -318,16 +395,6 @@ module Smalruby
     def draw
       draw_balloon
 
-      if self.x < 0
-        self.x = 0
-      elsif self.x + image.width >= Window.width
-        self.x = Window.width - image.width
-      end
-      if self.y < 0
-        self.y = 0
-      elsif self.y + image.height >= Window.height
-        self.y = Window.height - image.height
-      end
       super
     end
 
@@ -453,6 +520,12 @@ module Smalruby
 
     private
 
+    def draw_pen(left, top, right, bottom)
+      world.current_stage.line(left: left, top: top,
+                               right: right, bottom: bottom,
+                               color: @pen_color)
+    end
+
     def sync_angle(x, y)
       a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
       a = 360 - a if y < 0
@@ -482,13 +555,13 @@ module Smalruby
 
     def draw_balloon
       if @balloon
-        @balloon.x = self.x + image.width / 2
+        @balloon.x = x + image.width / 2
         if @balloon.x < 0
           @balloon.x = 0
         elsif @balloon.x + @balloon.image.width >= Window.width
           @balloon.x = Window.width - @balloon.image.width
         end
-        @balloon.y = self.y - @balloon.image.height
+        @balloon.y = y - @balloon.image.height
         if @balloon.y < 0
           @balloon.y = 0
         elsif @balloon.y + @balloon.image.height >= Window.height

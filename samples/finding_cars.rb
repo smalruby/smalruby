@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 require "smalruby"
 
-canvas1 = Canvas.new
+canvas1 = Stage.new(color: 'black')
 
-car1 = Character.new(x: 0, y: 148, costume: "car1.png", visible: false)
-car2 = Character.new(x: 639, y: 148, costume: "car2.png", visible: false)
-car3 = Character.new(x: 0, y: 348, costume: "car3.png", visible: false)
-car4 = Character.new(x: 639, y: 348, costume: "car4.png", visible: false)
+car1 = Character.new(x: 0, y: 148, costume: "car1.png", visible: false, rotation_style: :left_right)
+car2 = Character.new(x: 639, y: 148, costume: "car2.png", visible: false, rotation_style: :left_right)
+car3 = Character.new(x: 0, y: 348, costume: "car3.png", visible: false, rotation_style: :left_right)
+car4 = Character.new(x: 639, y: 348, costume: "car4.png", visible: false, rotation_style: :left_right)
 
 canvas1.on(:start) do
   draw_font(x: 0, y: 0, string: "画面をクリックして隠れている車を4つ探してね", size: 32)

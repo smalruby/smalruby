@@ -11,6 +11,11 @@ module Smalruby
 
       super(opts.reject { |k, _| defaults.keys.include?(k) })
 
+      # HACK: ステージを一番最初に描画する
+      World.instance.objects.delete(self)
+      World.instance.objects.unshift(self)
+      World.instance.current_stage = self
+
       fill(color: opts[:color])
     end
   end

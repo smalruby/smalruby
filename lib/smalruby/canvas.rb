@@ -80,7 +80,7 @@ module Smalruby
     private
 
     DEFAULT_COLOR_OPTION = {
-      color: 'white'
+      color: 'black'
     }
     private_constant :DEFAULT_COLOR_OPTION
 

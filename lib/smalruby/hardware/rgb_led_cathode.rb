@@ -38,6 +38,10 @@ module Smalruby
         analog_write(pins[2], calc_value(color[2]))
       end
 
+      def stop
+        off
+      end
+
       private
 
       def after_initialize(_ = {})

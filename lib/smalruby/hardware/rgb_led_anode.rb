@@ -36,6 +36,10 @@ module Smalruby
         digital_write(pins[3], Dino::Board::LOW)
       end
 
+      def stop
+        off
+      end
+
       private
 
       def after_initialize(_ = {})

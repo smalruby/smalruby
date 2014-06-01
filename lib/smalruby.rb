@@ -25,7 +25,11 @@ module Smalruby
     @started = true
     begin
       if world.objects.any? { |o| /console/i !~ o.class.name }
-        start_window_application
+        begin
+          start_window_application
+        ensure
+          Hardware.stop
+        end
       else
         start_console_application
       end

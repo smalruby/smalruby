@@ -14,6 +14,10 @@ module Smalruby
 
       # @!method off
       # LEDをオフにする
+
+      def stop
+        off
+      end
     end
   end
 end

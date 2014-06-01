@@ -15,6 +15,10 @@ module Smalruby
         super(board: world.board, pin: Pin.smalruby_to_dino(options[:pin]))
       end
 
+      def stop
+        @board.remove_analog_hardware(self)
+      end
+
       private
 
       def after_initialize(options = {})

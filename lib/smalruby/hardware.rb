@@ -46,6 +46,16 @@ module Smalruby
       @initialized_hardware = true
     end
 
+    # ハードウェアを停止させる
+    def stop
+      @hardware_cache.synchronize do
+        @hardware_cache.values.each do |h|
+          h.stop if h.respond_to?(:stop)
+        end
+        @hardware_cache.clear
+      end
+    end
+
     # ハードウェアのインスタンスを生成する
     #
     # 作成したハードウェアのインスタンスはキャッシュする

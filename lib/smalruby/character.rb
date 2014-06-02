@@ -227,12 +227,13 @@ module Smalruby
     # (  )に行く
     def go_to(target)
       if target == :mouse
-        self.x = Input.mouse_pos_x - (image.width / 2)
-        self.y = Input.mouse_pos_y - (image.height / 2)
+        x = Input.mouse_pos_x - center_x
+        y = Input.mouse_pos_y - center_y
       else
-        self.x = target.x
-        self.y = target.y
+        x = target.x
+        y = target.y
       end
+      self.position = [x, y]
     end
 
     # @!endgroup

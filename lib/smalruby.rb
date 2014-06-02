@@ -65,6 +65,7 @@ module Smalruby
     private
 
     def init_window_application
+      Window.windowed = false unless Util.windows?
       Window.caption = File.basename($PROGRAM_NAME)
       Window.fps = 15
       Window.bgcolor = [255, 255, 255]

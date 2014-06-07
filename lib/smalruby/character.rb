@@ -285,6 +285,16 @@ module Smalruby
       @balloon = Sprite.new(x, y, image)
     end
 
+    # 表示する/隠す
+    def visible=(val)
+      if val
+        self.collision_enable = true
+      else
+        self.collision_enable = false
+      end
+      super
+    end
+
     # 次のコスチュームにする
     def next_costume
       @costume_index += 1

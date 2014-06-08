@@ -53,7 +53,7 @@ module Smalruby
       # 命令する
       def run(options = {})
         defaults = {
-          command: :forward,
+          command: 'forward',
           sec: nil,
           left_level: 100,
           right_level: 100,

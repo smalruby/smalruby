@@ -17,13 +17,13 @@ stage1.on(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do
-    two_wheel_drive_car('D6').run(command: :forward, sec: 2, left_level: 85, right_level: 100)
+    two_wheel_drive_car('D6').run(command: 'forward', sec: 2, left_level: 85, right_level: 100)
     sleep(1)
-    two_wheel_drive_car('D6').run(command: :backward, sec: 2, left_level: 85, right_level: 100)
+    two_wheel_drive_car('D6').run(command: 'backward', sec: 2, left_level: 85, right_level: 100)
     sleep(1)
-    two_wheel_drive_car('D6').run(command: :turn_left, sec: 2, left_level: 85, right_level: 100)
+    two_wheel_drive_car('D6').run(command: 'turn_left', sec: 2, left_level: 85, right_level: 100)
     sleep(1)
-    two_wheel_drive_car('D6').run(command: :turn_right, sec: 2, left_level: 85, right_level: 100)
+    two_wheel_drive_car('D6').run(command: 'turn_right', sec: 2, left_level: 85, right_level: 100)
     sleep(1)
   end
 end

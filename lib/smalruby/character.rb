@@ -404,7 +404,7 @@ module Smalruby
     # @!endgroup
 
     def draw
-      draw_balloon
+      draw_balloon if visible
 
       super
     end

@@ -8,12 +8,15 @@ module Smalruby
         x: 0,
         y: 0,
         width: Window.width,
-        height: Window.height
+        height: Window.height,
+        color: nil,
       }
       opts = Util.process_options(options, defaults)
 
       opts[:costume] = Image.new(opts[:width], opts[:height])
-      super(opts.reject { |k, _| [:width, :height].include?(k) })
+      super(opts.reject { |k, _| [:width, :height, :color].include?(k) })
+
+      fill(color: opts[:color]) if opts[:color]
     end
 
     # @!group ペン

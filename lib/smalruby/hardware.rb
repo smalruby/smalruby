@@ -31,7 +31,8 @@ module Smalruby
 
       defaults = {
         device: nil,
-        baud: 115_200
+        baud: 115_200,
+        heart_rate: 125
       }
       opt = Util.process_options(options, defaults)
 
@@ -42,6 +43,7 @@ module Smalruby
         txrx.io = opt[:device] if opt[:device]
       end
       world.board = Dino::Board.new(txrx)
+      world.board.heart_rate = opt[:heart_rate]
 
       @initialized_hardware = true
     end

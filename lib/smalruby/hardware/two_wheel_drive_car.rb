@@ -75,10 +75,12 @@ module Smalruby
       end
 
       def digital_write_pins(*levels)
-        levels.each.with_index do
-          |level, i|
-          analog_write(pins[i], (Dino::Board::HIGH * level / 100.0).to_i)
-          sleep(0.05) if i % 2 == 0
+        3.times do
+          levels.each.with_index do
+            |level, i|
+            analog_write(pins[i], (Dino::Board::HIGH * level / 100.0).to_i)
+          end
+          sleep(0.1)
         end
       end
     end

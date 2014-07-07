@@ -13,12 +13,19 @@ module Smalruby
       @object = object
       @options = options
       @block = block
+      @running = false
     end
 
     def call(*args)
+      return nil if @running
       return Thread.start(@object, @block) { |object, block|
-               object.instance_exec(*args, &block)
-             }
+        begin
+          @running = true
+          object.instance_exec(*args, &block)
+        ensure
+          @running = false
+        end
+      }
     end
   end
 end

@@ -497,6 +497,7 @@ module Smalruby
     end
 
     def alive?
+      @threads.compact!
       @threads.delete_if { |t|
         if t.alive?
           false
@@ -514,6 +515,7 @@ module Smalruby
     end
 
     def join
+      @threads.compact!
       @threads.each(&:join)
     end
 

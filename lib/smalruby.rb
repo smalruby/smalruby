@@ -120,7 +120,7 @@ module Smalruby
 
           if first
             unless world.objects.any? { |o| o.is_a?(Stage) }
-              Stage.new(color: 'white')
+              Stage.new(color: 'white') unless Util.raspberrypi?
             end
             world.objects.each do |object|
               object.start

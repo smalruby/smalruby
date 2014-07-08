@@ -16,38 +16,29 @@ module Smalruby
       end
 
       # 前進する
-      def forward(left_level = Dino::Board::HIGH,
-                  right_level = Dino::Board::HIGH)
-        digital_write_pins(left_level, Dino::Board::LOW,
-                           right_level, Dino::Board::LOW)
+      def forward(left_level = 100,
+                  right_level = 100)
+        digital_write_pins(left_level, 0, right_level, 0)
       end
 
       # 後退する
-      def backward(left_level = Dino::Board::HIGH,
-                   right_level = Dino::Board::HIGH)
-        digital_write_pins(Dino::Board::LOW, left_level,
-                           Dino::Board::LOW, right_level)
+      def backward(left_level = 100, right_level = 100)
+        digital_write_pins(0, left_level, 0, right_level)
       end
 
       # 左に曲がる
-      def turn_left(left_level = Dino::Board::HIGH,
-                    right_level = Dino::Board::HIGH)
-        digital_write_pins(Dino::Board::LOW, left_level,
-                           right_level, Dino::Board::LOW)
+      def turn_left(left_level = 100, right_level = 100)
+        digital_write_pins(0, left_level, right_level, 0)
       end
 
       # 右に曲がる
-      def turn_right(left_level = Dino::Board::HIGH,
-                     right_level = Dino::Board::HIGH)
-        digital_write_pins(left_level, Dino::Board::LOW,
-                           Dino::Board::LOW, right_level)
+      def turn_right(left_level = 100, right_level = 100)
+        digital_write_pins(left_level, 0, 0, right_level)
       end
 
       # 停止する
-      def stop(left_level = Dino::Board::HIGH,
-               right_level = Dino::Board::HIGH)
-        digital_write_pins(Dino::Board::LOW, Dino::Board::LOW,
-                           Dino::Board::LOW, Dino::Board::LOW)
+      def stop
+        digital_write_pins(0, 0, 0, 0)
       end
 
       # 命令する
@@ -75,12 +66,12 @@ module Smalruby
       end
 
       def digital_write_pins(*levels)
-        3.times do
+        2.times do
           levels.each.with_index do
             |level, i|
-            analog_write(pins[i], (Dino::Board::HIGH * level / 100.0).to_i)
+            digital_write(pins[i], (Dino::Board::HIGH * level / 100.0).to_i)
+            sleep(0.05) if i.odd?
           end
-          sleep(0.1)
         end
       end
     end

@@ -32,7 +32,7 @@ module Smalruby
       defaults = {
         device: nil,
         baud: 115_200,
-        heart_rate: 125
+        heart_rate: 40 # HACK: 実機で調整した値
       }
       opt = Util.process_options(options, defaults)
 

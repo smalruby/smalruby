@@ -8,6 +8,8 @@ module Smalruby
   module Hardware
     extend ActiveSupport::Autoload
 
+    autoload :NullHardware
+
     autoload :Pin
     autoload :Led
     autoload :RgbLedAnode
@@ -27,7 +29,6 @@ module Smalruby
     #   WindowsだとCOM1など
     def init(options = {})
       return if @initialized_hardware
-      fail 'already started.' if @started
 
       defaults = {
         device: nil,
@@ -42,10 +43,18 @@ module Smalruby
         txrx = Dino::TxRx.new
         txrx.io = opt[:device] if opt[:device]
       end
-      world.board = Dino::Board.new(txrx)
-      world.board.heart_rate = opt[:heart_rate]
+      begin
+        world.board = Dino::Board.new(txrx)
+        world.board.heart_rate = opt[:heart_rate]
 
-      @initialized_hardware = true
+        @initialized_hardware = true
+      rescue Exception
+        Util.print_exception($!)
+
+        canvas = Canvas.new(height: 32)
+        canvas.draw_font(string: 'ハードウェアの準備に失敗しました',
+                         color: 'red')
+      end
     end
 
     # ハードウェアを停止させる
@@ -66,6 +75,7 @@ module Smalruby
     # @param [String|Numeric] pin ピン番号
     # @return [Object] ハードウェアのインスタンス
     def create_hardware(klass, pin)
+      klass = NullHardware unless @initialized_hardware
       key = [klass, pin]
       @hardware_cache.synchronize do
         @hardware_cache[key] ||= klass.new(pin: pin)

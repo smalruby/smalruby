@@ -46,8 +46,12 @@ module Smalruby
   end
 
   def await
-    @draw_mutex.synchronize do
-      @draw_cv.wait(@draw_mutex)
+    if Thread.current == Thread.main
+      sleep(1.0 / 15)
+    else
+      @draw_mutex.synchronize do
+        @draw_cv.wait(@draw_mutex)
+      end
     end
   end
 

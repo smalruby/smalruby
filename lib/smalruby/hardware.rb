@@ -50,10 +50,7 @@ module Smalruby
         @initialized_hardware = true
       rescue Exception
         Util.print_exception($!)
-
-        canvas = Canvas.new(height: 32)
-        canvas.draw_font(string: 'ハードウェアの準備に失敗しました',
-                         color: 'red')
+        @failed_init_hardware = true
       end
     end
 
@@ -65,6 +62,11 @@ module Smalruby
         end
         @hardware_cache.clear
       end
+    end
+
+    # ハードウェアの初期化に失敗したかどうかを返す
+    def failed?
+      @failed_init_hardware
     end
 
     # ハードウェアのインスタンスを生成する
@@ -86,6 +88,7 @@ module Smalruby
     private
 
     @initialized_hardware = false
+    @failed_init_hardware = false
     @hardware_cache = {}
     @hardware_cache.extend(Mutex_m)
   end

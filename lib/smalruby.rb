@@ -126,6 +126,11 @@ module Smalruby
             unless world.objects.any? { |o| o.is_a?(Stage) }
               Stage.new(color: 'white') unless Util.raspberrypi?
             end
+            if Hardware.failed?
+              canvas = Canvas.new(height: 32)
+              canvas.draw_font(string: 'ハードウェアの準備に失敗しました',
+                               color: 'red')
+            end
             world.objects.each do |object|
               object.start
             end

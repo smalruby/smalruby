@@ -37,7 +37,7 @@ module Smalruby
       end
 
       # 停止する
-      def stop
+      def stop(*_)
         digital_write_pins(0, 0, 0, 0)
       end
 

@@ -16,6 +16,7 @@ module Smalruby
     autoload :RgbLedCathode
     autoload :Servo
     autoload :TwoWheelDriveCar
+    autoload :MotorDriver
 
     autoload :Button
     autoload :Sensor

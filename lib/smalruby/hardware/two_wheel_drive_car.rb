@@ -8,7 +8,9 @@ module Smalruby
       def initialize(options)
         pin = Pin.smalruby_to_dino(options[:pin])
         case pin
-        when 2..10
+        when 5
+          super(board: world.board, pin: [5, 6, 9, 10])
+        when 6
           super(board: world.board, pin: (pin...(pin + 4)).to_a)
         else
           fail "モーターのピン番号が間違っています: {options[:pin]}"
@@ -66,11 +68,17 @@ module Smalruby
       end
 
       def digital_write_pins(*levels)
-        2.times do
-          levels.each.with_index do
-            |level, i|
-            digital_write(pins[i], (Dino::Board::HIGH * level / 100.0).to_i)
-            sleep(0.05) if i.odd?
+        if pins.first == 5
+          levels.each.with_index do |level, i|
+            analog_write(pins[i], (Dino::Board::HIGH * level / 100.0).floor)
+          end
+        else
+          2.times do
+            levels.each.with_index do
+              |level, i|
+              digital_write(pins[i], (Dino::Board::HIGH * level / 100.0).to_i)
+              sleep(0.05) if i.odd?
+            end
           end
         end
       end

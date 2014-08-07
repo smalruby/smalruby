@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 DESCRIPTION = <<EOS
-ハードウェアのボタンを操作します
+ハードウェアのボタン(プルアップ)を操作します
 EOS
 
-# デジタルの3番ピンにボタンを接続してください。
+# デジタルの3番ピンに直接ボタンを接続してください。
 
 require 'smalruby'
 
@@ -15,8 +15,6 @@ frog1 = Character.new(costume: 'frog1.png', x: 300, y: 200, visible: false)
 
 stage1.on(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
-
-  button('D3').not_use_pullup
 
   if button('D3').up?
     frog1.visible = false

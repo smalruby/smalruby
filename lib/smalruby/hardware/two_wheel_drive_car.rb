@@ -5,7 +5,16 @@ module Smalruby
   module Hardware
     # 2WD車のモーターを表現するクラス
     class TwoWheelDriveCar < Dino::Components::BaseComponent
+      # 左のモーターの速度%
+      attr_reader :left_speed
+
+      # 右のモーターの速度%
+      attr_reader :right_speed
+
       def initialize(options)
+        @left_speed = 100
+        @right_speed = 100
+
         pin = Pin.smalruby_to_dino(options[:pin])
         case pin
         when 5
@@ -17,29 +26,41 @@ module Smalruby
         end
       end
 
+      [:left, :right].each do |lor|
+        define_method("#{lor}_speed=") do |val|
+          name = "@#{lor}_speed"
+          if val < 0
+            instance_variable_set(name, 0)
+          elsif val > 100
+            instance_variable_set(name, 100)
+          else
+            instance_variable_set(name, val)
+          end
+        end
+      end
+
       # 前進する
-      def forward(left_level = 100,
-                  right_level = 100)
-        digital_write_pins(left_level, 0, right_level, 0)
+      def forward
+        digital_write_pins(left_speed, 0, right_speed, 0)
       end
 
       # 後退する
-      def backward(left_level = 100, right_level = 100)
-        digital_write_pins(0, left_level, 0, right_level)
+      def backward
+        digital_write_pins(0, left_speed, 0, right_speed)
       end
 
       # 左に曲がる
-      def turn_left(left_level = 100, right_level = 100)
-        digital_write_pins(0, left_level, right_level, 0)
+      def turn_left
+        digital_write_pins(0, left_speed, right_speed, 0)
       end
 
       # 右に曲がる
-      def turn_right(left_level = 100, right_level = 100)
-        digital_write_pins(left_level, 0, 0, right_level)
+      def turn_right
+        digital_write_pins(left_speed, 0, 0, right_speed)
       end
 
       # 停止する
-      def stop(*_)
+      def stop
         digital_write_pins(0, 0, 0, 0)
       end
 
@@ -48,12 +69,10 @@ module Smalruby
         defaults = {
           command: 'forward',
           sec: nil,
-          left_level: 100,
-          right_level: 100,
         }
         opts = Util.process_options(options, defaults)
 
-        send(opts[:command], opts[:left_level], opts[:right_level])
+        send(opts[:command])
         sleep(opts[:sec]) if opts[:sec]
         stop unless opts[:command] == :stop
       end
@@ -67,16 +86,24 @@ module Smalruby
         stop
       end
 
-      def digital_write_pins(*levels)
+      def digital_write_pins(*speeds)
         if pins.first == 5
-          levels.each.with_index do |level, i|
-            analog_write(pins[i], (Dino::Board::HIGH * level / 100.0).floor)
+          speeds.each.with_index do |speed, i|
+            level = (Dino::Board::HIGH * speed / 100.0).floor
+            case level
+            when 0
+              digital_write(pins[i], Dino::Board::LOW)
+            when 100
+              digital_write(pins[i], Dino::Board::HIGH)
+            else
+              analog_write(pins[i], level)
+            end
           end
         else
           2.times do
-            levels.each.with_index do
-              |level, i|
-              digital_write(pins[i], (Dino::Board::HIGH * level / 100.0).to_i)
+            speeds.each.with_index do
+              |speed, i|
+              digital_write(pins[i], (Dino::Board::HIGH * speed / 100.0).floor)
               sleep(0.05) if i.odd?
             end
           end

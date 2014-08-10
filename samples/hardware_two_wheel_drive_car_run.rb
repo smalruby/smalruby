@@ -4,8 +4,8 @@ DESCRIPTION = <<EOS
 2WD車のタイヤ(モーター)を操作します
 EOS
 
-# デジタルの6番・7番ピンに左のモーター、8番・9番ピンに右のモーターを接
-# 続してください。
+# PWM出力可能なデジタルの5番・6番ピンに左のモーター、10番・9番ピンに右
+# のモーターを接続してください。
 
 require 'smalruby'
 
@@ -17,13 +17,10 @@ stage1.on(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do
-    two_wheel_drive_car('D6').run(command: 'forward', sec: 2, left_level: 85, right_level: 100)
-    sleep(1)
-    two_wheel_drive_car('D6').run(command: 'backward', sec: 2, left_level: 85, right_level: 100)
-    sleep(1)
-    two_wheel_drive_car('D6').run(command: 'turn_left', sec: 2, left_level: 85, right_level: 100)
-    sleep(1)
-    two_wheel_drive_car('D6').run(command: 'turn_right', sec: 2, left_level: 85, right_level: 100)
-    sleep(1)
+    two_wheel_drive_car('D5').run(command: 'forward', sec: 2)
+    two_wheel_drive_car('D5').run(command: 'backward', sec: 2)
+    two_wheel_drive_car('D5').run(command: 'turn_left', sec: 2)
+    two_wheel_drive_car('D5').run(command: 'turn_right', sec: 2)
+    two_wheel_drive_car('D5').run(command: 'stop', sec: 2)
   end
 end

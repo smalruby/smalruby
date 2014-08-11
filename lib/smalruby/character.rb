@@ -539,6 +539,7 @@ module Smalruby
     private
 
     def draw_pen(left, top, right, bottom)
+      return if !visible || vanished?
       world.current_stage.line(left: left, top: top,
                                right: right, bottom: bottom,
                                color: @pen_color)

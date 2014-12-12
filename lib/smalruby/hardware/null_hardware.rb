@@ -8,7 +8,8 @@ module Smalruby
       def initialize(*_)
       end
 
-      def method_missing(name)
+      def method_missing(_name)
+        @null ||= NullHardware.new
       end
     end
   end

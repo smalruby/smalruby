@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   if is_windows
     spec.add_runtime_dependency 'dxruby', '1.4.0'
   else
-    spec.add_runtime_dependency 'dxruby_sdl', '~> 0.0.11'
+    spec.add_runtime_dependency 'dxruby_sdl', '~> 0.0.12'
   end
   spec.add_runtime_dependency 'dino', '~> 0.11.2'
 end

@@ -6,13 +6,12 @@ module Smalruby
     # ボタンを表現するクラス
     class Button < Smalrubot::Components::BaseComponent
       def initialize(options)
-        @using_pullup = true
         super(board: world.board, pin: Pin.smalruby_to_smalrubot(options[:pin]),
-              pullup: true)
+              pullup: false)
       end
 
       def up?
-        board.digital_read(pin) == 1
+        board.digital_read(pin) == 0
       end
 
       alias_method :off?, :up?

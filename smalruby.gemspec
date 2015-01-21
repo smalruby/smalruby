@@ -42,5 +42,5 @@ Gem::Specification.new do |spec|
   else
     spec.add_runtime_dependency 'dxruby_sdl', '~> 0.0.12'
   end
-  spec.add_runtime_dependency 'dino', '~> 0.11.2'
+  spec.add_runtime_dependency 'smalrubot', '~> 0.0.1'
 end

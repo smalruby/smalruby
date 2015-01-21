@@ -12,12 +12,12 @@ module Smalruby
     # 動作確認済みのモータードライバの一覧
     # * TOSHIBA
     #   * TA7291P
-    class MotorDriver < Dino::Components::BaseComponent
+    class MotorDriver < Smalrubot::Components::BaseComponent
       # モーターの回転速度の割合(0～100%)
       attr_reader :speed
 
       def initialize(options)
-        pin = Pin.smalruby_to_dino(options[:pin])
+        pin = Pin.smalruby_to_smalrubot(options[:pin])
         case pin
         when 3, 5, 6, 9, 10, 11
           super(board: world.board, pin: (pin...(pin + 3)).to_a)
@@ -64,11 +64,11 @@ module Smalruby
         levels.each.with_index do |level, i|
           case level
           when 0
-            digital_write(pins[i], Dino::Board::LOW)
+            digital_write(pins[i], Smalrubot::Board::LOW)
           when 100
-            digital_write(pins[i], Dino::Board::HIGH)
+            digital_write(pins[i], Smalrubot::Board::HIGH)
           else
-            analog_write(pins[i], (Dino::Board::HIGH * level / 100.0).round)
+            analog_write(pins[i], (Smalrubot::Board::HIGH * level / 100.0).round)
           end
         end
       end

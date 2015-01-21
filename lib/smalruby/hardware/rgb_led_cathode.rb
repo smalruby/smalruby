@@ -4,9 +4,9 @@ require 'smalruby/hardware'
 module Smalruby
   module Hardware
     # RGB LED(カソード)を表現するクラス
-    class RgbLedCathode < Dino::Components::BaseComponent
+    class RgbLedCathode < Smalrubot::Components::BaseComponent
       def initialize(options)
-        pin = Pin.smalruby_to_dino(options[:pin])
+        pin = Pin.smalruby_to_smalrubot(options[:pin])
         case pin
         when 3, 5, 6
           super(board: world.board, pin: [3, 5, 6])
@@ -49,10 +49,10 @@ module Smalruby
       end
 
       def calc_value(value)
-        if value < Dino::Board::LOW
-          Dino::Board::LOW
-        elsif value > Dino::Board::HIGH
-          Dino::Board::HIGH
+        if value < Smalrubot::Board::LOW
+          Smalrubot::Board::LOW
+        elsif value > Smalrubot::Board::HIGH
+          Smalrubot::Board::HIGH
         else
           value
         end

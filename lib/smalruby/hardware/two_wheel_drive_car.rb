@@ -4,7 +4,7 @@ require 'smalruby/hardware'
 module Smalruby
   module Hardware
     # 2WD車のモーターを表現するクラス
-    class TwoWheelDriveCar < Dino::Components::BaseComponent
+    class TwoWheelDriveCar < Smalrubot::Components::BaseComponent
       # 左のモーターの速度%
       attr_reader :left_speed
 
@@ -15,7 +15,7 @@ module Smalruby
         @left_speed = 100
         @right_speed = 100
 
-        pin = Pin.smalruby_to_dino(options[:pin])
+        pin = Pin.smalruby_to_smalrubot(options[:pin])
         case pin
         when 5
           super(board: world.board, pin: [5, 6, 9, 10])
@@ -87,25 +87,15 @@ module Smalruby
       end
 
       def digital_write_pins(*speeds)
-        if pins.first == 5
-          speeds.each.with_index do |speed, i|
-            level = (Dino::Board::HIGH * speed / 100.0).floor
-            case level
-            when 0
-              digital_write(pins[i], Dino::Board::LOW)
-            when 100
-              digital_write(pins[i], Dino::Board::HIGH)
-            else
-              analog_write(pins[i], level)
-            end
-          end
-        else
-          2.times do
-            speeds.each.with_index do
-              |speed, i|
-              digital_write(pins[i], (Dino::Board::HIGH * speed / 100.0).floor)
-              sleep(0.05) if i.odd?
-            end
+        speeds.each.with_index do |speed, i|
+          level = (Smalrubot::Board::HIGH * speed / 100.0).floor
+          case level
+          when 0
+            digital_write(pins[i], Smalrubot::Board::LOW)
+          when 100
+            digital_write(pins[i], Smalrubot::Board::HIGH)
+          else
+            analog_write(pins[i], level)
           end
         end
       end

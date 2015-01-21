@@ -4,9 +4,9 @@ require 'smalruby/hardware'
 module Smalruby
   module Hardware
     # RGB LED(アノード)を表現するクラス
-    class RgbLedAnode < Dino::Components::BaseComponent
+    class RgbLedAnode < Smalrubot::Components::BaseComponent
       def initialize(options)
-        pin = Pin.smalruby_to_dino(options[:pin])
+        pin = Pin.smalruby_to_smalrubot(options[:pin])
         case pin
         when 3..6
           super(board: world.board, pin: [3, 5, 6, 4])
@@ -28,12 +28,12 @@ module Smalruby
         analog_write(pins[0], calc_value(color[0]))
         analog_write(pins[1], calc_value(color[1]))
         analog_write(pins[2], calc_value(color[2]))
-        digital_write(pins[3], Dino::Board::HIGH)
+        digital_write(pins[3], Smalrubot::Board::HIGH)
       end
 
       # RGB LEDをオフにする
       def off
-        digital_write(pins[3], Dino::Board::LOW)
+        digital_write(pins[3], Smalrubot::Board::LOW)
       end
 
       def stop
@@ -48,11 +48,11 @@ module Smalruby
       end
 
       def calc_value(value)
-        v = Dino::Board::HIGH - value
-        if v < Dino::Board::LOW
-          Dino::Board::LOW
-        elsif v > Dino::Board::HIGH
-          Dino::Board::HIGH
+        v = Smalrubot::Board::HIGH - value
+        if v < Smalrubot::Board::LOW
+          Smalrubot::Board::LOW
+        elsif v > Smalrubot::Board::HIGH
+          Smalrubot::Board::HIGH
         else
           v
         end

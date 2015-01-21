@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-require 'dino'
 require 'mutex_m'
-require_relative 'hardware/dino/fix_gets'
+require 'smalrubot'
 
 module Smalruby
   # ハードウェアの名前空間
@@ -34,20 +33,12 @@ module Smalruby
       defaults = {
         device: nil,
         baud: 115_200,
-        heart_rate: 40 # HACK: 実機で調整した値
       }
       opt = Util.process_options(options, defaults)
 
-      if Dino::VERSION >= '0.11'
-        txrx = Dino::TxRx.new(opt)
-      elsif Dino::VERSION >= '0.10'
-        txrx = Dino::TxRx.new
-        txrx.io = opt[:device] if opt[:device]
-      end
+      txrx = Smalrubot::TxRx.new(opt)
       begin
-        world.board = Dino::Board.new(txrx)
-        world.board.heart_rate = opt[:heart_rate]
-
+        world.board = Smalrubot::Board.new(txrx)
         @initialized_hardware = true
       rescue Exception
         Util.print_exception($!)

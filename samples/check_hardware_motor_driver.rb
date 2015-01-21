@@ -11,6 +11,8 @@ require 'smalruby'
 
 init_hardware
 
+Smalrubot.debug_mode = true
+
 stage1 = Stage.new(color: 'white')
 
 stage1.on(:start) do
@@ -140,6 +142,87 @@ stage1.on(:start) do
         await
       end
       fill(color: 'white')
+    end
+  end
+end
+
+stage1.on(:key_push, K_A) do
+  loop do
+    fill(color: 'white')
+    draw_font(string: '自動運転', color: 'black')
+
+    puts("R: #{button('D3').on? ? 'T' : 'F'}, L: #{button('D4').on? ? 'T' : 'F'}")
+
+    if button('D3').on? && button('D4').on?
+      fill(color: 'white')
+      draw_font(string: '前方障害物発見！', color: 'black')
+
+      motor_driver('D6').backward
+      motor_driver('D9').backward
+      sleep(0.5)
+      motor_driver('D6').stop
+      motor_driver('D9').stop
+
+      if rand(2) == 1
+        motor_driver('D6').forward
+        motor_driver('D9').backward
+        sleep(0.2)
+        motor_driver('D6').stop
+        motor_driver('D9').stop
+      else
+        motor_driver('D6').backward
+        motor_driver('D9').forward
+        sleep(0.2)
+        motor_driver('D6').stop
+        motor_driver('D9').stop
+      end
+      next
+    end
+    if button('D3').on?
+      fill(color: 'white')
+      draw_font(string: '右側障害物発見！', color: 'black')
+
+      motor_driver('D6').backward
+      motor_driver('D9').backward
+      sleep(0.2)
+      motor_driver('D6').stop
+      motor_driver('D9').stop
+
+      motor_driver('D6').backward
+      motor_driver('D9').forward
+      sleep(0.2)
+      motor_driver('D6').stop
+      motor_driver('D9').stop
+
+      next
+    end
+    if button('D4').on?
+      fill(color: 'white')
+      draw_font(string: '左側障害物発見！', color: 'black')
+
+      motor_driver('D6').backward
+      motor_driver('D9').backward
+      sleep(0.2)
+      motor_driver('D6').stop
+      motor_driver('D9').stop
+
+      motor_driver('D6').forward
+      motor_driver('D9').backward
+      sleep(0.2)
+      motor_driver('D6').stop
+      motor_driver('D9').stop
+
+      next
+    end
+    motor_driver('D6').forward
+    motor_driver('D9').forward
+    sleep(0.5)
+    motor_driver('D6').stop
+    motor_driver('D9').stop
+
+    if Input.key_down?(K_Y)
+      fill(color: 'white')
+      break
     end
   end
 end

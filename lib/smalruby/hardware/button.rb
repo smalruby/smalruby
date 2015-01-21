@@ -12,7 +12,7 @@ module Smalruby
       end
 
       def up?
-        digital_read(pin) == Smalrubot::Board::LOW
+        board.digital_read(pin) == 1
       end
 
       alias_method :off?, :up?
@@ -22,6 +22,12 @@ module Smalruby
       end
 
       alias_method :on?, :down?
+
+      private
+
+      def after_initialize(_ = {})
+        set_pin_mode(:in)
+      end
     end
   end
 end

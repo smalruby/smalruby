@@ -427,10 +427,6 @@ module Smalruby
         @checking_hit_targets << options
         @checking_hit_targets.flatten!
         @checking_hit_targets.uniq!
-      when :sensor_change
-        sensor(options.first)
-      when :button_up, :button_down
-        button(options.first)
       end
     end
 
@@ -477,27 +473,6 @@ module Smalruby
           next
         end
         @threads << h.call(h.options & objects)
-      end
-    end
-
-    def sensor_change(pin, value)
-      @event_handlers[:sensor_change].try(:each) do |h|
-        next unless h.options.include?(pin)
-        @threads << h.call(value)
-      end
-    end
-
-    def button_up(pin)
-      @event_handlers[:button_up].try(:each) do |h|
-        next unless h.options.include?(pin)
-        @threads << h.call
-      end
-    end
-
-    def button_down(pin)
-      @event_handlers[:button_down].try(:each) do |h|
-        next unless h.options.include?(pin)
-        @threads << h.call
       end
     end
 

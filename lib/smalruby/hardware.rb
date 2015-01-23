@@ -20,6 +20,8 @@ module Smalruby
     autoload :Button
     autoload :Sensor
 
+    autoload :SmalrubotV3
+
     module_function
 
     # ハードウェアを準備する
@@ -68,7 +70,7 @@ module Smalruby
     # @param [Class] klass ハードウェアのクラス
     # @param [String|Numeric] pin ピン番号
     # @return [Object] ハードウェアのインスタンス
-    def create_hardware(klass, pin)
+    def create_hardware(klass, pin = nil)
       klass = NullHardware unless @initialized_hardware
       key = [klass, pin]
       @hardware_cache.synchronize do

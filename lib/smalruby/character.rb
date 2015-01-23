@@ -406,6 +406,11 @@ module Smalruby
       Hardware.create_hardware(Hardware::Sensor, pin)
     end
 
+    # create or get Hardware::SmalrubotV3 instance
+    def smalrubot_v3
+      Hardware.create_hardware(Hardware::SmalrubotV3)
+    end
+
     # @!endgroup
 
     def draw

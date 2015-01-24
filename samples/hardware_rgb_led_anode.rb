@@ -17,13 +17,13 @@ stage1.on(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do
-    rgb_led_anode('D3').on(color: 'red')
+    rgb_led_anode('D3').color = 'red'
     sleep(1)
-    rgb_led_anode('D3').on(color: 'green')
+    rgb_led_anode('D3').color = 'green'
     sleep(1)
-    rgb_led_anode('D3').on(color: 'blue')
+    rgb_led_anode('D3').color = 'blue'
     sleep(1)
-    rgb_led_anode('D3').off
+    rgb_led_anode('D3').turn_off
     sleep(1)
   end
 end

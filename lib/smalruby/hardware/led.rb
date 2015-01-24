@@ -9,14 +9,16 @@ module Smalruby
         super(board: world.board, pin: Pin.smalruby_to_smalrubot(options[:pin]))
       end
 
-      # @!method on
+      # @!method turn_on
       # LEDをオンにする
+      alias_method :turn_on, :on
 
-      # @!method off
+      # @!method turn_off
       # LEDをオフにする
+      alias_method :turn_off, :off
 
       def stop
-        off
+        turn_off
       end
     end
   end

@@ -10,17 +10,19 @@ module Smalruby
               pullup: false)
       end
 
-      def up?
+      def released?
         board.digital_read(pin) == 0
       end
 
-      alias_method :off?, :up?
+      alias_method :off?, :released?
+      alias_method :up?, :released?
 
-      def down?
-        !up?
+      def pressed?
+        !released?
       end
 
-      alias_method :on?, :down?
+      alias_method :on?, :pressed?
+      alias_method :down?, :pressed?
 
       private
 

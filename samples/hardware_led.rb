@@ -16,9 +16,9 @@ stage1.on(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do
-    led('D13').on
+    led('D13').turn_on
     sleep(1)
-    led('D13').off
+    led('D13').turn_off
     sleep(1)
   end
 end

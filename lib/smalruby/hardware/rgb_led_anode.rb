@@ -17,14 +17,9 @@ module Smalruby
         end
       end
 
-      # RGB LEDをオンにする
-      def on(options = {})
-        defaults = {
-          color: 'white'
-        }
-        opts = Util.process_options(options, defaults)
-
-        color = Color.smalruby_to_dxruby(opts[:color])
+      # RGB LEDを指定した色に光らせる
+      def color=(val)
+        color = Color.smalruby_to_dxruby(val)
         analog_write(pins[0], calc_value(color[0]))
         analog_write(pins[1], calc_value(color[1]))
         analog_write(pins[2], calc_value(color[2]))
@@ -32,19 +27,19 @@ module Smalruby
       end
 
       # RGB LEDをオフにする
-      def off
+      def turn_off
         digital_write(pins[3], Smalrubot::Board::LOW)
       end
 
       def stop
-        off
+        turn_off
       end
 
       private
 
       def after_initialize(_ = {})
         set_pin_mode(pins[3], :out)
-        off
+        turn_off
       end
 
       def calc_value(value)

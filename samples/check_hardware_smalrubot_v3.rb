@@ -98,20 +98,20 @@ stage1.on(:start) do
       fill(color: 'white')
       draw_font(string: '赤色LEDを光らせる', color: 'black')
 
-      smalrubot_v3.red_led.on
+      smalrubot_v3.red_led.turn_on
 
       sleep(1)
 
-      smalrubot_v3.red_led.off
+      smalrubot_v3.red_led.turn_off
 
       fill(color: 'white')
       draw_font(string: '緑色LEDを光らせる', color: 'black')
 
-      smalrubot_v3.green_led.on
+      smalrubot_v3.green_led.turn_on
 
       sleep(1)
 
-      smalrubot_v3.green_led.off
+      smalrubot_v3.green_led.turn_off
     end
 
     if Input.key_down?(K_B)

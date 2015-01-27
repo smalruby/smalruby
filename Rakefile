@@ -47,21 +47,25 @@ task :build do
   ENV['GEM_PLATFORM'] = 'linux'
   Rake::Task['gem:build'].invoke
 
-  ENV['GEM_PLATFORM'] = 'x86-mingw32'
-  Rake::Task['gem:build'].reenable
-  Rake::Task['gem:build'].invoke
+  require 'smalruby/version'
+  Bundler.with_clean_env do
+    ENV['GEM_PLATFORM'] = 'x86-mingw32'
+    dest = "smalruby-#{Smalruby::VERSION}-#{ENV['GEM_PLATFORM']}.gem"
+    sh "gem build smalruby.gemspec && mv #{dest} pkg/"
+  end
 end
 
 task :release do
   ENV['GEM_PLATFORM'] = 'linux'
   Rake::Task['gem:release'].invoke
 
-  ENV['GEM_PLATFORM'] = 'x86-mingw32'
-  Rake::Task['gem:release'].reenable
-  Rake::Task['gem:build'].reenable
-  Rake::Task['gem:release'].invoke
-
   require 'smalruby/version'
+  Bundler.with_clean_env do
+    ENV['GEM_PLATFORM'] = 'x86-mingw32'
+    dest = "smalruby-#{Smalruby::VERSION}-#{ENV['GEM_PLATFORM']}.gem"
+    sh "gem build smalruby.gemspec && mv #{dest} pkg/ && gem push pkg/#{dest}"
+  end
+
   next_version = Smalruby::VERSION.split('.').tap { |versions|
     versions[-1] = (versions[-1].to_i + 1).to_s
   }.join('.')

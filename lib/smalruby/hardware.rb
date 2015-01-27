@@ -21,6 +21,7 @@ module Smalruby
     autoload :Sensor
 
     autoload :SmalrubotV3
+    autoload :Studuino
 
     module_function
 
@@ -34,7 +35,7 @@ module Smalruby
 
       defaults = {
         device: nil,
-        baud: 115_200,
+        baud: 19_200,
       }
       opt = Util.process_options(options, defaults)
 

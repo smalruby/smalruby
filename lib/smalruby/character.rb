@@ -411,6 +411,11 @@ module Smalruby
       Hardware.create_hardware(Hardware::SmalrubotV3)
     end
 
+    # create or get Hardware::Studuino instance
+    def studuino
+      Hardware.create_hardware(Hardware::Studuino)
+    end
+
     # @!endgroup
 
     def draw

@@ -21,7 +21,7 @@ module Smalruby
     autoload :Sensor
 
     autoload :SmalrubotV3
-    autoload :Studuino
+    autoload :SmalrubotS1
 
     module_function
 

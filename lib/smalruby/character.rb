@@ -411,9 +411,9 @@ module Smalruby
       Hardware.create_hardware(Hardware::SmalrubotV3)
     end
 
-    # create or get Hardware::Studuino instance
-    def studuino
-      Hardware.create_hardware(Hardware::Studuino)
+    # create or get Hardware::SmalrubotS1 instance
+    def smalrubot_s1
+      Hardware.create_hardware(Hardware::SmalrubotS1)
     end
 
     # @!endgroup

@@ -7,7 +7,8 @@ module Smalruby
     class SmalrubotS1
       include Smalrubot::Board::Studuino
 
-      DC_MOTOR_PACE = (255 * 0.50).round
+      # default dc motor pace ratio
+      DEFAULT_DC_MOTOR_PACE_RATIO = 50
 
       def initialize(_)
         world.board.init_dc_motor_port(PORT_M1, 0)
@@ -18,6 +19,27 @@ module Smalruby
 
         world.board.init_sensor_port(PORT_A4, PIDIRPHOTOREFLECTOR)
         world.board.init_sensor_port(PORT_A5, PIDIRPHOTOREFLECTOR)
+
+        @dc_motor_pace_ratios = {
+          PORT_M1 => DEFAULT_DC_MOTOR_PACE_RATIO,
+          PORT_M2 => DEFAULT_DC_MOTOR_PACE_RATIO,
+        }
+      end
+
+      def left_dc_motor_pace_ratio
+        @dc_motor_pace_ratios[PORT_M1]
+      end
+
+      def left_dc_motor_pace_ratio=(val)
+        set_dc_motor_pace_ratio(PORT_M1, val)
+      end
+
+      def right_dc_motor_pace_ratio
+        @dc_motor_pace_ratios[PORT_M2]
+      end
+
+      def right_dc_motor_pace_ratio=(val)
+        set_dc_motor_pace_ratio(PORT_M2, val)
       end
 
       # @!method forward(sec: nil)
@@ -76,26 +98,45 @@ module Smalruby
 
       private
 
+      def set_dc_motor_pace_ratio(port, val)
+        if val < 0
+          @dc_motor_pace_ratios[port] = 0
+        elsif val > 100
+          @dc_motor_pace_ratios[port] = 100
+        else
+          @dc_motor_pace_ratios[port] = val
+        end
+        set_dc_motor_power(port)
+      end
+
+      def set_dc_motor_power(port)
+        ratio = @dc_motor_pace_ratios[port]
+        power = Smalrubot::Board::HIGH * (ratio.to_f / 100)
+        world.board.dc_motor_power(port, power.round)
+      end
+
+      def set_dc_motor_powers
+        @dc_motor_pace_ratios.keys.each do |port|
+          set_dc_motor_power(port)
+        end
+      end
+
       def run(direction, sec: nil)
         case direction
         when :forward
-          world.board.dc_motor_power(PORT_M1, DC_MOTOR_PACE)
-          world.board.dc_motor_power(PORT_M2, DC_MOTOR_PACE)
+          set_dc_motor_powers
           world.board.dc_motor_control(PORT_M1, NORMAL)
           world.board.dc_motor_control(PORT_M2, NORMAL)
         when :backward
-          world.board.dc_motor_power(PORT_M1, DC_MOTOR_PACE)
-          world.board.dc_motor_power(PORT_M2, DC_MOTOR_PACE)
+          set_dc_motor_powers
           world.board.dc_motor_control(PORT_M1, REVERSE)
           world.board.dc_motor_control(PORT_M2, REVERSE)
         when :turn_left
-          world.board.dc_motor_power(PORT_M1, DC_MOTOR_PACE)
-          world.board.dc_motor_power(PORT_M2, DC_MOTOR_PACE)
+          set_dc_motor_powers
           world.board.dc_motor_control(PORT_M1, REVERSE)
           world.board.dc_motor_control(PORT_M2, NORMAL)
         when :turn_right
-          world.board.dc_motor_power(PORT_M1, DC_MOTOR_PACE)
-          world.board.dc_motor_power(PORT_M2, DC_MOTOR_PACE)
+          set_dc_motor_powers
           world.board.dc_motor_control(PORT_M1, NORMAL)
           world.board.dc_motor_control(PORT_M2, REVERSE)
         when :stop
@@ -111,8 +152,7 @@ module Smalruby
       end
 
       def _stop
-        world.board.dc_motor_power(PORT_M1, DC_MOTOR_PACE)
-        world.board.dc_motor_power(PORT_M2, DC_MOTOR_PACE)
+        set_dc_motor_powers
         world.board.dc_motor_control(PORT_M1, COAST)
         world.board.dc_motor_control(PORT_M2, COAST)
       end

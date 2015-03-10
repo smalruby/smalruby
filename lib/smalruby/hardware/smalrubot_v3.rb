@@ -30,8 +30,8 @@ module Smalruby
       # Red LED that is connected D13
       attr_reader :red_led
 
-      # Green LED that is connected D2
-      attr_reader :green_led
+      # Blue(Green) LED that is connected D2
+      attr_reader :blue_led
 
       # Left Motor that is connected D6, D7, D8
       attr_reader :left_motor
@@ -39,30 +39,41 @@ module Smalruby
       # Right Motor that is connected D9, D10, D11
       attr_reader :right_motor
 
-      # Left touch sensor that is connected D4
-      attr_reader :left_touch_sensor
+      # Left sensor that is connected A0
+      attr_reader :left_sensor
 
-      # Right touch sensor that is connected D3
-      attr_reader :right_touch_sensor
-
-      # Light sensor that is connected A0
-      attr_reader :light_sensor
+      # Right sensor that is connected A1
+      attr_reader :right_sensor
 
       def initialize(_)
         @red_led = Led.new(pin: 'D13')
-        @green_led = Led.new(pin: 'D2')
+        @blue_led = Led.new(pin: 'D2')
 
         @left_motor = MotorDriver.new(pin: 'D6')
         @left_motor.speed = 100
         @right_motor = MotorDriver.new(pin: 'D9')
         @right_motor.speed = 100
 
-        @left_touch_sensor = Button.new(pin: 'D4')
-        @right_touch_sensor = Button.new(pin: 'D3')
-
-        @light_sensor = Sensor.new(pin: 'A0')
+        @left_sensor = Sensor.new(pin: 'A0')
+        @right_sensor = Sensor.new(pin: 'A1')
 
         @current_motor_direction = :stop
+      end
+
+      def left_dc_motor_pace_ratio
+        @left_motor.speed
+      end
+
+      def left_dc_motor_pace_ratio=(val)
+        @left_motor.speed = val
+      end
+
+      def right_dc_motor_pace_ratio
+        @right_motor.speed
+      end
+
+      def right_dc_motor_pace_ratio=(val)
+        @right_motor.speed = val
       end
 
       # @!method forward(sec: nil)
@@ -102,6 +113,30 @@ module Smalruby
             sleep(sec)
           end
         end
+      end
+
+      def left_sensor_value
+        @left_sensor.value
+      end
+
+      def right_sensor_value
+        @right_sensor.value
+      end
+
+      def turn_on_red_led
+        @red_led.turn_on
+      end
+
+      def turn_off_red_led
+        @red_led.turn_off
+      end
+
+      def turn_on_blue_led
+        @blue_led.turn_on
+      end
+
+      def turn_off_blue_led
+        @blue_led.turn_off
       end
 
       private

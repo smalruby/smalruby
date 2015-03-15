@@ -72,29 +72,33 @@ module Smalruby
         end
       end
 
-      def left_ir_photoreflector_value
+      def left_sensor_value
         world.board.get_ir_photoreflector_value(PORT_A4).to_i
       end
 
-      def right_ir_photoreflector_value
+      def right_sensor_value
         world.board.get_ir_photoreflector_value(PORT_A5).to_i
-      end
-
-      def turn_on_white_led
-        world.board.led(PORT_A1, ON)
-      end
-
-      def turn_off_white_led
-        world.board.led(PORT_A1, OFF)
       end
 
       def turn_on_blue_led
         world.board.led(PORT_A0, ON)
       end
+      alias_method :turn_on_left_led, :turn_on_blue_led
 
       def turn_off_blue_led
         world.board.led(PORT_A0, OFF)
       end
+      alias_method :turn_off_left_led, :turn_off_blue_led
+
+      def turn_on_red_led
+        world.board.led(PORT_A1, ON)
+      end
+      alias_method :turn_on_right_led, :turn_on_red_led
+
+      def turn_off_red_led
+        world.board.led(PORT_A1, OFF)
+      end
+      alias_method :turn_off_right_led, :turn_off_red_led
 
       private
 

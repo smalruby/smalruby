@@ -30,8 +30,8 @@ module Smalruby
       # Red LED that is connected D13
       attr_reader :red_led
 
-      # Blue(Green) LED that is connected D2
-      attr_reader :blue_led
+      # Green LED that is connected D2
+      attr_reader :green_led
 
       # Left Motor that is connected D6, D7, D8
       attr_reader :left_motor
@@ -47,7 +47,7 @@ module Smalruby
 
       def initialize(_)
         @red_led = Led.new(pin: 'D13')
-        @blue_led = Led.new(pin: 'D2')
+        @green_led = Led.new(pin: 'D2')
 
         @left_motor = MotorDriver.new(pin: 'D6')
         @left_motor.speed = 100
@@ -116,28 +116,32 @@ module Smalruby
       end
 
       def left_sensor_value
-        @left_sensor.value
+        @left_sensor.value.to_i
       end
 
       def right_sensor_value
-        @right_sensor.value
+        @right_sensor.value.to_i
       end
+
+      def turn_on_green_led
+        @green_led.turn_on
+      end
+      alias_method :turn_on_left_led, :turn_on_green_led
+
+      def turn_off_green_led
+        @green_led.turn_off
+      end
+      alias_method :turn_off_left_led, :turn_off_green_led
 
       def turn_on_red_led
         @red_led.turn_on
       end
+      alias_method :turn_on_right_led, :turn_on_red_led
 
       def turn_off_red_led
         @red_led.turn_off
       end
-
-      def turn_on_blue_led
-        @blue_led.turn_on
-      end
-
-      def turn_off_blue_led
-        @blue_led.turn_off
-      end
+      alias_method :turn_off_right_led, :turn_off_red_led
 
       private
 

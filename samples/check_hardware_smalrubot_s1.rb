@@ -6,7 +6,8 @@ EOS
 
 require 'smalruby'
 
-init_hardware
+init_hardware(device: ENV['SMALRUBOT_DEVICE'],
+              baud: ENV['SMALRUBOT_BAUD'] ? ENV['SMALRUBOT_BAUD'].to_i : nil)
 
 stage1 = Stage.new(color: 'white')
 
@@ -92,28 +93,28 @@ stage1.on(:start) do
 
     if Input.key_down?(K_W)
       fill(color: 'white')
-      draw_font(string: '白色LEDを光らせる', color: 'black')
+      draw_font(string: '右のLEDを光らせる', color: 'black')
 
-      smalrubot_s1.turn_on_white_led
+      smalrubot_s1.turn_on_right_led
 
       await until !Input.key_down?(K_W)
 
       fill(color: 'white')
 
-      smalrubot_s1.turn_off_white_led
+      smalrubot_s1.turn_off_right_led
     end
 
     if Input.key_down?(K_B)
       fill(color: 'white')
-      draw_font(string: '青色LEDを光らせる', color: 'black')
+      draw_font(string: '左のLEDを光らせる', color: 'black')
 
-      smalrubot_s1.turn_on_blue_led
+      smalrubot_s1.turn_on_left_led
 
       await until !Input.key_down?(K_B)
 
-      fill(color: 'white')
+      smalrubot_s1.turn_off_left_led
 
-      smalrubot_s1.turn_off_blue_led
+      fill(color: 'white')
     end
   end
 end

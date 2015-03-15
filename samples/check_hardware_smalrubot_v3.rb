@@ -6,9 +6,8 @@ EOS
 
 require 'smalruby'
 
-init_hardware
-
-Smalrubot.debug_mode = true
+init_hardware(device: ENV['SMALRUBOT_DEVICE'],
+              baud: ENV['SMALRUBOT_BAUD'] ? ENV['SMALRUBOT_BAUD'].to_i : nil)
 
 stage1 = Stage.new(color: 'white')
 stage1.smalrubot_v3
@@ -72,64 +71,56 @@ stage1.on(:start) do
 
     if Input.key_down?(K_W) || Input.key_down?(K_S)
       if Input.key_down?(K_W)
-        smalrubot_v3.left_motor.speed += 10
+        smalrubot_v3.left_dc_motor_pace_ratio += 10
       else
-        smalrubot_v3.left_motor.speed -= 10
+        smalrubot_v3.left_dc_motor_pace_ratio -= 10
       end
 
       fill(color: 'white')
-      draw_font(string: "左の速度: #{smalrubot_v3.left_motor.speed}%",
+      draw_font(string: "左の速度: #{smalrubot_v3.left_dc_motor_pace_ratio}%",
                 color: 'black')
     end
 
     if Input.key_down?(K_O) || Input.key_down?(K_L)
       if Input.key_down?(K_O)
-        smalrubot_v3.right_motor.speed += 10
+        smalrubot_v3.right_dc_motor_pace_ratio += 10
       else
-        smalrubot_v3.right_motor.speed -= 10
+        smalrubot_v3.right_dc_motor_pace_ratio -= 10
       end
 
       fill(color: 'white')
-      draw_font(string: "右の速度: #{smalrubot_v3.right_motor.speed}%",
+      draw_font(string: "右の速度: #{smalrubot_v3.right_dc_motor_pace_ratio}%",
                 color: 'black')
     end
 
     if Input.key_down?(K_SPACE)
       fill(color: 'white')
-      draw_font(string: '赤色LEDを光らせる', color: 'black')
+      draw_font(string: '右のLEDを光らせる', color: 'black')
 
-      smalrubot_v3.red_led.turn_on
+      smalrubot_v3.turn_on_right_led
 
       sleep(1)
 
-      smalrubot_v3.red_led.turn_off
+      smalrubot_v3.turn_off_right_led
 
       fill(color: 'white')
-      draw_font(string: '緑色LEDを光らせる', color: 'black')
+      draw_font(string: '左のLEDを光らせる', color: 'black')
 
-      smalrubot_v3.green_led.turn_on
+      smalrubot_v3.turn_on_left_led
 
       sleep(1)
 
-      smalrubot_v3.green_led.turn_off
-    end
+      smalrubot_v3.turn_off_left_led
 
-    if Input.key_down?(K_B)
-      until !Input.key_down?(K_B)
-        fill(color: 'white')
-        draw_font(string: "光センサーの情報: #{smalrubot_v3.light_sensor.value}",
-                  color: 'black')
-        await
-      end
       fill(color: 'white')
     end
 
     if Input.key_down?(K_H)
       until !Input.key_down?(K_H)
         fill(color: 'white')
-        msg = 'タッチセンサーの情報: ' +
-          "左 #{smalrubot_v3.left_touch_sensor.on? ? 'ON ' : 'OFF'} " +
-          "右 #{smalrubot_v3.right_touch_sensor.on? ? 'ON ' : 'OFF'}"
+        msg = 'センサーの情報: ' +
+          "左 #{smalrubot_v3.left_sensor_value} " +
+          "右 #{smalrubot_v3.right_sensor_value}"
         draw_font(string: msg, color: 'black')
         await
       end
@@ -138,49 +129,92 @@ stage1.on(:start) do
   end
 end
 
+THRESHOLD = 400
+
 stage1.on(:key_push, K_A) do
   loop do
     fill(color: 'white')
     draw_font(string: '自動運転', color: 'black')
 
-    if smalrubot_v3.left_touch_sensor.on? && smalrubot_v3.right_touch_sensor.on?
-      fill(color: 'white')
-      draw_font(string: '前方障害物発見！', color: 'black')
+    left_sensor = smalrubot_v3.left_sensor_value < THRESHOLD
+    right_sensor = smalrubot_v3.right_sensor_value < THRESHOLD
 
-      smalrubot_v3.backward(sec: 0.5)
-      if rand(2) == 1
-        smalrubot_v3.turn_left(sec: 0.2)
-      else
-        smalrubot_v3.turn_right(sec: 0.2)
+    if !left_sensor && !right_sensor
+      smalrubot_v3.forward
+    end
+
+    loop do
+      if left_sensor || right_sensor
+        if left_sensor && right_sensor
+          fill(color: 'white')
+          draw_font(string: '前方障害物発見！', color: 'black')
+
+          smalrubot_v3.backward
+
+          loop do
+            left_sensor = smalrubot_v3.left_sensor_value < THRESHOLD
+            right_sensor = smalrubot_v3.right_sensor_value < THRESHOLD
+            if !left_sensor && !right_sensor
+              smalrubot_v3.stop
+              break
+            end
+          end
+
+          if rand(2) == 1
+            smalrubot_v3.turn_left(sec: 0.1)
+          else
+            smalrubot_v3.turn_right(sec: 0.1)
+          end
+        else
+          if right_sensor
+            fill(color: 'white')
+            draw_font(string: '右側障害物発見！', color: 'black')
+
+            #smalrubot_v3.backward(sec: 0.1)
+            smalrubot_v3.turn_left
+
+            loop do
+              left_sensor = smalrubot_v3.left_sensor_value < THRESHOLD
+              right_sensor = smalrubot_v3.right_sensor_value < THRESHOLD
+              if !left_sensor && !right_sensor
+                smalrubot_v3.stop
+                break
+              end
+            end
+          else
+            if left_sensor
+              fill(color: 'white')
+              draw_font(string: '左側障害物発見！', color: 'black')
+
+              #smalrubot_v3.backward(sec: 0.1)
+              smalrubot_v3.turn_right
+
+              loop do
+                left_sensor = smalrubot_v3.left_sensor_value < THRESHOLD
+                right_sensor = smalrubot_v3.right_sensor_value < THRESHOLD
+                if !left_sensor && !right_sensor
+                  smalrubot_v3.stop
+                  break
+                end
+              end
+            end
+          end
+        end
+        break
       end
 
-      next
+      if Input.key_down?(K_Y)
+        fill(color: 'white')
+        break
+      end
+
+      left_sensor = smalrubot_v3.left_sensor_value < THRESHOLD
+      right_sensor = smalrubot_v3.right_sensor_value < THRESHOLD
     end
-
-    if smalrubot_v3.right_touch_sensor.on?
-      fill(color: 'white')
-      draw_font(string: '右側障害物発見！', color: 'black')
-
-      smalrubot_v3.backward(sec: 0.5)
-      smalrubot_v3.turn_left(sec: 0.2)
-
-      next
-    end
-
-    if smalrubot_v3.left_touch_sensor.on?
-      fill(color: 'white')
-      draw_font(string: '左側障害物発見！', color: 'black')
-
-      smalrubot_v3.backward(sec: 0.5)
-      smalrubot_v3.turn_right(sec: 0.2)
-
-      next
-    end
-
-    smalrubot_v3.forward(sec: 0.5)
 
     if Input.key_down?(K_Y)
       fill(color: 'white')
+      smalrubot_v3.stop
       break
     end
   end

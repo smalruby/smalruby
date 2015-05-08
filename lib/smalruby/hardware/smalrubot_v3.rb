@@ -60,19 +60,19 @@ module Smalruby
         @current_motor_direction = :stop
       end
 
-      def left_dc_motor_pace_ratio
+      def left_dc_motor_power_ratio
         @left_motor.speed
       end
 
-      def left_dc_motor_pace_ratio=(val)
+      def left_dc_motor_power_ratio=(val)
         @left_motor.speed = val
       end
 
-      def right_dc_motor_pace_ratio
+      def right_dc_motor_power_ratio
         @right_motor.speed
       end
 
-      def right_dc_motor_pace_ratio=(val)
+      def right_dc_motor_power_ratio=(val)
         @right_motor.speed = val
       end
 

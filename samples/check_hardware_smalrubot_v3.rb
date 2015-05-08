@@ -71,25 +71,25 @@ stage1.on(:start) do
 
     if Input.key_down?(K_W) || Input.key_down?(K_S)
       if Input.key_down?(K_W)
-        smalrubot_v3.left_dc_motor_pace_ratio += 10
+        smalrubot_v3.left_dc_motor_power_ratio += 10
       else
-        smalrubot_v3.left_dc_motor_pace_ratio -= 10
+        smalrubot_v3.left_dc_motor_power_ratio -= 10
       end
 
       fill(color: 'white')
-      draw_font(string: "左の速度: #{smalrubot_v3.left_dc_motor_pace_ratio}%",
+      draw_font(string: "左の速度: #{smalrubot_v3.left_dc_motor_power_ratio}%",
                 color: 'black')
     end
 
     if Input.key_down?(K_O) || Input.key_down?(K_L)
       if Input.key_down?(K_O)
-        smalrubot_v3.right_dc_motor_pace_ratio += 10
+        smalrubot_v3.right_dc_motor_power_ratio += 10
       else
-        smalrubot_v3.right_dc_motor_pace_ratio -= 10
+        smalrubot_v3.right_dc_motor_power_ratio -= 10
       end
 
       fill(color: 'white')
-      draw_font(string: "右の速度: #{smalrubot_v3.right_dc_motor_pace_ratio}%",
+      draw_font(string: "右の速度: #{smalrubot_v3.right_dc_motor_power_ratio}%",
                 color: 'black')
     end
 

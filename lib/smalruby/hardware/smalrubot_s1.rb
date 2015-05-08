@@ -7,8 +7,8 @@ module Smalruby
     class SmalrubotS1
       include Smalrubot::Board::Studuino
 
-      # default dc motor pace ratio
-      DEFAULT_DC_MOTOR_PACE_RATIO = 50
+      # default dc motor power ratio
+      DEFAULT_DC_MOTOR_POWER_RATIO = 50
 
       def initialize(_)
         world.board.init_dc_motor_port(PORT_M1, 0)
@@ -20,26 +20,26 @@ module Smalruby
         world.board.init_sensor_port(PORT_A4, PIDIRPHOTOREFLECTOR)
         world.board.init_sensor_port(PORT_A5, PIDIRPHOTOREFLECTOR)
 
-        @dc_motor_pace_ratios = {
-          PORT_M1 => DEFAULT_DC_MOTOR_PACE_RATIO,
-          PORT_M2 => DEFAULT_DC_MOTOR_PACE_RATIO,
+        @dc_motor_power_ratios = {
+          PORT_M1 => DEFAULT_DC_MOTOR_POWER_RATIO,
+          PORT_M2 => DEFAULT_DC_MOTOR_POWER_RATIO,
         }
       end
 
-      def left_dc_motor_pace_ratio
-        @dc_motor_pace_ratios[PORT_M1]
+      def left_dc_motor_power_ratio
+        @dc_motor_power_ratios[PORT_M1]
       end
 
-      def left_dc_motor_pace_ratio=(val)
-        set_dc_motor_pace_ratio(PORT_M1, val)
+      def left_dc_motor_power_ratio=(val)
+        set_dc_motor_power_ratio(PORT_M1, val)
       end
 
-      def right_dc_motor_pace_ratio
-        @dc_motor_pace_ratios[PORT_M2]
+      def right_dc_motor_power_ratio
+        @dc_motor_power_ratios[PORT_M2]
       end
 
-      def right_dc_motor_pace_ratio=(val)
-        set_dc_motor_pace_ratio(PORT_M2, val)
+      def right_dc_motor_power_ratio=(val)
+        set_dc_motor_power_ratio(PORT_M2, val)
       end
 
       # @!method forward(sec: nil)
@@ -102,25 +102,25 @@ module Smalruby
 
       private
 
-      def set_dc_motor_pace_ratio(port, val)
+      def set_dc_motor_power_ratio(port, val)
         if val < 0
-          @dc_motor_pace_ratios[port] = 0
+          @dc_motor_power_ratios[port] = 0
         elsif val > 100
-          @dc_motor_pace_ratios[port] = 100
+          @dc_motor_power_ratios[port] = 100
         else
-          @dc_motor_pace_ratios[port] = val
+          @dc_motor_power_ratios[port] = val
         end
         set_dc_motor_power(port)
       end
 
       def set_dc_motor_power(port)
-        ratio = @dc_motor_pace_ratios[port]
+        ratio = @dc_motor_power_ratios[port]
         power = Smalrubot::Board::HIGH * (ratio.to_f / 100)
         world.board.dc_motor_power(port, power.round)
       end
 
       def set_dc_motor_powers
-        @dc_motor_pace_ratios.keys.each do |port|
+        @dc_motor_power_ratios.keys.each do |port|
           set_dc_motor_power(port)
         end
       end

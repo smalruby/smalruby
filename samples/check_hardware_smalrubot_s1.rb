@@ -15,8 +15,8 @@ stage1.on(:start) do
   fill(color: 'white')
   draw_font(string: DESCRIPTION, color: 'black')
 
-  smalrubot_s1.left_dc_motor_pace_ratio = 100
-  smalrubot_s1.right_dc_motor_pace_ratio = 100
+  smalrubot_s1.left_dc_motor_power_ratio = 100
+  smalrubot_s1.right_dc_motor_power_ratio = 100
 
   loop do
     if Input.key_down?(K_UP)
@@ -28,15 +28,15 @@ stage1.on(:start) do
       await until !Input.key_down?(K_UP)
 
       [75, 50, 25].each do |ratio|
-        smalrubot_s1.left_dc_motor_pace_ratio = ratio
-        smalrubot_s1.right_dc_motor_pace_ratio = ratio
+        smalrubot_s1.left_dc_motor_power_ratio = ratio
+        smalrubot_s1.right_dc_motor_power_ratio = ratio
         sleep(0.1)
       end
 
       fill(color: 'white')
 
-      smalrubot_s1.left_dc_motor_pace_ratio = 100
-      smalrubot_s1.right_dc_motor_pace_ratio = 100
+      smalrubot_s1.left_dc_motor_power_ratio = 100
+      smalrubot_s1.right_dc_motor_power_ratio = 100
 
       smalrubot_s1.stop
     end

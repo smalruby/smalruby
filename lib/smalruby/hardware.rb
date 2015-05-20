@@ -34,7 +34,7 @@ module Smalruby
       return if @initialized_hardware
 
       defaults = {
-        device: nil,
+        device: ENV["SMALRUBOT_DEVICE"] || nil,
         baud: 19_200,
       }
       opt = Util.process_options(options, defaults)

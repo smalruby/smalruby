@@ -83,4 +83,4 @@ task :release do
   sh 'git push'
 end
 
-task :default => [:spec]
+task :default => [:rubocop, :spec]

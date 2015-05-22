@@ -1,5 +1,5 @@
 AllCops:
-  Excludes:
+  Exclude:
     - tmp/**/*
     - vendor/**/*
     - work/**/*
@@ -30,7 +30,7 @@ Metrics/AbcSize:
 # Offense count: 3
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
-  Max: 433
+  Max: 1000
 
 # Offense count: 3
 Metrics/CyclomaticComplexity:

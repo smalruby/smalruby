@@ -13,6 +13,7 @@ module Smalruby
     autoload :Led
     autoload :RgbLedAnode
     autoload :RgbLedCathode
+    autoload :NeoPixel
     autoload :Servo
     autoload :TwoWheelDriveCar
     autoload :MotorDriver

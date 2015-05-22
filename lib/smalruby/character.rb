@@ -381,6 +381,11 @@ module Smalruby
       Hardware.create_hardware(Hardware::RgbLedCathode, pin)
     end
 
+    # マイコン内蔵RGB LED
+    def neo_pixel(pin)
+      Hardware.create_hardware(Hardware::NeoPixel, pin)
+    end
+
     # サーボモーター
     def servo(pin)
       Hardware.create_hardware(Hardware::Servo, pin)

@@ -5,143 +5,105 @@ AllCops:
     - work/**/*
     - samples/**/*
 
-# Offense count: 1
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
   Enabled: false
 
-# Offense count: 2
 Lint/HandleExceptions:
   Enabled: false
 
-# Offense count: 1
 Lint/RescueException:
   Enabled: false
 
-# Offense count: 2
 # Cop supports --auto-correct.
 Lint/UnusedMethodArgument:
   Enabled: false
 
-# Offense count: 17
 Metrics/AbcSize:
   Max: 58
 
-# Offense count: 3
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
   Max: 1000
 
-# Offense count: 3
 Metrics/CyclomaticComplexity:
   Max: 8
 
-# Offense count: 4
 # Configuration parameters: AllowURI, URISchemes.
 Metrics/LineLength:
   Max: 162
 
-# Offense count: 22
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
-  Max: 37
+  Max: 100
 
-# Offense count: 2
 # Configuration parameters: CountComments.
 Metrics/ModuleLength:
   Max: 170
 
-# Offense count: 1
 Metrics/PerceivedComplexity:
   Max: 8
 
-# Offense count: 1
-# Cop supports --auto-correct.
 Performance/ParallelAssignment:
   Enabled: false
 
-# Offense count: 1
 Style/AccessorMethodName:
   Enabled: false
 
-# Offense count: 160
 Style/AsciiComments:
   Enabled: false
 
-# Offense count: 4
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, ProceduralMethods, FunctionalMethods, IgnoredMethods.
 Style/BlockDelimiters:
   Enabled: false
 
-# Offense count: 4
 Style/Documentation:
   Enabled: false
 
-# Offense count: 8
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, UseHashRocketsWithSymbolValues.
 Style/HashSyntax:
   Enabled: false
 
-# Offense count: 11
-# Cop supports --auto-correct.
 # Configuration parameters: MaxLineLength.
 Style/IfUnlessModifier:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/MultilineOperationIndentation:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
 Style/PercentLiteralDelimiters:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
 Style/PerlBackrefs:
   Enabled: false
 
-# Offense count: 4
-# Cop supports --auto-correct.
 # Configuration parameters: AllowMultipleReturnValues.
 Style/RedundantReturn:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
 Style/SpecialGlobalVars:
   Enabled: false
 
-# Offense count: 12
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/StringLiterals:
   Enabled: false
 
-# Offense count: 3
-# Cop supports --auto-correct.
 # Configuration parameters: IgnoredMethods.
 Style/SymbolProc:
   Enabled: false
 
-# Offense count: 6
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
 Style/TrailingComma:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
 Style/UnneededPercentQ:
+  Enabled: false
+
+Style/NegatedIf:
   Enabled: false

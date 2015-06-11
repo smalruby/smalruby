@@ -312,10 +312,9 @@ module Smalruby
 
     # コスチュームを(  )にする
     def switch_costume(name)
-      if !(index = @costume_name__index[name])
-        fail ArgumentError, "Unknown costume: #{name}"
+      if (index = @costume_name__index[name])
+        self.costume_index = index
       end
-      self.costume_index = index
     end
 
     def costume_index=(val)

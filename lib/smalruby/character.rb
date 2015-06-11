@@ -40,8 +40,17 @@ module Smalruby
       }
       opt = process_optional_arguments(option, defaults)
 
-      @costumes = Array.wrap(opt[:costume]).compact.map { |costume|
-        costume.is_a?(String) ? Image.load(asset_path(costume)) : costume
+      @costume_name__index = {}
+      @costumes = Array.wrap(opt[:costume]).compact.map.with_index { |costume, i|
+        if costume.is_a?(String)
+          md = /^(?:([^:]+):)?(.*)$/.match(costume)
+          name = md[1]
+          path = md[2]
+          costume = Image.load(asset_path(path))
+        end
+        name ||= "costume#{i + 1}"
+        @costume_name__index[name] = i
+        costume
       }
       @costume_index = opt[:costume_index]
       super(opt[:x], opt[:y], @costumes[@costume_index])
@@ -298,8 +307,19 @@ module Smalruby
 
     # 次のコスチュームにする
     def next_costume
-      @costume_index += 1
-      @costume_index = @costume_index % @costumes.length
+      self.costume_index = @costume_index + 1
+    end
+
+    # コスチュームを(  )にする
+    def set_costume(name)
+      if !(index = @costume_name__index[name])
+        fail ArgumentError, "Unknown costume: #{name}"
+      end
+      self.costume_index = index
+    end
+
+    def costume_index=(val)
+      @costume_index = val % @costumes.length
       self.image = @costumes[@costume_index]
     end
 

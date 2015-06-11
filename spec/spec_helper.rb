@@ -5,6 +5,7 @@ Coveralls.wear!
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'smalruby'
+Smalruby.instance_variable_set("@started", true)
 
 Dir.glob(File.expand_path('../support/**/*.rb', __FILE__)).each do |path|
   require path

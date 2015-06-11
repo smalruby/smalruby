@@ -311,7 +311,7 @@ module Smalruby
     end
 
     # コスチュームを(  )にする
-    def set_costume(name)
+    def switch_costume(name)
       if !(index = @costume_name__index[name])
         fail ArgumentError, "Unknown costume: #{name}"
       end

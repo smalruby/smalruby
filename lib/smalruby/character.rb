@@ -33,16 +33,17 @@ module Smalruby
         x: 0,
         y: 0,
         costume: nil,
+        costume_index: 0,
         angle: 0,
         visible: true,
         rotation_style: :free
       }
       opt = process_optional_arguments(option, defaults)
 
-      @costumes = [opt[:costume]].flatten.compact.map { |costume|
+      @costumes = Array.wrap(opt[:costume]).compact.map { |costume|
         costume.is_a?(String) ? Image.load(asset_path(costume)) : costume
       }
-      @costume_index = 0
+      @costume_index = opt[:costume_index]
       super(opt[:x], opt[:y], @costumes[@costume_index])
 
       @event_handlers = {}

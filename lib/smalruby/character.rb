@@ -312,9 +312,12 @@ module Smalruby
 
     # コスチュームを(  )にする
     def switch_costume(name)
-      if (index = @costume_name__index[name])
-        self.costume_index = index
+      if @costume_name__index.key?(name)
+        index = @costume_name__index[name]
+      else
+        index = 0
       end
+      self.costume_index = index
     end
 
     def costume_index=(val)
@@ -564,6 +567,7 @@ module Smalruby
     def asset_path(name)
       program_path = Pathname($PROGRAM_NAME).expand_path(Dir.pwd)
       paths = [Pathname("../#{name}").expand_path(program_path),
+               Pathname("../__assets__/#{name}").expand_path(program_path),
                Pathname("../../../assets/#{name}").expand_path(__FILE__)]
       paths.find { |path| path.file? }.to_s
     end

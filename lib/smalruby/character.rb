@@ -61,6 +61,7 @@ module Smalruby
       @angle = 0 unless Util.windows?
       @enable_pen = false
       @pen_color = 'black'
+      @volume = 128 #Ruby/SDL ではボリュームは 0 から 128 までの値
 
       self.scale_x = 1.0
       self.scale_y = 1.0
@@ -365,7 +366,19 @@ module Smalruby
       }
       opt = process_optional_arguments(option, defaults)
 
-      new_sound(opt[:name]).play
+      sound = new_sound(opt[:name])
+      sound.set_volume(@volume)
+      sound.play
+    end
+
+    # 音量を（  ）％にする
+    def volume=(val = 100)
+      @volume = 128 * val / 100
+    end
+
+    # 音量（％）
+    def volume
+      @volume / 128 * 100
     end
 
     # @!endgroup

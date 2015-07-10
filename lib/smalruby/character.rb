@@ -27,6 +27,7 @@ module Smalruby
     attr_reader :rotation_style
     attr_reader :enable_pen
     attr_accessor :pen_color
+    attr_accessor :volume
 
     def initialize(option = {})
       defaults = {
@@ -369,16 +370,6 @@ module Smalruby
       sound = new_sound(opt[:name])
       sound.set_volume(calc_volume)
       sound.play
-    end
-
-    # 音量を（  ）％にする
-    def volume=(val = 100)
-      @volume = 128 * val / 100
-    end
-
-    # 音量（％）
-    def volume
-      @volume / 128 * 100
     end
 
     # @!endgroup

@@ -61,7 +61,7 @@ module Smalruby
       @angle = 0 unless Util.windows?
       @enable_pen = false
       @pen_color = 'black'
-      @volume = 128 #Ruby/SDL ではボリュームは 0 から 128 までの値
+      @volume = 100
 
       self.scale_x = 1.0
       self.scale_y = 1.0
@@ -367,7 +367,7 @@ module Smalruby
       opt = process_optional_arguments(option, defaults)
 
       sound = new_sound(opt[:name])
-      sound.set_volume(@volume)
+      sound.set_volume(calc_volume)
       sound.play
     end
 
@@ -629,6 +629,12 @@ module Smalruby
     def print_exception(exception)
       $stderr.puts("#{exception.class}: #{exception.message}")
       $stderr.puts("        #{exception.backtrace.join("\n        ")}")
+    end
+
+    private
+
+    def calc_volume
+      (255 * @volume / 100.0).to_i
     end
   end
 end

@@ -168,5 +168,72 @@ module Smalruby
         color
       end
     end
+
+    #rgb色空間をhsv色空間に変換
+    #scratchに合わせるためhsvは0..199
+    def rgb_to_hsv(r,g,b)
+      red   = r / 255.0
+      green = g / 255.0
+      blue  = b / 255.0
+      cmax = [red, green, blue].max
+      cmin = [red, green, blue].min
+      d = cmax - cmin
+      if d == 0 then
+        return [0,0,(cmax*100).ceil]
+      end
+      hue = case cmin
+      when blue then 33.0 * ((green - red  ) / d) + 33
+      when red  then 33.0 * ((blue  - green) / d) + 100
+      else           33.0 * ((red   - blue ) / d) + 167
+      end
+
+      saturation = d / cmax * 100
+      value = cmax * 100
+
+      [hue.ceil,saturation.ceil,value.ceil]
+    end
+
+    #hsv色空間をrgb色空間に変換
+    #scratchに合わせるためhsvは0..199
+    def hsv_to_rgb(h,s,v)
+      s /= 100.0
+      v /= 100.0
+      c = v * s
+      i = h / 33.0
+      x = c * (1-(i%2-1).abs)
+      base = v - c
+
+      red,green,blue = case i.to_i
+      when 0 then  [c ,x, 0]
+      when 1 then  [x ,c, 0]
+      when 2 then  [0 ,c, x]
+      when 3 then  [0 ,x, c]
+      when 4 then  [x ,0 ,c]
+      else         [c ,0 ,x]
+      end
+
+      [ ((red  + base)*255).ceil,
+        ((green+ base)*255).ceil,
+        ((blue + base)*255).ceil]
+    end
+
+    # RGBで表されたSmalrubyの色をx増やす
+    # 色は0..200の間で変化
+    # 参照: http://wiki.scratch.mit.edu/wiki/Pen_Color_(value)
+    # =>   https://ja.wikipedia.org/wiki/HSV色空間
+    def change_pen_color(r,g,b,x)
+      h,s,v = rgb_to_hsv(r,g,b)
+      h = (h + x) % 200
+      hsv_to_rgb(h,s,v)
+    end
+
+    # RGBで表されたSmalrubyの濃さをx増やす
+    # 明度は0..100の間で変化
+    def change_pen_depth(r,g,b,x)
+      h,s,v = rgb_to_hsv(r,g,b)
+      v = (v + x) % 100
+      hsv_to_rgb(h,s,v)
+    end
+
   end
 end

@@ -170,7 +170,7 @@ module Smalruby
     end
 
     #rgb色空間をhsl色空間に変換
-    #scratchに合わせるためhは0..199, s lは0..100
+    #scratchに合わせるためhは0..200, s lは0..100
     def rgb_to_hsl(r,g,b)
       red   = r / 255.0
       green = g / 255.0
@@ -200,7 +200,6 @@ module Smalruby
     end
 
     #hsl色空間をrgb色空間に変換
-    #scratchに合わせるためhslは0..199
     def hsl_to_rgb(h,s,l)
       cmax = 2.55 * (l + l * (s / 100))
       cmin = 2.55 * (l - l * (s / 100))
@@ -238,7 +237,13 @@ module Smalruby
     # =>   https://ja.wikipedia.org/wiki/HSV色空間
     def change_color(r,g,b,x)
       h,s,l = rgb_to_hsl(r,g,b)
-      h = (h + x) % 200
+      h = (h + x) % 201
+      hsl_to_rgb(h,s,l)
+    end
+
+    def set_color(r,g,b,x)
+      h,s,l = rgb_to_hsl(r,g,b)
+      h = x % 201
       hsl_to_rgb(h,s,l)
     end
 

@@ -171,20 +171,20 @@ module Smalruby
 
     # rgb色空間をhsl色空間に変換
     # scratchに合わせるためhは0..200, s lは0..100
-    def rgb_to_hsl(r , g, b)
+    def rgb_to_hsl(r, g, b)
       red   = r / 255.0
       green = g / 255.0
       blue  = b / 255.0
       cmax = [red, green, blue].max
       cmin = [red, green, blue].min
       d = cmax - cmin
-      if d == 0 then
+      if d == 0
         return [0, 0, (cmax * 100).ceil]
       end
       hue = case cmin
             when blue then 33.0 * ((green - red) / d) + 33
             when red  then 33.0 * ((blue - green) / d) + 100
-            else           33.0 * ((red - blue ) / d) + 167
+            else           33.0 * ((red - blue) / d) + 167
             end
 
       cnt = (cmax - cmin) / 2
@@ -200,7 +200,7 @@ module Smalruby
     end
 
     # hsl色空間をrgb色空間に変換
-    def hsl_to_rgb(h,s,l)
+    def hsl_to_rgb(h, s, l)
       cmax = 2.55 * (l + l * (s / 100))
       cmin = 2.55 * (l - l * (s / 100))
       i = h / 33.0
@@ -240,7 +240,7 @@ module Smalruby
     end
 
     def set_color(r, g, b, x)
-      h, s, l = rgb_to_hsl(r, g, b)
+      _, s, l = rgb_to_hsl(r, g, b)
       h = x % 201
       hsl_to_rgb(h, s, l)
     end
@@ -254,7 +254,7 @@ module Smalruby
     end
 
     def set_shade(r, g, b, x)
-      h,s,l = rgb_to_hsl(r, g, b)
+      h, s, _ = rgb_to_hsl(r, g, b)
       l = x % 101
       hsl_to_rgb(h, s, l)
     end

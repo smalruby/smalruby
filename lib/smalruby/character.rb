@@ -387,20 +387,20 @@ module Smalruby
 
     # ペンの色を(  )ずつ変える
     def change_pen_color_by(val)
-      @pen_color = Color.change_color(@pen_color[0],@pen_color[1],
-                                      @pen_color[2],val)
+      @pen_color = Color.change_color(@pen_color[0], @pen_color[1],
+                                      @pen_color[2], val)
     end
 
     # ペンの色を(  )にする
     def set_pen_color_to(val)
-      @pen_color = Color.set_color(@pen_color[0],@pen_color[1],
-                                   @pen_color[2],val)
+      @pen_color = Color.set_color(@pen_color[0], @pen_color[1],
+                                   @pen_color[2], val)
     end
 
     # ペンの濃さを(  )ずつ変える
     def change_pen_shade_by(val)
-      @pen_color = Color.change_shade(@pen_color[0],@pen_color[1],
-                                      @pen_color[2],val)
+      @pen_color = Color.change_shade(@pen_color[0], @pen_color[1],
+                                      @pen_color[2], val)
     end
 
     # ペンの濃さを(  )にする

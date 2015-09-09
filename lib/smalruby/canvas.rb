@@ -119,5 +119,6 @@ module Smalruby
       }.merge(DEFAULT_COLOR_OPTION)
       process_optional_arguments(option, defaults)
     end
+
   end
 end

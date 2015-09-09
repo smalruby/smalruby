@@ -169,9 +169,9 @@ module Smalruby
       end
     end
 
-    #rgb色空間をhsv色空間に変換
-    #scratchに合わせるためhsvは0..199
-    def rgb_to_hsv(r,g,b)
+    #rgb色空間をhsl色空間に変換
+    #scratchに合わせるためhは0..199, s lは0..100
+    def rgb_to_hsl(r,g,b)
       red   = r / 255.0
       green = g / 255.0
       blue  = b / 255.0
@@ -187,52 +187,67 @@ module Smalruby
       else           33.0 * ((red   - blue ) / d) + 167
       end
 
-      saturation = d / cmax * 100
-      value = cmax * 100
+      cnt = (cmax - cmin) / 2
+      if cnt < 0.5 then
+        saturation = (cmax - cmin) / (cmax + cmin) * 100
+      else
+        saturation = (cmax - cmin) / (2.0 - cmax - cmin) * 100
+      end
+      # (cmax + cmin) / 2 * 100
+      lightness = (cmax + cmin) * 50
 
-      [hue.ceil,saturation.ceil,value.ceil]
+      [hue.ceil,saturation.ceil,lightness.ceil]
     end
 
-    #hsv色空間をrgb色空間に変換
-    #scratchに合わせるためhsvは0..199
-    def hsv_to_rgb(h,s,v)
-      s /= 100.0
-      v /= 100.0
-      c = v * s
+    #hsl色空間をrgb色空間に変換
+    #scratchに合わせるためhslは0..199
+    def hsl_to_rgb(h,s,l)
+      cmax = 2.55 * (l + l * (s / 100))
+      cmin = 2.55 * (l - l * (s / 100))
       i = h / 33.0
-      x = c * (1-(i%2-1).abs)
-      base = v - c
+      base = ((i.to_i + 1) / 2).to_i * 66
+
+      if i < 1
+        base = h
+      elsif i < 2
+        base = (h - 66).abs
+      elsif i < 4
+        base = (h - 132).abs
+      else
+        base = (200 - h)
+      end
+      base = base / 60 * (cmax - cmin) + cmin
 
       red,green,blue = case i.to_i
-      when 0 then  [c ,x, 0]
-      when 1 then  [x ,c, 0]
-      when 2 then  [0 ,c, x]
-      when 3 then  [0 ,x, c]
-      when 4 then  [x ,0 ,c]
-      else         [c ,0 ,x]
+      when 0 then  [cmax ,base, cmin]
+      when 1 then  [base ,cmax, cmin]
+      when 2 then  [cmin ,cmax, base]
+      when 3 then  [cmin ,base, cmax]
+      when 4 then  [base ,cmin ,cmax]
+      else         [cmax ,cmin ,base]
       end
 
-      [ ((red  + base)*255).ceil,
-        ((green+ base)*255).ceil,
-        ((blue + base)*255).ceil]
+      [ red.ceil,
+        green.ceil,
+        blue.ceil]
     end
 
     # RGBで表されたSmalrubyの色をx増やす
     # 色は0..200の間で変化
     # 参照: http://wiki.scratch.mit.edu/wiki/Pen_Color_(value)
     # =>   https://ja.wikipedia.org/wiki/HSV色空間
-    def change_pen_color(r,g,b,x)
-      h,s,v = rgb_to_hsv(r,g,b)
+    def change_color(r,g,b,x)
+      h,s,l = rgb_to_hsl(r,g,b)
       h = (h + x) % 200
-      hsv_to_rgb(h,s,v)
+      hsl_to_rgb(h,s,l)
     end
 
     # RGBで表されたSmalrubyの濃さをx増やす
     # 明度は0..100の間で変化
-    def change_pen_depth(r,g,b,x)
-      h,s,v = rgb_to_hsv(r,g,b)
-      v = (v + x) % 100
-      hsv_to_rgb(h,s,v)
+    def change_shade(r,g,b,x)
+      h,s,l = rgb_to_hsl(r,g,b)
+      l = (l + x) % 100
+      hsl_to_rgb(h,s,l)
     end
 
   end

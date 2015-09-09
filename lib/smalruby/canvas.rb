@@ -120,9 +120,5 @@ module Smalruby
       process_optional_arguments(option, defaults)
     end
 
-    def change_pen_color(value)
-      @pen_color = Color.change_pen_color(@pen_color[0],@pen_color[1],
-                                          @pen_color[2],value)
-    end
   end
 end

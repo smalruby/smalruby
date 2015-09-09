@@ -403,6 +403,12 @@ module Smalruby
                                       @pen_color[2],val)
     end
 
+    # ペンの濃さを(  )にする
+    def set_pen_shade_to(val)
+      @pen_color = Color.set_shade(@pen_color[0],@pen_color[1],
+                                   @pen_color[2],val)
+    end
+
     # @!endgroup
 
     # @!group ハードウェア

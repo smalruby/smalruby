@@ -251,7 +251,13 @@ module Smalruby
     # 明度は0..100の間で変化
     def change_shade(r,g,b,x)
       h,s,l = rgb_to_hsl(r,g,b)
-      l = (l + x) % 100
+      l = (l + x) % 101
+      hsl_to_rgb(h,s,l)
+    end
+
+    def set_shade(r,g,b,x)
+      h,s,l = rgb_to_hsl(r,g,b)
+      l = x % 101
       hsl_to_rgb(h,s,l)
     end
 

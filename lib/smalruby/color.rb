@@ -148,6 +148,9 @@ module Smalruby
       'mediumslateblue' => [0x7b, 0x68, 0xee]
     }
 
+    # 3 = R, G, B,  2 = Up, Down
+    HUE_PER_6 = 200.0 / (3.0 * 2.0)
+
     # 色名の配列
     NAMES = NAME_TO_CODE.keys
 
@@ -171,93 +174,82 @@ module Smalruby
 
     # rgb色空間をhsl色空間に変換
     # scratchに合わせるためhは0..200, s lは0..100
-    def rgb_to_hsl(r, g, b)
-      red   = r / 255.0
-      green = g / 255.0
-      blue  = b / 255.0
-      cmax = [red, green, blue].max
-      cmin = [red, green, blue].min
-      d = cmax - cmin
+    def rgb_to_hsl(red , green, blue)
+      set_0_to_255(red)
+      set_0_to_255(green)
+      set_0_to_255(blue)
+
+      color_max = [red, green, blue].max
+      color_min = [red, green, blue].min
+      d = color_max - color_min
       if d == 0
-        return [0, 0, (cmax * 100).ceil]
+        return [0, 0, (color_max / 2.55).to_i]
       end
-      hue = case cmin
-            when blue then 33.0 * ((green - red) / d) + 33
-            when red  then 33.0 * ((blue - green) / d) + 100
-            else           33.0 * ((red - blue) / d) + 167
+      hue = case color_max
+            when red then
+              HUE_PER_6 * ((green - blue) / d)
+            when green  then
+              HUE_PER_6 * ((blue - red) / d) + HUE_PER_6 * 2
+            else
+              HUE_PER_6 * ((red - green) / d) + HUE_PER_6 * 4
             end
 
-      cnt = (cmax - cmin) / 2
-      if cnt < 0.5
-        saturation = (cmax - cmin) / (cmax + cmin) * 100
+      cnt = (color_max - color_min) / 2
+      if cnt <= 127
+        saturation = (color_max - color_min) / (color_max + color_min) * 100
       else
-        saturation = (cmax - cmin) / (2.0 - cmax - cmin) * 100
+        saturation = (color_max - color_min) / (510 - color_max - color_min) * 100
       end
-      # (cmax + cmin) / 2 * 100
-      lightness = (cmax + cmin) * 50
+      lightness = (color_max + color_min) / 2.0 / 255.0 * 100
 
-      [hue.ceil, saturation.ceil, lightness.ceil]
+      [hue.round, saturation.round, lightness.round]
+    end
+
+    def set_0_to_255(value)
+      if value > 255
+        255
+      elsif value < 0
+        0
+      else
+        value
+      end
     end
 
     # hsl色空間をrgb色空間に変換
     def hsl_to_rgb(h, s, l)
-      cmax = 2.55 * (l + l * (s / 100))
-      cmin = 2.55 * (l - l * (s / 100))
-      i = h / 33.0
-      base = ((i.to_i + 1) / 2).to_i * 66
+      h %= 201
+      s %= 101
+      l %= 101
+      if l < 50
+        color_max = 2.55 * (l + l * (s / 100))
+        color_min = 2.55 * (l - l * (s / 100))
+      else
+        color_max = 2.55 * (l + (100 -l) * (s / 100))
+        color_min = 2.55 * (l - (100 -l) * (s / 100))
+      end
 
-      if i < 1
+      if h < HUE_PER_6
         base = h
-      elsif i < 2
-        base = (h - 66).abs
-      elsif i < 4
-        base = (h - 132).abs
+      elsif h < HUE_PER_6 * 3
+        base = (h - HUE_PER_6 * 2).abs
+      elsif h < HUE_PER_6 * 5
+        base = (h - HUE_PER_6 * 4).abs
       else
         base = (200 - h)
       end
-      base = base / 60 * (cmax - cmin) + cmin
+      base = base / HUE_PER_6 * (color_max - color_min) + color_min
 
-      red, green, blue = case i.to_i
-                         when 0 then  [cmax, base, cmin]
-                         when 1 then  [base, cmax, cmin]
-                         when 2 then  [cmin, cmax, base]
-                         when 3 then  [cmin, base, cmax]
-                         when 4 then  [base, cmin, cmax]
-                         else         [cmax, cmin, base]
-                         end
+      divide = (h / HUE_PER_6).to_i
+      red, green, blue = (case divide
+                          when 0 then  [color_max, base, color_min]
+                          when 1 then  [base, color_max, color_min]
+                          when 2 then  [color_min, color_max, base]
+                          when 3 then  [color_min, base, color_max]
+                          when 4 then  [base, color_min, color_max]
+                          else         [color_max, color_min, base]
+                          end)
 
-      [red.ceil, green.ceil, blue.ceil]
+      [red.round, green.round, blue.round]
     end
-
-    # RGBで表されたSmalrubyの色をx増やす
-    # 色は0..200の間で変化
-    # 参照: http://wiki.scratch.mit.edu/wiki/Pen_Color_(value)
-    # =>   https://ja.wikipedia.org/wiki/HSV色空間
-    def change_color(r, g, b, x)
-      h, s, l = rgb_to_hsl(r, g, b)
-      h = (h + x) % 201
-      hsl_to_rgb(h, s, l)
-    end
-
-    def set_color(r, g, b, x)
-      _, s, l = rgb_to_hsl(r, g, b)
-      h = x % 201
-      hsl_to_rgb(h, s, l)
-    end
-
-    # RGBで表されたSmalrubyの濃さをx増やす
-    # 明度は0..100の間で変化
-    def change_shade(r, g, b, x)
-      h, s, l = rgb_to_hsl(r, g, b)
-      l = (l + x) % 101
-      hsl_to_rgb(h, s, l)
-    end
-
-    def set_shade(r, g, b, x)
-      h, s, _ = rgb_to_hsl(r, g, b)
-      l = x % 101
-      hsl_to_rgb(h, s, l)
-    end
-
   end
 end

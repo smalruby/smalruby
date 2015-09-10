@@ -382,31 +382,28 @@ module Smalruby
       @enable_pen = false
     end
 
-    # @!method pen_color=(val)
-    # ペンの色を（  ）にする
-
-    # ペンの色を(  )ずつ変える
-    def change_pen_color_by(val)
-      @pen_color = Color.change_color(@pen_color[0], @pen_color[1],
-                                      @pen_color[2], val)
+    # set pen color
+    #
+    # @param [Array<Integer>|Symbol|Integer] val color
+    #   When color is Array<Integer>, it means [R, G, B].
+    #   When color is Symbol, it means the color code; like :white, :black, etc...
+    #   When color is Integer, it means hue.
+    def pen_color=(val)
+      if val.is_a?(Numeric)
+        val %= 201
+        _, s, l = Color.rgb_to_hsl(*self.pen_color)
+        val = Color.hsl_to_rgb(val, s, l)
+      end
+      @pen_color = val
     end
 
-    # ペンの色を(  )にする
-    def set_pen_color_to(val)
-      @pen_color = Color.set_color(@pen_color[0], @pen_color[1],
-                                   @pen_color[2], val)
-    end
-
-    # ペンの濃さを(  )ずつ変える
-    def change_pen_shade_by(val)
-      @pen_color = Color.change_shade(@pen_color[0], @pen_color[1],
-                                      @pen_color[2], val)
-    end
-
-    # ペンの濃さを(  )にする
-    def set_pen_shade_to(val)
-      @pen_color = Color.set_shade(@pen_color[0], @pen_color[1],
-                                   @pen_color[2], val)
+    # set pen shade
+    #
+    # @param Integer val shade
+    def pen_shade=(val)
+      val %= 101
+      h, s, _ = *Color.rgb_to_hsl(*self.pen_color)
+      @pen_color = Color.hsl_to_rgb(h, s, val)
     end
 
     # @!endgroup

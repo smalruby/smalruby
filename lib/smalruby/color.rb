@@ -172,8 +172,10 @@ module Smalruby
       end
     end
 
-    # rgb色空間をhsl色空間に変換
-    # scratchに合わせるためhは0..200, s lは0..100
+    # Convert RGB Color model to HSL Color model
+    # @return [Array] hue, saturation, lightness  
+    #   hue in the range [0,200],
+    #   saturation and lightness in the range [0, 100]
     def rgb_to_hsl(red , green, blue)
       set_0_to_255(red)
       set_0_to_255(green)
@@ -215,7 +217,9 @@ module Smalruby
       end
     end
 
-    # hsl色空間をrgb色空間に変換
+    # Convert HSV Color model to RGB Color model
+    # @return [Array] red,green,blue color  
+    #   red,green,blue in the range [0,255]
     def hsl_to_rgb(h, s, l)
       h %= 201
       s %= 101

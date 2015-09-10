@@ -187,14 +187,14 @@ module Smalruby
       if d == 0
         return [0, 0, (color_max / 2.55).to_i]
       end
-      hue = case color_max
-            when red then
-              HUE_PER_6 * ((green - blue) / d)
-            when green  then
-              HUE_PER_6 * ((blue - red) / d) + HUE_PER_6 * 2
-            else
-              HUE_PER_6 * ((red - green) / d) + HUE_PER_6 * 4
-            end
+      hue = ( case color_max
+              when red then
+                HUE_PER_6 * ((green - blue) / d)
+              when green  then
+                HUE_PER_6 * ((blue - red) / d) + HUE_PER_6 * 2
+              else
+                HUE_PER_6 * ((red - green) / d) + HUE_PER_6 * 4
+              end)
 
       cnt = (color_max - color_min) / 2
       if cnt <= 127

@@ -185,7 +185,7 @@ module Smalruby
       color_min = [red, green, blue].min
       d = color_max - color_min
       if d == 0
-        return [0, 0, (color_max / 2.55).to_i]
+        return [0, 0, (color_max * 100 / 255).to_i]
       end
       hue = ( case color_max
               when red then
@@ -225,11 +225,11 @@ module Smalruby
       s %= 101
       l %= 101
       if l < 50
-        color_max = 2.55 * (l + l * (s / 100))
-        color_min = 2.55 * (l - l * (s / 100))
+        color_max = 255.0 * (l + l * (s / 100)) / 100
+        color_min = 255.0 * (l - l * (s / 100)) / 100
       else
-        color_max = 2.55 * (l + (100 -l) * (s / 100))
-        color_min = 2.55 * (l - (100 -l) * (s / 100))
+        color_max = 255.0 * (l + (100 -l) * (s / 100)) / 100
+        color_min = 255.0 * (l - (100 -l) * (s / 100)) / 100
       end
 
       if h < HUE_PER_6

@@ -99,7 +99,7 @@ module Smalruby
         attach_thread_input =
           Win32API.new('user32', 'AttachThreadInput', %w(i i i), 'v')
         attach_thread_input.call(this_thread_id, active_thread_id, 1)
-        Win32API.new('user32', 'SetForegroundWindow', %w(i), 'i')
+        Win32API.new('user32', 'BringWindowToTop', %w(i), 'i')
           .call(Window.hWnd)
         attach_thread_input.call(this_thread_id, active_thread_id, 0)
 

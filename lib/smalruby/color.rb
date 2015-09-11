@@ -173,34 +173,34 @@ module Smalruby
     end
 
     # Convert RGB Color model to HSL Color model
-    # @return [Array] hue, saturation, lightness  
+    # @return [Array] hue, saturation, lightness
     #   hue in the range [0,200],
     #   saturation and lightness in the range [0, 100]
     def rgb_to_hsl(red , green, blue)
-      set_0_to_255(red)
-      set_0_to_255(green)
-      set_0_to_255(blue)
+      red = set_0_to_255(red)
+      green = set_0_to_255(green)
+      blue = set_0_to_255(blue)
 
       color_max = [red, green, blue].max
       color_min = [red, green, blue].min
-      d = color_max - color_min
-      if d == 0
+      color_range = (color_max - color_min).to_f
+      if color_range == 0
         return [0, 0, (color_max / 2.55).to_i]
       end
-      hue = ( case color_max
-              when red then
-                HUE_PER_6 * ((green - blue) / d)
-              when green  then
-                HUE_PER_6 * ((blue - red) / d) + HUE_PER_6 * 2
-              else
-                HUE_PER_6 * ((red - green) / d) + HUE_PER_6 * 4
-              end)
+      hue = (case color_max
+             when red then
+               HUE_PER_6 * ((green - blue) / color_range)
+             when green  then
+               HUE_PER_6 * ((blue - red) / color_range) + HUE_PER_6 * 2
+             else
+               HUE_PER_6 * ((red - green) / color_range) + HUE_PER_6 * 4
+             end)
 
-      cnt = (color_max - color_min) / 2
+      cnt = color_range / 2.0
       if cnt <= 127
-        saturation = (color_max - color_min) / (color_max + color_min) * 100
+        saturation = color_range / (color_max + color_min) * 100
       else
-        saturation = (color_max - color_min) / (510 - color_max - color_min) * 100
+        saturation = color_range / (510 - color_max - color_min) * 100
       end
       lightness = (color_max + color_min) / 2.0 / 255.0 * 100
 
@@ -218,13 +218,13 @@ module Smalruby
     end
 
     # Convert HSV Color model to RGB Color model
-    # @return [Array] red,green,blue color  
+    # @return [Array] red,green,blue color
     #   red,green,blue in the range [0,255]
     def hsl_to_rgb(h, s, l)
       h %= 201
       s %= 101
       l %= 101
-      if l < 50
+      if l <= 49
         color_max = 2.55 * (l + l * (s / 100))
         color_min = 2.55 * (l - l * (s / 100))
       else

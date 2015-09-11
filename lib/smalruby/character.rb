@@ -397,6 +397,14 @@ module Smalruby
       @pen_color = val
     end
 
+    # change pen color
+    #
+    # @param [Integer] val color
+    def change_pen_color_by(val)
+      h, s, l = Color.rgb_to_hsl(*self.pen_color)
+      @pen_color = Color.hsl_to_rgb(h + val, s, l)
+    end
+
     # set pen shade
     #
     # @param Integer val shade

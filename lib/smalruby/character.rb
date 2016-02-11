@@ -27,6 +27,7 @@ module Smalruby
     attr_reader :rotation_style
     attr_reader :enable_pen
     attr_accessor :pen_color
+    attr_accessor :volume
 
     def initialize(option = {})
       defaults = {
@@ -61,6 +62,7 @@ module Smalruby
       @angle = 0 unless Util.windows?
       @enable_pen = false
       @pen_color = 'black'
+      @volume = 100
 
       self.scale_x = 1.0
       self.scale_y = 1.0
@@ -365,7 +367,9 @@ module Smalruby
       }
       opt = process_optional_arguments(option, defaults)
 
-      new_sound(opt[:name]).play
+      sound = new_sound(opt[:name])
+      sound.set_volume(calc_volume)
+      sound.play
     end
 
     # @!endgroup
@@ -616,6 +620,12 @@ module Smalruby
     def print_exception(exception)
       $stderr.puts("#{exception.class}: #{exception.message}")
       $stderr.puts("        #{exception.backtrace.join("\n        ")}")
+    end
+
+    private
+
+    def calc_volume
+      (255 * @volume / 100.0).to_i
     end
   end
 end

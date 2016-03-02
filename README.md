@@ -10,7 +10,7 @@ project that is a learning ruby programming environment for kids.
 
 * Windows or UNIX like OS (MAC OS X, Linux, etc...)
 * Ruby 2.0.0-p353 or higher
-* dxruby_sdl (for Mac OS X and Linux): https://github.com/takaokouji/dxruby_sdl/
+* dxruby_sdl (for Mac OS X and Linux): https://github.com/smalruby/dxruby_sdl
 * rsdl (for Mac OS X): http://www.kumaryu.net/proj/ruby-rsdl/
 
 ## Installation

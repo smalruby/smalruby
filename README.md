@@ -6,6 +6,13 @@
 smalruby is a 2D game development library. This is part of "Smalruby"
 project that is a learning ruby programming environment for kids.
 
+## Requirement
+
+* Windows or UNIX like OS (MAC OS X, Linux, etc...)
+* Ruby 2.0.0-p353 or higher
+* dxruby_sdl (for Mac OS X and Linux): https://github.com/takaokouji/dxruby_sdl/
+* rsdl (for Mac OS X): http://www.kumaryu.net/proj/ruby-rsdl/
+
 ## Installation
 
 Add this line to your application's Gemfile:

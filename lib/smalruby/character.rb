@@ -518,7 +518,7 @@ module Smalruby
       end
     end
 
-    def receive
+    def receive(messages)
       @event_handlers[:receive].try(:each) do |h|
         if h.options.length > 0 && !h.options.any? { |m| messages.include?(m) }
           next

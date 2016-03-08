@@ -391,7 +391,7 @@ module Smalruby
     def pen_color=(val)
       if val.is_a?(Numeric)
         val %= 201
-        _, s, l = Color.rgb_to_hsl(*self.pen_color)
+        _, s, l = Color.rgb_to_hsl(*pen_color)
         val = Color.hsl_to_rgb(val, s, l)
       end
       @pen_color = val
@@ -401,7 +401,7 @@ module Smalruby
     #
     # @param [Integer] val color
     def change_pen_color_by(val)
-      h, s, l = Color.rgb_to_hsl(*self.pen_color)
+      h, s, l = Color.rgb_to_hsl(*pen_color)
       @pen_color = Color.hsl_to_rgb(h + val, s, l)
     end
 
@@ -410,7 +410,7 @@ module Smalruby
     # @param Integer val shade
     def pen_shade=(val)
       val %= 101
-      h, s, _ = *Color.rgb_to_hsl(*self.pen_color)
+      h, s = *Color.rgb_to_hsl(*pen_color)
       @pen_color = Color.hsl_to_rgb(h, s, val)
     end
 

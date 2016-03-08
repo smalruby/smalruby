@@ -410,7 +410,7 @@ module Smalruby
     # @param Integer val shade
     def pen_shade=(val)
       val %= 101
-      h, s = *Color.rgb_to_hsl(*pen_color)
+      h, s, = *Color.rgb_to_hsl(*pen_color)
       @pen_color = Color.hsl_to_rgb(h, s, val)
     end
 

@@ -376,7 +376,7 @@ module Smalruby
     def clear
       world.current_stage.fill(color: world.current_stage.stage_color)
     end
-    
+
     # ペンを下ろす
     def down_pen
       @enable_pen = true

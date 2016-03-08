@@ -176,7 +176,7 @@ module Smalruby
     # @return [Array] hue, saturation, lightness
     #   hue in the range [0,200],
     #   saturation and lightness in the range [0, 100]
-    def rgb_to_hsl(red , green, blue)
+    def rgb_to_hsl(red, green, blue)
       red = set_0_to_255(red)
       green = set_0_to_255(green)
       blue = set_0_to_255(blue)
@@ -228,8 +228,8 @@ module Smalruby
         color_max = 255.0 * (l + l * (s / 100)) / 100
         color_min = 255.0 * (l - l * (s / 100)) / 100
       else
-        color_max = 255.0 * (l + (100 -l) * (s / 100)) / 100
-        color_min = 255.0 * (l - (100 -l) * (s / 100)) / 100
+        color_max = 255.0 * (l + (100 - l) * (s / 100)) / 100
+        color_min = 255.0 * (l - (100 - l) * (s / 100)) / 100
       end
 
       if h < HUE_PER_6

@@ -44,7 +44,7 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 8
 
-Performance/ParallelAssignment:
+Style/ParallelAssignment:
   Enabled: false
 
 Style/AccessorMethodName:
@@ -98,12 +98,46 @@ Style/StringLiterals:
 Style/SymbolProc:
   Enabled: false
 
-# Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
-Style/TrailingComma:
+Style/TrailingCommaInLiteral:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
   Enabled: false
 
 Style/UnneededPercentQ:
   Enabled: false
 
 Style/NegatedIf:
+  Enabled: false
+
+Performance/RedundantMatch:
+  Enabled: false
+
+Style/ExtraSpacing:
+  Exclude:
+    - 'smalruby.gemspec'
+
+Style/SpaceAroundOperators:
+  Exclude:
+    - 'smalruby.gemspec'
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
+  Enabled: false
+
+Style/SignalException:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  Enabled: false
+
+Style/Alias:
+  Enabled: false
+
+Lint/UselessAccessModifier:
   Enabled: false

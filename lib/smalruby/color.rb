@@ -148,6 +148,9 @@ module Smalruby
       'mediumslateblue' => [0x7b, 0x68, 0xee]
     }
 
+    # 3 = R, G, B,  2 = Up, Down
+    HUE_PER_6 = 200.0 / (3.0 * 2.0)
+
     # 色名の配列
     NAMES = NAME_TO_CODE.keys
 
@@ -167,6 +170,103 @@ module Smalruby
       else
         color
       end
+    end
+
+    # Convert RGB Color model to HSL Color model
+    #
+    # @param [Integer] red
+    # @param [Integer] green
+    # @param [Integer] blue
+    # @return [Array] hue, saturation, lightness
+    #   hue in the range [0,200],
+    #   saturation and lightness in the range [0, 100]
+    def rgb_to_hsl(red, green, blue)
+      red = round_rgb_color(red)
+      green = round_rgb_color(green)
+      blue = round_rgb_color(blue)
+
+      color_max = [red, green, blue].max
+      color_min = [red, green, blue].min
+      color_range = color_max - color_min
+      if color_range == 0
+        return [0, 0, (color_max * 100.0 / 255).to_i]
+      end
+      color_range = color_range.to_f
+      hue = (case color_max
+             when red then
+               HUE_PER_6 * ((green - blue) / color_range)
+             when green  then
+               HUE_PER_6 * ((blue - red) / color_range) + HUE_PER_6 * 2
+             else
+               HUE_PER_6 * ((red - green) / color_range) + HUE_PER_6 * 4
+             end)
+
+      cnt = color_range / 2.0
+      if cnt <= 127
+        saturation = color_range / (color_max + color_min) * 100
+      else
+        saturation = color_range / (510 - color_max - color_min) * 100
+      end
+      lightness = (color_max + color_min) / 2.0 / 255.0 * 100
+
+      [hue.round, saturation.round, lightness.round]
+    end
+
+    # Round rgb color 0 to 255
+    #
+    # @param [Integer] value RGB color
+    # @return [Integer] rounded RGB color
+    def round_rgb_color(value)
+      if value > 255
+        255
+      elsif value < 0
+        0
+      else
+        value
+      end
+    end
+
+    # Convert HSV Color model to RGB Color model
+    #
+    # @param [Integer] h
+    # @param [Integer] s
+    # @param [Integer] l
+    # @return [Array] red,green,blue color
+    #   red,green,blue in the range [0,255]
+    def hsl_to_rgb(h, s, l)
+      h %= 201
+      s %= 101
+      l %= 101
+      if l <= 49
+        color_max = 255.0 * (l + l * (s / 100.0)) / 100.0
+        color_min = 255.0 * (l - l * (s / 100.0)) / 100.0
+      else
+        color_max = 255.0 * (l + (100 - l) * (s / 100.0)) / 100.0
+        color_min = 255.0 * (l - (100 - l) * (s / 100.0)) / 100.0
+      end
+
+      if h < HUE_PER_6
+        base = h
+      elsif h < HUE_PER_6 * 3
+        base = (h - HUE_PER_6 * 2).abs
+      elsif h < HUE_PER_6 * 5
+        base = (h - HUE_PER_6 * 4).abs
+      else
+        base = (200 - h)
+      end
+      base = base / HUE_PER_6 * (color_max - color_min) + color_min
+
+      divide = (h / HUE_PER_6).to_i
+      red, green, blue = (case divide
+                          when 0 then  [color_max, base, color_min]
+                          when 1 then  [base, color_max, color_min]
+                          when 2 then  [color_min, color_max, base]
+                          when 3 then  [color_min, base, color_max]
+                          when 4 then  [base, color_min, color_max]
+                          else         [color_max, color_min, base]
+                          end)
+
+      [red.round, green.round, blue.round]
     end
   end
 end

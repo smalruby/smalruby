@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   if is_windows
     spec.add_runtime_dependency 'dxruby', '~> 1.4.0'
   else
-    spec.add_runtime_dependency 'dxruby_sdl', '~> 0.0.13'
+    spec.add_runtime_dependency 'dxruby_sdl', '~> 0.0.14'
   end
   spec.add_runtime_dependency 'smalrubot', '~> 0.0.6'
 end

@@ -141,3 +141,6 @@ Style/Alias:
 
 Lint/UselessAccessModifier:
   Enabled: false
+
+Style/SpaceInsideStringInterpolation:
+  Enabled: false

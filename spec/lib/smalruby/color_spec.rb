@@ -149,7 +149,7 @@ describe Smalruby::Color do
     }
 
     name_to_code.each do |name, code|
-      context '引数が #{ name.inspect } の場合' do
+      context "引数が #{ name.inspect } の場合" do
         let(:color_name) { name }
 
         it { should eq(code) }

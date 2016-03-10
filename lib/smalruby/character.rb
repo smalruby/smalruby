@@ -376,6 +376,11 @@ module Smalruby
 
     # @!group ペン
 
+    # Clears all pen marks from the Stage
+    def clear
+      world.current_stage.clear
+    end
+
     # ペンを下ろす
     def down_pen
       @enable_pen = true

@@ -173,20 +173,25 @@ module Smalruby
     end
 
     # Convert RGB Color model to HSL Color model
+    #
+    # @param [Integer] red
+    # @param [Integer] green
+    # @param [Integer] blue
     # @return [Array] hue, saturation, lightness
     #   hue in the range [0,200],
     #   saturation and lightness in the range [0, 100]
     def rgb_to_hsl(red, green, blue)
-      red = set_0_to_255(red)
-      green = set_0_to_255(green)
-      blue = set_0_to_255(blue)
+      red = round_rgb_color(red)
+      green = round_rgb_color(green)
+      blue = round_rgb_color(blue)
 
       color_max = [red, green, blue].max
       color_min = [red, green, blue].min
-      color_range = (color_max - color_min).to_f
+      color_range = color_max - color_min
       if color_range == 0
         return [0, 0, (color_max * 100.0 / 255).to_i]
       end
+      color_range = color_range.to_f
       hue = (case color_max
              when red then
                HUE_PER_6 * ((green - blue) / color_range)
@@ -207,7 +212,11 @@ module Smalruby
       [hue.round, saturation.round, lightness.round]
     end
 
-    def set_0_to_255(value)
+    # Round rgb color 0 to 255
+    #
+    # @param [Integer] value RGB color
+    # @return [Integer] rounded RGB color
+    def round_rgb_color(value)
       if value > 255
         255
       elsif value < 0
@@ -218,6 +227,10 @@ module Smalruby
     end
 
     # Convert HSV Color model to RGB Color model
+    #
+    # @param [Integer] h
+    # @param [Integer] s
+    # @param [Integer] l
     # @return [Array] red,green,blue color
     #   red,green,blue in the range [0,255]
     def hsl_to_rgb(h, s, l)
@@ -225,11 +238,11 @@ module Smalruby
       s %= 101
       l %= 101
       if l <= 49
-        color_max = 255.0 * (l + l * (s / 100)) / 100
-        color_min = 255.0 * (l - l * (s / 100)) / 100
+        color_max = 255.0 * (l + l * (s / 100.0)) / 100.0
+        color_min = 255.0 * (l - l * (s / 100.0)) / 100.0
       else
-        color_max = 255.0 * (l + (100 - l) * (s / 100)) / 100
-        color_min = 255.0 * (l - (100 - l) * (s / 100)) / 100
+        color_max = 255.0 * (l + (100 - l) * (s / 100.0)) / 100.0
+        color_min = 255.0 * (l - (100 - l) * (s / 100.0)) / 100.0
       end
 
       if h < HUE_PER_6

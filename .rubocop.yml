@@ -27,7 +27,7 @@ Metrics/ClassLength:
   Max: 1000
 
 Metrics/CyclomaticComplexity:
-  Max: 8
+  Max: 10
 
 # Configuration parameters: AllowURI, URISchemes.
 Metrics/LineLength:
@@ -39,10 +39,10 @@ Metrics/MethodLength:
 
 # Configuration parameters: CountComments.
 Metrics/ModuleLength:
-  Max: 170
+  Max: 500
 
 Metrics/PerceivedComplexity:
-  Max: 8
+  Max: 15
 
 Style/ParallelAssignment:
   Enabled: false

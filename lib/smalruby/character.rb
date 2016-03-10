@@ -376,9 +376,9 @@ module Smalruby
 
     # @!group ペン
 
-    # 消す
+    # Clears all pen marks from the Stage
     def clear
-      world.current_stage.fill(color: world.current_stage.stage_color)
+      world.current_stage.clear
     end
 
     # ペンを下ろす

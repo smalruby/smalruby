@@ -524,6 +524,7 @@ module Smalruby
           next
         end
         @threads << h.call
+      end
     end
 
     def broadcast(message)

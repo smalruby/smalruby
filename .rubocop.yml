@@ -144,3 +144,15 @@ Lint/UselessAccessModifier:
 
 Style/SpaceInsideStringInterpolation:
   Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/EmptyMethod:
+  Enabled: false
+
+Style/MethodMissing:
+  Enabled: false
+
+Metrics/BlockLength:
+  Max: 35

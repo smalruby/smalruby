@@ -497,8 +497,7 @@ module Smalruby
     end
 
     def when(event, *options, &block)
-      event = normalize_event_name(event)
-      options = normalize_event_options(event, options)
+      event, options = *normalize_event(event, options)
 
       @event_handlers[event] ||= []
       h = EventHandler.new(self, options, &block)
@@ -611,6 +610,12 @@ module Smalruby
       a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
       a = 360 - a if y < 0
       self.angle = a
+    end
+
+    def normalize_event(event, options)
+      event = normalize_event_name(event)
+      options = normalize_event_options(event, options)
+      [event, options]
     end
 
     def normalize_event_name(event)

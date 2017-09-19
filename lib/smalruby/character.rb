@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 require 'forwardable'
 require 'mutex_m'
+require_relative 'position'
 
 module Smalruby
   # キャラクターを表現するクラス
-  class Character < Sprite
+  class Character
     extend Forwardable
 
     cattr_accessor :font_cache
@@ -29,6 +30,47 @@ module Smalruby
     attr_accessor :pen_color
     attr_accessor :volume
 
+    def_instance_delegators(
+      :@position,
+      :x,
+      :y
+    )
+
+    def_instance_delegators(
+      :@sprite,
+      :===,
+      :target,
+      :check,
+      :vanished?,
+      :collision,
+      :collision=,
+      :z,
+      :alpha,
+      :image,
+      :scale_x,
+      :scale_y,
+      :center_x,
+      :center_y,
+      :blend,
+      :shader,
+      :collision_enable,
+      :collision_sync,
+      :visible,
+      :image=,
+      :vanish,
+      :z=,
+      :scale_x=,
+      :scale_y=,
+      :center_x=,
+      :center_y=,
+      :alpha=,
+      :blend=,
+      :shader=,
+      :target=,
+      :collision_enable=,
+      :collision_sync=,
+    )
+
     def initialize(option = {})
       defaults = {
         x: 0,
@@ -40,6 +82,8 @@ module Smalruby
         rotation_style: :free
       }
       opt = process_optional_arguments(option, defaults)
+
+      @position = Position.new(self, opt[:x], opt[:y])
 
       @costume_name__index = {}
       @costumes = Array.wrap(opt[:costume]).compact.map.with_index { |costume, i|
@@ -54,7 +98,8 @@ module Smalruby
         costume
       }
       @costume_index = opt[:costume_index]
-      super(opt[:x], opt[:y], @costumes[@costume_index])
+
+      @sprite = Sprite.new(*@position.dxruby_xy, @costumes[@costume_index])
 
       @event_handlers = {}
       @threads = []
@@ -91,7 +136,7 @@ module Smalruby
 
     # (  )歩動かす
     def move(val = 1)
-      self.position = [x + @vector[:x] * val, y + @vector[:y] * val]
+      self.position = [x + @vector[:x] * val, y - @vector[:y] * val]
     end
 
     # (  )歩後ろに動かす
@@ -101,54 +146,46 @@ module Smalruby
 
     # X座標を(  )にする
     def x=(val)
-      left = x + center_x
-      top = y + center_y
+      left = @sprite.x + center_x
+      top = @sprite.y + center_y
 
-      if val < 0
-        val = 0
-      elsif val + image.width >= Window.width
-        val = Window.width - image.width
-      end
+      @position.x = val
+      @sprite.x = @position.dxruby_x
 
-      super(val)
-
-      draw_pen(left, top, x + center_x, y + center_y) if @enable_pen
+      draw_pen(left, top, @sprite.x + center_x, @sprite.y + center_y) if @enable_pen
     end
 
     # Y座標を(  )にする
     def y=(val)
-      left = x + center_x
-      top = y + center_y
+      left = @sprite.x + center_x
+      top = @sprite.y + center_y
 
-      if val < 0
-        val = 0
-      elsif val + image.height >= Window.height
-        val = Window.height - image.height
-      end
-      super(val)
+      @position.y = val
 
-      draw_pen(left, top, x + center_x, y + center_y) if @enable_pen
+      @sprite.y = @position.dxruby_y
+
+      draw_pen(left, top, @sprite.x + center_x, @sprite.y + center_y) if @enable_pen
     end
 
     # X座標を(  )、Y座標を(  )にする
     def position=(val)
+      @position.x, @position.y = *val
+
       if @enable_pen
         @enable_pen = false
-        left = x + center_x
-        top = y + center_y
-        self.x = val[0]
-        self.y = val[1]
-        draw_pen(left, top, x + center_x, y + center_y)
+        left = @sprite.x + center_x
+        top = @sprite.y + center_y
+        @sprite.x, @sprite.y = *@position.dxruby_xy
+        draw_pen(left, top, @sprite.x + center_x, @sprite.y + center_y)
         @enable_pen = true
       else
-        self.x = val[0]
-        self.y = val[1]
+        @sprite.x, @sprite.y = *@position.dxruby_xy
       end
     end
 
     # X座標、Y座標
     def position
-      [x, y]
+      @position.to_a
     end
 
     # くるっと振り返る
@@ -197,7 +234,7 @@ module Smalruby
 
     # 角度
     def angle
-      return super if @rotation_style == :free
+      return @sprite.angle if @rotation_style == :free
 
       x, y = @vector[:x], @vector[:y]
       a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
@@ -214,17 +251,17 @@ module Smalruby
 
       if @rotation_style == :free
         self.scale_x = scale_x.abs
-        super(val)
+        @sprite.angle = val
       elsif @rotation_style == :left_right
         if @vector[:x] >= 0
           self.scale_x = scale_x.abs
         else
           self.scale_x = scale_x.abs * -1
         end
-        super(0)
+        @sprite.angle = 0
       else
         self.scale_x = scale_x.abs
-        super(0)
+        sprite.angle = 0
       end
     end
 
@@ -310,7 +347,7 @@ module Smalruby
       else
         self.collision_enable = false
       end
-      super
+      @sprite.visible = val
     end
 
     # 次のコスチュームにする
@@ -350,12 +387,12 @@ module Smalruby
 
     # 左右の端に着いた?
     def reach_left_or_right_wall?
-      x <= 0 || x >= (Window.width - image.width)
+      x <= -240 || x >= (240 - image.width)
     end
 
     # 上下の端に着いた?
     def reach_top_or_bottom_wall?
-      y <= 0 || y >= (Window.height - image.height)
+      y <= -240 || y >= (240 - image.height)
     end
 
     def hit?(other)
@@ -493,7 +530,7 @@ module Smalruby
     def draw
       draw_balloon if visible
 
-      super
+      @sprite.draw
     end
 
     def when(event, *options, &block)

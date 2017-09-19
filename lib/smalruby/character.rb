@@ -179,10 +179,16 @@ module Smalruby
       end
     end
 
-    # (  )度回転する
-    def rotate(angle)
+    def turn_clockwise(angle)
       self.angle += angle
     end
+    alias turn_cw turn_clockwise
+    alias rotate turn_clockwise
+
+    def turn_counterclockwise(angle)
+      self.angle -= angle
+    end
+    alias turn_ccw turn_counterclockwise
 
     def rotation_style=(val)
       @rotation_style = val

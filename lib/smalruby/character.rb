@@ -498,6 +498,8 @@ module Smalruby
 
     def when(event, *options, &block)
       event = normalize_event_name(event)
+      options = normalize_event_options(event, options)
+
       @event_handlers[event] ||= []
       h = EventHandler.new(self, options, &block)
       @event_handlers[event] << h
@@ -620,6 +622,22 @@ module Smalruby
         :key_pressed
       else
         event
+      end
+    end
+
+    def normalize_event_options(event, options)
+      case event
+      when :key_pressed, :key_push
+        options.map { |key|
+          case key
+          when String, Symbol
+            self.class.const_get("K_#{key.to_s.upcase}")
+          else
+            key
+          end
+        }
+      else
+        options
       end
     end
 

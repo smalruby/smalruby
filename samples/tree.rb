@@ -48,6 +48,6 @@ end
 
 background = Canvas.new
 tree = Tree.new(background)
-background.on(:start) do
+background.when(:start) do
   tree.draw(12)
 end

@@ -13,7 +13,7 @@ init_hardware
 
 stage1 = Stage.new(color: 'white')
 
-stage1.on(:start) do
+stage1.when(:start) do
   color_codes = Color::NAME_TO_CODE.keys
   index = 0
   loop do
@@ -21,16 +21,16 @@ stage1.on(:start) do
     color = color_codes[index]
     draw_font(string: "#{DESCRIPTION}#{index}:#{color}", color: 'black')
     neo_pixel("D5").set(color: color)
-    until button("D3").pressed? || button("D4").pressed?
+    until but.when("D3").pressed? || but.when("D4").pressed?
       await
     end
-    if button("D3").pressed?
+    if but.when("D3").pressed?
       index -= 1
       if index < 0
         index = 0
       end
     end
-    if button("D4").pressed?
+    if but.when("D4").pressed?
       index += 1
       if index >= color_codes.length
         index = color_codes.length - 1

@@ -13,7 +13,7 @@ init_hardware
 
 stage1 = Stage.new(color: 'white')
 
-stage1.on(:start) do
+stage1.when(:start) do
   fill(color: 'white')
   draw_font(string: DESCRIPTION, color: 'black')
 
@@ -21,7 +21,7 @@ stage1.on(:start) do
   motor_driver('D9').speed = 100
 end
 
-stage1.on(:key_down, K_UP) do
+stage1.when(:key_pressed, K_UP) do
   fill(color: 'white')
   draw_font(string: '進む', color: 'black')
 
@@ -36,7 +36,7 @@ stage1.on(:key_down, K_UP) do
   motor_driver('D9').stop
 end
 
-stage1.on(:key_down, K_DOWN) do
+stage1.when(:key_pressed, K_DOWN) do
   fill(color: 'white')
   draw_font(string: 'バックする', color: 'black')
 
@@ -51,7 +51,7 @@ stage1.on(:key_down, K_DOWN) do
   motor_driver('D9').stop
 end
 
-stage1.on(:key_down, K_LEFT) do
+stage1.when(:key_down, K_LEFT) do
   fill(color: 'white')
   draw_font(string: '左に旋回する', color: 'black')
 
@@ -66,7 +66,7 @@ stage1.on(:key_down, K_LEFT) do
   motor_driver('D9').stop
 end
 
-stage1.on(:key_down, K_RIGHT) do
+stage1.when(:key_down, K_RIGHT) do
   fill(color: 'white')
   draw_font(string: '右に旋回する', color: 'black')
 
@@ -81,28 +81,28 @@ stage1.on(:key_down, K_RIGHT) do
   motor_driver('D9').stop
 end
 
-stage1.on(:key_push, K_W) do
+stage1.when(:key_push, K_W) do
   motor_driver('D6').speed += 10
 
   fill(color: 'white')
   draw_font(string: "左の速度: #{motor_driver('D6').speed}%", color: 'black')
 end
 
-stage1.on(:key_push, K_S) do
+stage1.when(:key_push, K_S) do
   motor_driver('D6').speed -= 10
 
   fill(color: 'white')
   draw_font(string: "左の速度: #{motor_driver('D6').speed}%", color: 'black')
 end
 
-stage1.on(:key_push, K_O) do
+stage1.when(:key_push, K_O) do
   motor_driver('D9').speed += 10
 
   fill(color: 'white')
   draw_font(string: "右の速度: #{motor_driver('D9').speed}%", color: 'black')
 end
 
-stage1.on(:key_push, K_L) do
+stage1.when(:key_push, K_L) do
   motor_driver('D9').speed -= 10
 
   fill(color: 'white')

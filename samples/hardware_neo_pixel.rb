@@ -12,7 +12,7 @@ init_hardware
 
 stage1 = Stage.new(color: 'white')
 
-stage1.on(:start) do
+stage1.when(:start) do
   loop do
     Color::NAME_TO_CODE.keys.each do |color|
       draw_font(string: "#{DESCRIPTION}#{color}", color: 'black')

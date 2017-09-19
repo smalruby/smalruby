@@ -13,7 +13,7 @@ init_hardware
 
 stage1 = Stage.new(color: 'white')
 
-stage1.on(:start) do
+stage1.when(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do
@@ -30,28 +30,28 @@ stage1.on(:start) do
   end
 end
 
-stage1.on(:key_push, K_E) do
+stage1.when(:key_push, K_E) do
   two_wheel_drive_car('D5').left_speed += 1
 
   fill(color: 'white')
   draw_font(string: "速度%: 左< #{two_wheel_drive_car('D5').left_speed} > 右< #{two_wheel_drive_car('D5').right_speed} >", color: 'black')
 end
 
-stage1.on(:key_push, K_D) do
+stage1.when(:key_push, K_D) do
   two_wheel_drive_car('D5').left_speed -= 1
 
   fill(color: 'white')
   draw_font(string: "速度%: 左< #{two_wheel_drive_car('D5').left_speed} > 右< #{two_wheel_drive_car('D5').right_speed} >", color: 'black')
 end
 
-stage1.on(:key_push, K_UP) do
+stage1.when(:key_push, K_UP) do
   two_wheel_drive_car('D5').right_speed += 1
 
   fill(color: 'white')
   draw_font(string: "速度%: 左< #{two_wheel_drive_car('D5').left_speed} > 右< #{two_wheel_drive_car('D5').right_speed} >", color: 'black')
 end
 
-stage1.on(:key_push, K_DOWN) do
+stage1.when(:key_push, K_DOWN) do
   two_wheel_drive_car('D5').right_speed -= 1
 
   fill(color: 'white')

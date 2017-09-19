@@ -13,7 +13,7 @@ init_hardware
 
 stage1 = Stage.new(color: 'white')
 
-stage1.on(:start) do
+stage1.when(:start) do
   draw_font(string: DESCRIPTION, color: 'black')
 
   loop do

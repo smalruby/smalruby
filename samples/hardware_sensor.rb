@@ -6,7 +6,7 @@ init_hardware
 
 stage1 = Stage.new(color: 'white')
 
-stage1.on(:start) do
+stage1.when(:start) do
   loop do
     v = sensor('A0').value
     if 0 <= v && v <= 255

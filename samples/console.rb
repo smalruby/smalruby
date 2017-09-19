@@ -3,7 +3,7 @@ require 'smalruby'
 
 console1 = Console.new
 
-console1.on(:start) do
+console1.when(:start) do
   loop do
     input = readline('> ')
     if !input || input.empty?

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 def setup_smalrubot(stage1, smalrubot)
-  stage1.on(:start) do
+  stage1.when(:start) do
     fill(color: 'white')
     draw_font(string: DESCRIPTION, color: 'black')
 
@@ -121,7 +121,7 @@ def setup_smalrubot(stage1, smalrubot)
     end
   end
 
-  stage1.on(:key_push, K_A) do
+  stage1.when(:key_push, K_A) do
     threshold = 400
 
     loop do

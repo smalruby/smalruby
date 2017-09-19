@@ -613,7 +613,7 @@ module Smalruby
     def normalize_event_name(event)
       event = event.to_sym
       case event
-      when :start, :green_flag_clicked, :run_button_clicked
+      when :start, :green_flag_clicked, :gf_clicked, :run_button_clicked, :rb_clicked
         :green_flag_clicked
       else
         event

@@ -490,7 +490,7 @@ module Smalruby
       super
     end
 
-    def on(event, *options, &block)
+    def when(event, *options, &block)
       event = event.to_sym
       @event_handlers[event] ||= []
       h = EventHandler.new(self, options, &block)
@@ -505,6 +505,7 @@ module Smalruby
         @checking_hit_targets.uniq!
       end
     end
+    alias :on :when
 
     def start
       @event_handlers[:start].try(:each) do |h|

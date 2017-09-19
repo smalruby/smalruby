@@ -576,12 +576,13 @@ module Smalruby
       @threads.each(&:join)
     end
 
-    def loop
+    def forever
       Kernel.loop do
         yield
         Smalruby.await
       end
     end
+    alias loop forever
 
     # 1フレーム待つ
     def await

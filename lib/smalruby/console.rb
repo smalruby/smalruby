@@ -11,7 +11,7 @@ module Smalruby
   # @example 画面に「こんにちは、世界！」を表示する
   #    require 'smalruby'
   #    console1 = Console.new
-  #    console1.on(:start) do
+  #    console1.on(:green_flag_clicked) do
   #      puts('こんにちは、世界！')
   #    end
   #    start
@@ -46,7 +46,7 @@ module Smalruby
     # @example 縦に「こんにちは」と表示する
     #    require 'smalruby'
     #    console1 = Console.new
-    #    console1.on(:start) do
+    #    console1.on(:green_flag_clicked) do
     #      puts('こ')
     #      puts('ん')
     #      puts('に')
@@ -68,7 +68,7 @@ module Smalruby
     # @example 横に「こんにちは」と表示する
     #    require 'smalruby'
     #    console1 = Console.new
-    #    console1.on(:start) do
+    #    console1.on(:green_flag_clicked) do
     #      print('こ')
     #      print('ん')
     #      print('に')
@@ -92,7 +92,7 @@ module Smalruby
     # @example 「> 」を表示してキーボードからの操作を受け付ける
     #    require 'smalruby'
     #    console1 = Console.new
-    #    console1.on(:start) do
+    #    console1.on(:green_flag_clicked) do
     #      readline('> ')
     #    end
     #    start

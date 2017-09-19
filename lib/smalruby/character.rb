@@ -491,13 +491,13 @@ module Smalruby
     end
 
     def when(event, *options, &block)
-      event = event.to_sym
+      event = normalize_event_name(event)
       @event_handlers[event] ||= []
       h = EventHandler.new(self, options, &block)
       @event_handlers[event] << h
 
       case event
-      when :start
+      when :green_flag_clicked
         @threads << h.call if Smalruby.started?
       when :hit
         @checking_hit_targets << options
@@ -508,7 +508,7 @@ module Smalruby
     alias :on :when
 
     def start
-      @event_handlers[:start].try(:each) do |h|
+      @event_handlers[:green_flag_clicked].try(:each) do |h|
         @threads << h.call
       end
     end
@@ -601,6 +601,16 @@ module Smalruby
       a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
       a = 360 - a if y < 0
       self.angle = a
+    end
+
+    def normalize_event_name(event)
+      event = event.to_sym
+      case event
+      when :start, :green_flag_clicked, :run_button_clicked
+        :green_flag_clicked
+      else
+        event
+      end
     end
 
     def asset_path(name)

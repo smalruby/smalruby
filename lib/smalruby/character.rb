@@ -519,14 +519,15 @@ module Smalruby
       end
     end
 
-    def key_down(keys)
-      @event_handlers[:key_down].try(:each) do |h|
+    def key_pressed(keys)
+      @event_handlers[:key_pressed].try(:each) do |h|
         if h.options.length > 0 && !h.options.any? { |k| keys.include?(k) }
           next
         end
         @threads << h.call
       end
     end
+    alias key_down key_pressed
 
     def key_push(keys)
       @event_handlers[:key_push].try(:each) do |h|
@@ -615,6 +616,8 @@ module Smalruby
       case event
       when :start, :green_flag_clicked, :gf_clicked, :run_button_clicked, :rb_clicked
         :green_flag_clicked
+      when :key_down, :key_pressed
+        :key_pressed
       else
         event
       end

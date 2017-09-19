@@ -51,7 +51,7 @@ stage1.when(:key_pressed, K_DOWN) do
   motor_driver('D9').stop
 end
 
-stage1.when(:key_down, K_LEFT) do
+stage1.when(:key_pressed, K_LEFT) do
   fill(color: 'white')
   draw_font(string: '左に旋回する', color: 'black')
 
@@ -66,7 +66,7 @@ stage1.when(:key_down, K_LEFT) do
   motor_driver('D9').stop
 end
 
-stage1.when(:key_down, K_RIGHT) do
+stage1.when(:key_pressed, K_RIGHT) do
   fill(color: 'white')
   draw_font(string: '右に旋回する', color: 'black')
 

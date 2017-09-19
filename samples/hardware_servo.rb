@@ -16,10 +16,10 @@ stage1.when(:start) do
   servo('D3').position = 90
 end
 
-stage1.when(:key_down, K_UP, K_LEFT) do
+stage1.when(:key_pressed, K_UP, K_LEFT) do
   servo('D3').position += 2
 end
 
-stage1.when(:key_down, K_DOWN, K_RIGHT) do
+stage1.when(:key_pressed, K_DOWN, K_RIGHT) do
   servo('D3').position -= 2
 end

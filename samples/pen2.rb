@@ -37,18 +37,18 @@ car1.when(:key_push, K_4) do
   self.pen_color = 'black'
 end
 
-car1.when(:key_down, K_LEFT) do
+car1.when(:key_pressed, K_LEFT) do
   rotate(-15)
 end
 
-car1.when(:key_down, K_RIGHT) do
+car1.when(:key_pressed, K_RIGHT) do
   rotate(15)
 end
 
-car1.when(:key_down, K_UP) do
+car1.when(:key_pressed, K_UP) do
   move(30)
 end
 
-car1.when(:key_down, K_DOWN) do
+car1.when(:key_pressed, K_DOWN) do
   move(-30)
 end

@@ -21,18 +21,18 @@ car1.when(:click) do
   end
 end
 
-car1.when(:key_down, K_LEFT) do
+car1.when(:key_pressed, K_LEFT) do
   self.x -= 10
 end
 
-car1.when(:key_down, K_RIGHT) do
+car1.when(:key_pressed, K_RIGHT) do
   self.x += 10
 end
 
-car1.when(:key_down, K_UP) do
+car1.when(:key_pressed, K_UP) do
   self.y -= 10
 end
 
-car1.when(:key_down, K_DOWN) do
+car1.when(:key_pressed, K_DOWN) do
   self.y += 10
 end

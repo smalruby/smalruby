@@ -138,7 +138,7 @@ module Smalruby
 
           mouse_down_and_push
 
-          key_down_and_push
+          key_pressed_and_push
 
           hit
 
@@ -189,11 +189,11 @@ module Smalruby
       end
     end
 
-    def key_down_and_push
+    def key_pressed_and_push
       if (keys = Input.keys).length > 0
         world.objects.each do |o|
-          if o.respond_to?(:key_down)
-            o.key_down(keys)
+          if o.respond_to?(:key_pressed)
+            o.key_pressed(keys)
           end
         end
         pushed_keys = keys.select { |key| Input.key_push?(key) }

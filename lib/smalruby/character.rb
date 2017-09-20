@@ -77,7 +77,7 @@ module Smalruby
         y: 0,
         costume: nil,
         costume_index: 0,
-        angle: 0,
+        angle: 90,
         visible: true,
         rotation_style: :free
       }
@@ -244,6 +244,7 @@ module Smalruby
 
     # (　)度に向ける
     def angle=(val)
+      val -= 90
       val %= 360
       radian = val * Math::PI / 180
       @vector[:x] = Math.cos(radian)

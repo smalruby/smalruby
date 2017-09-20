@@ -338,7 +338,13 @@ module Smalruby
                         frame_size + margin_size + (font.size + 1) * row,
                         line, font, [0, 0, 0])
       end
-      @balloon = Sprite.new(x, y, image)
+      @balloon = Sprite.new(@position.dxruby_x, @position.dxruby_y, image)
+
+      if opts[:second] > 0
+        sleep(opts[:second])
+        @balloon.vanish
+        @balloon = nil
+      end
     end
 
     # 表示する/隠す
@@ -721,17 +727,17 @@ module Smalruby
 
     def draw_balloon
       if @balloon
-        @balloon.x = x + image.width / 2
-        if @balloon.x < 0
-          @balloon.x = 0
-        elsif @balloon.x + @balloon.image.width >= Window.width
-          @balloon.x = Window.width - @balloon.image.width
+        @balloon.x = @position.dxruby_x + image.width / 2
+        if @balloon.x < Position.left
+          @balloon.x = Position.left
+        elsif @balloon.x + @balloon.image.width >= Position.right
+          @balloon.x = Position.right - @balloon.image.width
         end
-        @balloon.y = y - @balloon.image.height
-        if @balloon.y < 0
-          @balloon.y = 0
-        elsif @balloon.y + @balloon.image.height >= Window.height
-          @balloon.y = Window.height - @balloon.image.height
+        @balloon.y = @position.dxruby_y - @balloon.image.height
+        if @balloon.y < Position.bottom
+          @balloon.y = Position.bottom
+        elsif @balloon.y + @balloon.image.height >= Position.top
+          @balloon.y = Position.top - @balloon.image.height
         end
         @balloon.draw
       end

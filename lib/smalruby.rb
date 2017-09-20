@@ -142,6 +142,8 @@ module Smalruby
 
           hit
 
+          when_receive
+
           world.objects.delete_if do |o|
             o.join unless o.alive?
             o.vanished?
@@ -211,6 +213,17 @@ module Smalruby
       world.objects.each do |o|
         if o.respond_to?(:hit)
           o.hit
+        end
+      end
+    end
+
+    def when_receive
+      while !world.messages.empty?
+        message = world.messages.shift
+        world.objects.each do |o|
+          if o.respond_to?(:when_receive)
+            o.when_receive(message)
+          end
         end
       end
     end

@@ -598,6 +598,15 @@ module Smalruby
       end
     end
 
+    def when_receive(message)
+      @event_handlers[:receive].try(:each) do |h|
+        if h.options.length > 0 && !h.options.include?(message)
+          next
+        end
+        @threads << h.call
+      end
+    end
+
     def alive?
       @threads.compact!
       @threads.delete_if { |t|
@@ -632,6 +641,10 @@ module Smalruby
     # 1フレーム待つ
     def await
       Smalruby.await
+    end
+
+    def broadcast(message)
+      world.messages.push(message)
     end
 
     private

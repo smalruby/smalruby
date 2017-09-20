@@ -9,9 +9,11 @@ module Smalruby
     attr_accessor :objects
     attr_accessor :board
     attr_accessor :current_stage
+    attr_accessor :messages
 
     def initialize
       @objects = []
+      @messages = []
       @board = nil
     end
   end

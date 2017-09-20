@@ -226,7 +226,7 @@ else
 end
 
 Window.width = 480
-Window.height = 480
+Window.height = 360
 
 at_exit do
   Smalruby.start if !$ERROR_INFO && !Smalruby.started?

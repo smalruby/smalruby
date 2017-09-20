@@ -83,8 +83,6 @@ module Smalruby
       }
       opt = process_optional_arguments(option, defaults)
 
-      @position = Position.new(self, opt[:x], opt[:y])
-
       @costume_name__index = {}
       @costumes = Array.wrap(opt[:costume]).compact.map.with_index { |costume, i|
         if costume.is_a?(String)
@@ -99,7 +97,9 @@ module Smalruby
       }
       @costume_index = opt[:costume_index]
 
-      @sprite = Sprite.new(*@position.dxruby_xy, @costumes[@costume_index])
+      @sprite = Sprite.new(0, 0, @costumes[@costume_index])
+      @position = Position.new(self, opt[:x], opt[:y])
+      @sprite.x, @sprite.y = *@position.dxruby_xy
 
       @event_handlers = {}
       @threads = []
@@ -387,12 +387,12 @@ module Smalruby
 
     # 左右の端に着いた?
     def reach_left_or_right_wall?
-      x <= -240 || x >= (240 - image.width)
+      x <= (Position.left + image.width / 2) || x >= (Position.right - image.width / 2)
     end
 
     # 上下の端に着いた?
     def reach_top_or_bottom_wall?
-      y <= -240 || y >= (240 - image.height)
+      y <= (Position.bottom - image.height / 2) || y >= (Position.top + image.height / 2)
     end
 
     def hit?(other)

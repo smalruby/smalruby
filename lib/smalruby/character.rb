@@ -662,6 +662,48 @@ module Smalruby
       world.messages.push(message)
     end
 
+    def touching_color?(*color)
+      color = case color
+              when String
+                if /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i =~ color
+                  [$1.to_i(16), $2.to_i(16), $3.to_i(16)]
+                else
+                  Color.smalruby_to_dxruby(color)
+                end
+              when Symbol
+                Color.smalruby_to_dxruby(color)
+              else
+                color
+              end
+
+      render_target = RenderTarget.new(Window.width, Window.height, Color.smalruby_to_dxruby(:black))
+      world.objects[0...world.objects.index(self)].each do |o|
+        s = o.sprite
+        if !s.respond_to?(:vanished?) or !s.vanished?
+          if s.respond_to?(:draw)
+            s.target = render_target
+            begin
+              s.draw
+            ensure
+              s.target = nil
+            end
+          end
+        end
+      end
+      target_image = render_target.to_image
+
+      dx, dy = *@position.dxruby_xy
+      dx.upto(dx + image.width - 1) do |x|
+        dy.upto(dy + image.height - 1) do |y|
+          if target_image.compare(x, y, color)
+            return true
+          end
+        end
+      end
+
+      false
+    end
+
     private
 
     def draw_pen(left, top, right, bottom)

@@ -342,6 +342,7 @@ module Smalruby
 
       if opts[:second] > 0
         sleep(opts[:second])
+        @current_message = ''
         @balloon.vanish
         @balloon = nil
       end
@@ -728,16 +729,16 @@ module Smalruby
     def draw_balloon
       if @balloon
         @balloon.x = @position.dxruby_x + image.width / 2
-        if @balloon.x < Position.left
-          @balloon.x = Position.left
-        elsif @balloon.x + @balloon.image.width >= Position.right
-          @balloon.x = Position.right - @balloon.image.width
+        if @balloon.x < 0
+          @balloon.x = 0
+        elsif @balloon.x + @balloon.image.width >= Window.width
+          @balloon.x = Window.width - @balloon.image.width
         end
         @balloon.y = @position.dxruby_y - @balloon.image.height
-        if @balloon.y < Position.bottom
-          @balloon.y = Position.bottom
-        elsif @balloon.y + @balloon.image.height >= Position.top
-          @balloon.y = Position.top - @balloon.image.height
+        if @balloon.y < 0
+          @balloon.y = 0
+        elsif @balloon.y + @balloon.image.height > Window.height
+          @balloon.y = Window.height - @balloon.image.height
         end
         @balloon.draw
       end

@@ -238,8 +238,17 @@ else
   Window.windowed = false
 end
 
-Window.width = 480
-Window.height = 360
+if ENV['SMALRUBY_POSITION'] == "dxruby"
+  module Smalruby
+    Position = DXRubyPosition
+  end
+else
+  module Smalruby
+    Position = ScratchPosition
+  end
+end
+
+Window.width, Window.height = *Position::DEFAULT_WINDOW_SIZE
 
 at_exit do
   Smalruby.start if !$ERROR_INFO && !Smalruby.started?

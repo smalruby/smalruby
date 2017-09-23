@@ -245,8 +245,7 @@ module Smalruby
 
     # (　)度に向ける
     def angle=(val)
-      val -= 90
-      val %= 360
+      val = Position.adjust_angle(val) % 360
       radian = val * Math::PI / 180
       @vector[:x] = Math.cos(radian)
       @vector[:y] = Math.sin(radian)
@@ -256,14 +255,14 @@ module Smalruby
         @sprite.angle = val
       elsif @rotation_style == :left_right
         if @vector[:x] >= 0
-          self.scale_x = scale_x.abs
-        else
           self.scale_x = scale_x.abs * -1
+        else
+          self.scale_x = scale_x.abs
         end
         @sprite.angle = 0
       else
         self.scale_x = scale_x.abs
-        sprite.angle = 0
+        @sprite.angle = 0
       end
     end
 

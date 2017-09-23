@@ -130,6 +130,9 @@ module Smalruby
         new_sound("piano_#{n}.wav")
       end
 
+      @touching_color_cache = {}
+      @touching_color_cache.extend(Mutex_m)
+
       World.instance.objects << self
     end
 
@@ -676,21 +679,28 @@ module Smalruby
                 color
               end
 
-      render_target = RenderTarget.new(Window.width, Window.height, Color.smalruby_to_dxruby(:black))
-      world.objects[0...world.objects.index(self)].each do |o|
-        s = o.sprite
-        if !s.respond_to?(:vanished?) or !s.vanished?
-          if s.respond_to?(:draw)
-            s.target = render_target
-            begin
-              s.draw
-            ensure
-              s.target = nil
+      target_image = nil
+      @touching_color_cache.synchronize do
+        if @touching_color_cache[:image]
+          target_image = @touching_color_cache[:image]
+        else
+          render_target = RenderTarget.new(Window.width, Window.height, Color.smalruby_to_dxruby(:black))
+          world.objects[0...world.objects.index(self)].each do |o|
+            s = o.sprite
+            if !s.respond_to?(:vanished?) or !s.vanished?
+              if s.respond_to?(:draw)
+                s.target = render_target
+                begin
+                  s.draw
+                ensure
+                  s.target = nil
+                end
+              end
             end
           end
+          target_image = @touching_color_cache[:image] = render_target.to_image
         end
       end
-      target_image = render_target.to_image
 
       dx, dy = *@position.dxruby_xy
       dx.upto(dx + image.width - 1) do |x|
@@ -702,6 +712,12 @@ module Smalruby
       end
 
       false
+    end
+
+    def clear_cache
+      @touching_color_cache.synchronize do
+        @touching_color_cache.clear
+      end
     end
 
     private
@@ -832,8 +848,6 @@ module Smalruby
       $stderr.puts("#{exception.class}: #{exception.message}")
       $stderr.puts("        #{exception.backtrace.join("\n        ")}")
     end
-
-    private
 
     def calc_volume
       (255 * @volume / 100.0).to_i

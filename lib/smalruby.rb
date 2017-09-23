@@ -155,6 +155,8 @@ module Smalruby
           end
 
           Sprite.draw(world.objects)
+
+          objects_clear_cache
         end
       end
     end
@@ -232,6 +234,14 @@ module Smalruby
           if o.respond_to?(:when_receive)
             o.when_receive(message)
           end
+        end
+      end
+    end
+
+    def objects_clear_cache
+      world.objects.each do |o|
+        if o.respond_to?(:clear_cache)
+          o.clear_cache
         end
       end
     end

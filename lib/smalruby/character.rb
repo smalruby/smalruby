@@ -418,20 +418,35 @@ module Smalruby
 
     # @!group ペン
 
+    def stamp
+      stage_image = world.current_stage.image
+      render_target = RenderTarget.new(Window.width, Window.height, Color.smalruby_to_dxruby(:black))
+      render_target.draw(0, 0, stage_image)
+      begin
+        @sprite.target = render_target
+        @sprite.draw
+      ensure
+        @sprite.target = nil
+      end
+      stage_image.draw(0, 0, render_target.to_image)
+    end
+
     # Clears all pen marks from the Stage
     def clear
       world.current_stage.clear
     end
 
     # ペンを下ろす
-    def down_pen
+    def pen_down
       @enable_pen = true
     end
+    alias down_pen pen_down
 
     # ペンを上げる
-    def up_pen
+    def pen_up
       @enable_pen = false
     end
+    alias up_pen pen_up
 
     # set pen color
     #
@@ -439,7 +454,7 @@ module Smalruby
     #   When color is Array<Integer>, it means [R, G, B].
     #   When color is Symbol, it means the color code; like :white, :black, etc...
     #   When color is Integer, it means hue.
-    def pen_color=(val)
+    def set_pen_color_to(val)
       if val.is_a?(Numeric)
         val %= 201
         _, s, l = Color.rgb_to_hsl(*pen_color)
@@ -447,6 +462,7 @@ module Smalruby
       end
       @pen_color = val
     end
+    alias pen_color= set_pen_color_to
 
     # change pen color
     #

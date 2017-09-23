@@ -185,7 +185,7 @@ module Smalruby
         end
         s = Sprite.new(Input.mouse_pos_x, Input.mouse_pos_y)
         s.collision = [0, 0, 1, 1]
-        s.check(clickable_objects).each do |o|
+        clickable_objects.select { |o| s === o.sprite }.each do |o|
           o.click(buttons)
         end
       end

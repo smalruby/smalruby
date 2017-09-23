@@ -29,6 +29,7 @@ module Smalruby
     attr_reader :enable_pen
     attr_accessor :pen_color
     attr_accessor :volume
+    attr_reader :sprite
 
     def_instance_delegators(
       :@position,

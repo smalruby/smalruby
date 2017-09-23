@@ -70,7 +70,7 @@ module Smalruby
 
     def init_window_application
       Window.caption = File.basename($PROGRAM_NAME)
-      Window.fps = 15
+      Window.fps = ENV['SMALRUBY_FPS']&.to_i || 15
       Window.bgcolor = [255, 255, 255]
 
       # HACK: DXRubyのためのサウンド関係の初期化処理。こうしておかな

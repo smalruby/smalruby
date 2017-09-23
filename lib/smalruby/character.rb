@@ -584,12 +584,12 @@ module Smalruby
       end
     end
 
-    def click(buttons)
+    def click(buttons, mouse_position)
       @event_handlers[:click].try(:each) do |h|
         if h.options.length > 0 && !h.options.any? { |b| buttons.include?(b) }
           next
         end
-        @threads << h.call(Input.mouse_pos_x, Input.mouse_pos_y)
+        @threads << h.call(*mouse_position)
       end
     end
 

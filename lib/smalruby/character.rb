@@ -747,9 +747,9 @@ module Smalruby
         @sprite.angle = val
       elsif @rotation_style == :left_right
         if @vector[:x] >= 0
-          self.scale_x = scale_x.abs * -1
-        else
           self.scale_x = scale_x.abs
+        else
+          self.scale_x = scale_x.abs * -1
         end
         @sprite.angle = 0
       else

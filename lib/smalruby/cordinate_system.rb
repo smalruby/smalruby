@@ -42,11 +42,11 @@ module Smalruby
     end
 
     def width
-      @character ? @character.image.width * @character.scale_x : 0
+      @character ? @character.image.width * @character.scale_x.abs : 0
     end
 
     def height
-      @character ? @character.image.height * @character.scale_y : 0
+      @character ? @character.image.height * @character.scale_y.abs : 0
     end
 
     def center_x

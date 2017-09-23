@@ -42,11 +42,11 @@ module Smalruby
     end
 
     def width
-      @character ? @character.image.width : 0
+      @character ? @character.image.width * @character.scale_x : 0
     end
 
     def height
-      @character ? @character.image.height : 0
+      @character ? @character.image.height * @character.scale_y : 0
     end
 
     def center_x
@@ -57,15 +57,31 @@ module Smalruby
       @character ? @character.center_y : 0
     end
 
+    def min_x
+      [left, right].min
+    end
+
+    def max_x
+      [left, right].max
+    end
+
+    def min_y
+      [top, bottom].min
+    end
+
+    def max_y
+      [top, bottom].max
+    end
+
     def x=(val)
       if val < self.class.min_x
         val = self.class.min_x
       elsif val > self.class.max_x
         val = self.class.max_x
       end
-      @x = val
+      @x = val.round
       if debug_mode?
-        p([@x, @y, dxruby_x, dxruby_y, scratch_x, scratch_y])
+        puts("xy: #{[@x, @y]}, dxruby_xy: #{dxruby_xy}, scratch_xy: #{scratch_xy}")
       end
     end
 
@@ -75,9 +91,9 @@ module Smalruby
       elsif val > self.class.max_y
         val = self.class.max_y
       end
-      @y = val
+      @y = val.round
       if debug_mode?
-        p([@x, @y, dxruby_x, dxruby_y, scratch_x, scratch_y])
+        puts("xy: #{[@x, @y]}, dxruby_xy: #{dxruby_xy}, scratch_xy: #{scratch_xy}")
       end
     end
 
@@ -125,16 +141,32 @@ module Smalruby
       @bottom ||= -((Window.height - 1) / 2)
     end
 
-    def self.default_angle
+    def self.right_angle
       90
     end
 
-    def self.adjust_angle(val)
-      val - 90
+    def self.vector
+      { x: 1, y: -1 }
     end
 
     alias super_center_x center_x
     alias super_center_y center_y
+
+    def left
+      x - super_center_x
+    end
+
+    def right
+      x + (width - super_center_x)
+    end
+
+    def top
+      y + super_center_y
+    end
+
+    def bottom
+      y - (height - super_center_y)
+    end
 
     def center_x
       0
@@ -153,11 +185,11 @@ module Smalruby
     end
 
     def dxruby_x=(val)
-      self.x = val - self.class.right - width / 2
+      self.x = val - self.class.right - super_center_x
     end
 
     def dxruby_y=(val)
-      self.y = -(val - self.class.top) - height / 2
+      self.y = -(val - self.class.top) - super_center_y
     end
 
     alias scratch_x x
@@ -191,8 +223,28 @@ module Smalruby
       @bottom ||= Window.height - 1
     end
 
-    def self.default_angle
+    def self.right_angle
       0
+    end
+
+    def self.vector
+      { x: 1, y: 1 }
+    end
+
+    def left
+      x
+    end
+
+    def right
+      x + width
+    end
+
+    def top
+      y
+    end
+
+    def bottom
+      y + height
     end
 
     alias dxruby_x x

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'forwardable'
 require 'mutex_m'
-require_relative 'position'
+require_relative 'cordinate_system'
 
 module Smalruby
   # キャラクターを表現するクラス
@@ -78,7 +78,7 @@ module Smalruby
         y: 0,
         costume: nil,
         costume_index: 0,
-        angle: 90,
+        angle: CordinateSystem.right_angle,
         visible: true,
         rotation_style: :free
       }
@@ -99,13 +99,13 @@ module Smalruby
       @costume_index = opt[:costume_index]
 
       @sprite = Sprite.new(0, 0, @costumes[@costume_index])
-      @position = Position.new(self, opt[:x], opt[:y])
+      @position = CordinateSystem.new(self, opt[:x], opt[:y])
       @sprite.x, @sprite.y = *@position.dxruby_xy
 
       @event_handlers = {}
       @threads = []
       @checking_hit_targets = []
-      @angle = 0 unless Util.windows?
+      @sprite.angle = 0
       @enable_pen = false
       @pen_color = 'black'
       @volume = 100
@@ -122,7 +122,7 @@ module Smalruby
 
       self.rotation_style = opt[:rotation_style]
 
-      self.angle = opt[:angle] if opt[:angle] != 0
+      self.angle = opt[:angle] if opt[:angle] != CordinateSystem.right_angle
 
       # HACK: Windows XP SP3の環境でワーカースレッドで音声を読み込めな
       # い不具合が発生した。このためメインスレッドでプリロードしておく。
@@ -137,7 +137,7 @@ module Smalruby
 
     # (  )歩動かす
     def move(val = 1)
-      self.position = [x + @vector[:x] * val, y - @vector[:y] * val]
+      self.position = [x + @vector[:x] * val * CordinateSystem.vector[:x], y + @vector[:y] * val * CordinateSystem.vector[:y]]
     end
 
     # (  )歩後ろに動かす
@@ -162,7 +162,6 @@ module Smalruby
       top = @sprite.y + center_y
 
       @position.y = val
-
       @sprite.y = @position.dxruby_y
 
       draw_pen(left, top, @sprite.x + center_x, @sprite.y + center_y) if @enable_pen
@@ -190,32 +189,36 @@ module Smalruby
     end
 
     # くるっと振り返る
-    def turn
+    def bounce
       sync_angle(@vector[:x] * -1, @vector[:y] * -1)
     end
+    alias turn bounce
 
     # 横に振り返る
-    def turn_x
+    def bounce_x
       sync_angle(@vector[:x] * -1, @vector[:y])
     end
+    alias turn_x bounce_x
 
     # 縦に振り返る
-    def turn_y
+    def bounce_y
       sync_angle(@vector[:x], @vector[:y] * -1)
     end
+    alias turn_y bounce_y
 
     # もし端に着いたら、跳ね返る
-    def turn_if_reach_wall
-      lr = reach_left_or_right_wall?
-      tb = reach_top_or_bottom_wall?
+    def if_on_edge_bounce
+      lr = on_left_or_right_edge?
+      tb = on_top_or_bottom_edge?
       if lr && tb
-        turn
+        bounce
       elsif lr
-        turn_x
+        bounce_x
       elsif tb
-        turn_y
+        bounce_y
       end
     end
+    alias turn_if_reach_wall if_on_edge_bounce
 
     def turn_clockwise(angle)
       self.angle += angle
@@ -235,42 +238,26 @@ module Smalruby
 
     # 角度
     def angle
-      return @sprite.angle if @rotation_style == :free
-
-      x, y = @vector[:x], @vector[:y]
-      a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
-      a = 360 - a if y < 0
-      a
+      val = if @rotation_style == :free
+              @sprite.angle
+            else
+              x, y = @vector[:x], @vector[:y]
+              a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
+              a = 360 - a if y < 0
+              a
+            end
+      (val + CordinateSystem.right_angle).round % 360
     end
 
     # (　)度に向ける
     def angle=(val)
-      val = Position.adjust_angle(val) % 360
-      radian = val * Math::PI / 180
-      @vector[:x] = Math.cos(radian)
-      @vector[:y] = Math.sin(radian)
-
-      if @rotation_style == :free
-        self.scale_x = scale_x.abs
-        @sprite.angle = val
-      elsif @rotation_style == :left_right
-        if @vector[:x] >= 0
-          self.scale_x = scale_x.abs * -1
-        else
-          self.scale_x = scale_x.abs
-        end
-        @sprite.angle = 0
-      else
-        self.scale_x = scale_x.abs
-        @sprite.angle = 0
-      end
+      set_angle_without_adjust(val- CordinateSystem.right_angle)
     end
 
     # (  )に向ける
     def point_towards(target)
       if target == :mouse
-        tx = Input.mouse_pos_x
-        ty = Input.mouse_pos_y
+        tx, ty = *Mouse.position
       else
         tx = target.x
         ty = target.y
@@ -283,8 +270,9 @@ module Smalruby
     # (  )に行く
     def go_to(target)
       if target == :mouse
-        x = Input.mouse_pos_x - center_x
-        y = Input.mouse_pos_y - center_y
+        x, y = *Mouse.position
+        x -= @position.center_x
+        y -= @position.center_y
       else
         x = target.x
         y = target.y
@@ -384,24 +372,27 @@ module Smalruby
 
     # 距離
     def distance(x, y)
-      Math.sqrt((self.x + center_x - x).abs**2 +
-                (self.y + center_y - y).abs**2).to_i
+      Math.sqrt((self.x + @position.center_x - x).abs**2 +
+                (self.y + @position.center_y - y).abs**2).to_i
     end
 
     # 端に着いた?
-    def reach_wall?
-      reach_left_or_right_wall? || reach_top_or_bottom_wall?
+    def touching_edge?
+      on_left_or_right_edge? || on_top_or_bottom_edge?
     end
+    alias reach_wall? touching_edge?
 
     # 左右の端に着いた?
-    def reach_left_or_right_wall?
-      x <= (Position.left + image.width / 2) || x >= (Position.right - image.width / 2)
+    def on_left_or_right_edge?
+      @position.min_x <= CordinateSystem.min_x || @position.max_x >= CordinateSystem.max_x
     end
+    alias reach_left_or_right_wall? on_left_or_right_edge?
 
     # 上下の端に着いた?
-    def reach_top_or_bottom_wall?
-      y <= (Position.bottom - image.height / 2) || y >= (Position.top + image.height / 2)
+    def on_top_or_bottom_edge?
+      @position.min_y <= CordinateSystem.min_y || @position.max_y >= CordinateSystem.max_y
     end
+    alias reach_top_or_bottom_wall? on_top_or_bottom_edge?
 
     def hit?(other)
       check([other]).length > 0
@@ -667,7 +658,33 @@ module Smalruby
     def sync_angle(x, y)
       a = Math.acos(x / Math.sqrt(x**2 + y**2)) * 180 / Math::PI
       a = 360 - a if y < 0
-      self.angle = a
+
+      set_angle_without_adjust(a)
+    end
+
+    def set_angle_without_adjust(val)
+      val %= 360
+      radian = val * Math::PI / 180
+      @vector[:x] = Math.cos(radian).round(3)
+      @vector[:y] = Math.sin(radian).round(3)
+
+      if @rotation_style == :free
+        self.scale_x = scale_x.abs
+        @sprite.angle = val
+      elsif @rotation_style == :left_right
+        if @vector[:x] >= 0
+          self.scale_x = scale_x.abs * -1
+        else
+          self.scale_x = scale_x.abs
+        end
+        @sprite.angle = 0
+      else
+        self.scale_x = scale_x.abs
+        @sprite.angle = 0
+      end
+      if debug_mode?
+        puts("angle: #{angle}, @sprite.angle: #{@sprite.angle}, vector: #{@vector}")
+      end
     end
 
     def normalize_event(event, options)

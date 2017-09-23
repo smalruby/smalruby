@@ -10,6 +10,7 @@ require 'smalruby/world'
 require 'smalruby/color'
 require 'smalruby/character'
 require 'smalruby/event_handler'
+require 'smalruby/mouse'
 
 module Smalruby
   extend ActiveSupport::Autoload
@@ -57,6 +58,10 @@ module Smalruby
 
   def init_hardware(options = {})
     Hardware.init(options)
+  end
+
+  def debug_mode?
+    !!ENV['SMALRUBY_DEBUG_MODE']
   end
 
   private
@@ -183,10 +188,13 @@ module Smalruby
             buttons << sym
           end
         end
-        s = Sprite.new(Input.mouse_pos_x, Input.mouse_pos_y)
+        dxruby_x = Input.mouse_pos_x
+        dxruby_y = Input.mouse_pos_y
+        mouse_position = Mouse.position(dxruby_x, dxruby_y)
+        s = Sprite.new(dxruby_x, dxruby_y)
         s.collision = [0, 0, 1, 1]
         clickable_objects.select { |o| s === o.sprite }.each do |o|
-          o.click(buttons)
+          o.click(buttons, mouse_position)
         end
       end
     end
@@ -238,17 +246,17 @@ else
   Window.windowed = false
 end
 
-if ENV['SMALRUBY_POSITION'] == "dxruby"
+if ENV['SMALRUBY_CORDINATE_SYSTEM'] == "dxruby"
   module Smalruby
-    Position = DXRubyPosition
+    CordinateSystem = DXRubyCordinateSystem
   end
 else
   module Smalruby
-    Position = ScratchPosition
+    CordinateSystem = ScratchCordinateSystem
   end
 end
 
-Window.width, Window.height = *Position::DEFAULT_WINDOW_SIZE
+Window.width, Window.height = *CordinateSystem::DEFAULT_WINDOW_SIZE
 
 at_exit do
   Smalruby.start if !$ERROR_INFO && !Smalruby.started?

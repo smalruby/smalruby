@@ -53,6 +53,7 @@ module Smalruby
         @costume_name__index[name] = i
         costume
       }
+      @costume_index__name = @costume_name__index.invert
       @costume_index = opt[:costume_index]
       super(opt[:x], opt[:y], @costumes[@costume_index])
 
@@ -326,6 +327,11 @@ module Smalruby
       @costume_index = val % @costumes.length
       self.image = @costumes[@costume_index]
     end
+
+    def costume_name
+      @costume_index__name[@costume_index]
+    end
+    alias_method :costume, :costume_name
 
     # @!endgroup
 

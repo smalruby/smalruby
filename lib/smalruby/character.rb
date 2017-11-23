@@ -378,6 +378,14 @@ module Smalruby
       sound.play
     end
 
+    def stop_all_sounds
+      self.class.sound_cache.synchronize do
+        self.class.sound_cache.each_value do |sound|
+          sound.stop
+        end
+      end
+    end
+
     # @!endgroup
 
     # @!group ペン

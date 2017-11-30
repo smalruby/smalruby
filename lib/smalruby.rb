@@ -218,6 +218,14 @@ module Smalruby
         end
       end
     end
+
+    def broadcast(message)
+       world.objects.each do |o|
+        if o.respond_to?(:receive)
+          o.receive(message)
+        end
+      end
+    end
   end
 end
 

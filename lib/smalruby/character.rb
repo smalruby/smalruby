@@ -566,6 +566,19 @@ module Smalruby
       end
     end
 
+    def receive(messages)
+      @event_handlers[:receive].try(:each) do |h|
+        if h.options.length > 0 && !h.options.any? { |m| messages.include?(m) }
+          next
+        end
+        @threads << h.call
+      end
+    end
+
+    def broadcast(message)
+      Smalruby.broadcast(message)
+    end
+
     def alive?
       @threads.compact!
       @threads.delete_if { |t|

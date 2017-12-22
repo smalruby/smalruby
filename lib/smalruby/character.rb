@@ -679,5 +679,12 @@ module Smalruby
     def calc_volume
       (255 * @volume / 100.0).to_i
     end
+
+    def distance_to_character(target)
+      tx = target.x
+      ty = target.y
+      distance = Math.sqrt((tx-self.x)**2 + (ty-self.y)**2)
+      return distance.round(6)
+    end
   end
 end

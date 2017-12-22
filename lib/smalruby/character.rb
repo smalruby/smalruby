@@ -679,5 +679,12 @@ module Smalruby
     def calc_volume
       (255 * @volume / 100.0).to_i
     end
+
+    def distance_to_mouse_pointer
+      mx = Input.mouse_pos_x
+      my = Input.mouse_pos_y
+      distance = Math.sqrt((mx-self.x)**2 + (my-self.y)**2)
+      return distance.round(6)
+    end
   end
 end

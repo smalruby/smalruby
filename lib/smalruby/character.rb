@@ -3,6 +3,14 @@ require 'forwardable'
 require 'mutex_m'
 
 module Smalruby
+  class NullSound
+    def initialize(_)
+    end
+
+    def method_missing(symbol, args)
+    end
+  end
+
   # キャラクターを表現するクラス
   class Character < Sprite
     extend Forwardable
@@ -633,7 +641,11 @@ module Smalruby
 
     def new_sound(name)
       self.class.sound_cache.synchronize do
-        self.class.sound_cache[name] ||= Sound.new(asset_path(name))
+        begin
+          self.class.sound_cache[name] ||= Sound.new(asset_path(name))
+        rescue
+          self.class.sound_cache[name] ||= NullSound.new(asset_path(name))
+        end
       end
       self.class.sound_cache[name]
     end
@@ -674,6 +686,13 @@ module Smalruby
 
     def calc_volume
       (255 * @volume / 100.0).to_i
+    end
+
+    def distance_to_mouse_pointer
+      mx = Input.mouse_pos_x
+      my = Input.mouse_pos_y
+      distance = Math.sqrt((mx-self.x)**2 + (my-self.y)**2)
+      return distance.round(6)
     end
   end
 end

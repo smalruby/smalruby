@@ -378,6 +378,23 @@ module Smalruby
       sound.play
     end
 
+    # 終わるまで(  )の音を鳴らす
+    def play_until_done(option = {})
+      raise NotImplementedError unless defined?(DXRubySDL)
+      defaults = {
+        name: 'piano_do.wav'
+      }
+      opt = process_optional_arguments(option, defaults)
+
+      sound = new_sound(opt[:name])
+      sound.loop_count = 0
+      sound.set_volume(calc_volume)
+      sound.play
+      channel = sound.instance_variable_get('@sound')
+                     .instance_variable_get('@last_played_channel')
+      await while channel ? SDL::Mixer.play?(channel) : SDL::Mixer.playMusic?
+    end
+
     def stop_all_sounds
       self.class.sound_cache.synchronize do
         self.class.sound_cache.each_value do |sound|
